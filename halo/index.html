@@ -71,6 +71,9 @@
   #info .tag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:9px;background:#E7E7E7;color:#555;margin:0 4px 6px 0}
   #info .tag.tr{background:#FBE3DD;color:#8A3524}
   #info p{margin:6px 0}
+  #info ol{padding-left:20px;margin:8px 0}#info li{margin:5px 0}
+  #info details{margin-top:10px}#info summary{cursor:pointer}
+  .comparison-choice{cursor:pointer}.comparison-choice:hover rect{stroke:var(--blue);stroke-width:1.6}
   #info .hint{color:var(--muted);font-size:11.5px}
   .legend{margin-top:12px;border-top:1px solid #DDD;padding-top:10px;color:#444;font-size:11.5px}
   .legend i{display:inline-block;width:22px;height:0;border-top:3px solid;vertical-align:middle;margin-right:6px}
@@ -287,9 +290,9 @@ const INFO = {
  p:['Zero-shot prediction','The original native probabilities for each candidate. These are not additive base scores in the current classifier: they are one of four probability sources. Original predictions stay unchanged as beliefs refine.'],
  tr:['Comparison path','Produce three bank-based predictions and blend them with the original zero-shot distribution. The table predicts four source weights separately for every candidate. No additive per-label correction head is used.'],
  experts:['Comparison experts','All three exclude the query physical recording and invalid/off-roster verified donors. Learned positive temperatures control their concentration before blending. Verified labels are pinned; otherwise donors use their current soft candidate beliefs.'],
- neighbor:['Motion-neighbor vote','Weight other recordings by motion cosine similarity and vote with their verified labels or current soft beliefs. The saved verified-first policy uses eligible verified donors when present, avoiding dilution by unlabelled rows.'],
- centroid:['Motion-centroid match','Build responsibility-weighted motion centroids for each candidate, excluding the query recording. Score the query against available centroids. The saved grouping policy controls whether verified evidence takes priority.'],
- pattern:['Prediction-pattern match','Group the original zero-shot distributions using verified/soft candidate responsibilities. Compare the query’s original distribution to each group using Bhattacharyya affinity. This uses the complete pattern of candidate probabilities, not a majority-count correction.'],
+ neighbor: ['Motion-neighbor vote','Borrow label evidence from recordings with similar movements.','<ol><li>Compare the query’s motion vector with other recordings in the memory bank.</li><li>Give more similar recordings more weight.</li><li>Combine their labels into a prediction. Verified labels give a definite vote; unlabelled recordings contribute their current probabilities.</li></ol><p>This saved model uses independent verified recordings first when they are available.</p>'],
+ centroid: ['Motion-centroid match','Compare the query with a typical motion vector for each activity.','<ol><li>Build an average motion vector for each candidate label.</li><li>Verified recordings contribute to their known label. Unlabelled recordings contribute to each label in proportion to their current probabilities.</li><li>Compare the query with those averages and turn the similarities into candidate probabilities.</li></ol><p>A centroid is an average in the learned motion-vector space, rather than an average of raw IMU waveforms.</p>'],
+ pattern: ['Prediction-pattern match','Recognize an activity by its usual pattern of zero-shot predictions.','<ol><li>Group memory recordings by their verified labels or current label probabilities.</li><li>For each candidate, average the recordings’ original zero-shot prediction bars.</li><li>Compare the query’s entire zero-shot distribution with each average pattern, then convert the matches into probabilities.</li></ol><p>For example, known downstairs recordings might also score upstairs highly. A query with that same pattern can provide evidence for downstairs, even if its top zero-shot label is upstairs.</p>'],
  evidence:['Four evidence predictions','One distribution per source, with explicit availability. Missing class groups are masked. Zero-shot is always available. These scores are projected into the table and also supply the final probability mixture.'],
  table:['Table evidence blender','Columns are motion, setup and candidates; rows are the bank recordings and a summary. Explicit row/column types replace arbitrary position IDs. Two attention blocks predict candidate-specific source weights.'],
  cells:['Table cells','Motion/setup projections and candidate cells combine original outcome/strength features, current belief, class-membership information, label text, four source scores and availability. Verified labels pin donor beliefs. No hidden targets enter these features.'],
@@ -747,10 +750,11 @@ function drawComparison(g,n){
   const st=styleOf(n);
   el('rect',{class:'bx',x:n.x,y:n.y,width:n.W,height:n.H,rx:corner(n),fill:st.fill,stroke:st.stroke,'stroke-width':st.sw},g);
   txt(g,n.x+14,n.y+20,n.label,{size:10.5,bold:true,anchor:'start'});
-  ['Motion-neighbor vote','Motion-centroid match','Prediction-pattern match'].forEach((label,i)=>{
-    const y=n.y+35+i*35;
-    el('rect',{x:n.x+12,y,width:n.W-24,height:28,rx:6,fill:P.fill.support,stroke:P.line,'stroke-width':.8},g);
-    txt(g,n.x+n.W/2,y+18,label,{size:10});
+  ['neighbor','centroid','pattern'].forEach((id,i)=>{
+    const y=n.y+35+i*35,choice=el('g',{class:'comparison-choice','data-detail-id':id},g);
+    el('rect',{x:n.x+12,y,width:n.W-24,height:28,rx:6,fill:P.fill.support,stroke:P.line,'stroke-width':.8},choice);
+    txt(choice,n.x+n.W/2,y+18,N[id].label,{size:10});
+    wire(choice,N[id]);
   });
   txt(g,n.x+n.W/2,n.y+n.H-12,n.id==='tr'?'Table attention → source weights':'Exclude the query recording',{size:8.3,fill:P.muted});
   addBadge(g,n,'+');
@@ -867,7 +871,7 @@ function showNode(n){
   const kind = n.train ? '<span class="tag tr">training only</span>' : '';
   const hint = (n.children.length||n.expandable) ? `<p class="hint">Click to ${isExp(n)?'collapse':'open'}.</p>`:'';
   revealDetail();
-  info.innerHTML=`<h3>${i[0]}</h3>${kind}<p>${i[1]}</p>${hint}`+realDetail(n.id);
+  info.innerHTML=`<h3>${i[0]}</h3>${kind}<p>${i[1]}</p>${i[2]||''}${hint}`+realDetail(n.id);
 }
 function showEdge(v){
   const d=EDG.find(e=>v.ids.includes(e.id)&&e.desc); if(!d) return;
@@ -1053,6 +1057,14 @@ function vectorPlot(values){
 }
 function realDetail(id){
  const t=realCase();let body='<p class="real-badge">Real '+safeHTML(REAL.provenance.dataset)+' · support_classifier_v5_4 · '+safeHTML(t.protocol||'')+'</p>';
+ const sourceIndex={neighbor:1,centroid:2,pattern:3}[id];
+ if(sourceIndex){
+  body='<p class="hint">Each comparison excludes the query’s entire recording. A candidate with no eligible evidence is masked.</p>';
+  if(S.ptype==='empty')return body+'<p><b>This view:</b> The memory bank is empty, so the classifier returns the zero-shot prediction.</p>';
+  body+='<p><b>This replay’s '+safeHTML(SOURCE_NAMES[sourceIndex])+' prediction</b></p><table class="metric-table"><tr><th>Candidate</th><th>Probability</th></tr>'+LABELS.map((label,c)=>'<tr><td>'+safeHTML(label)+'</td><td>'+(t.available?.[c]?.[sourceIndex]===false?'unavailable':Number(t.sources?.[c]?.[sourceIndex]).toFixed(5))+'</td></tr>').join('')+'</table>';
+  body+='<details><summary>How it contributes to the final prediction</summary><p>The table evidence blender learns a separate weight for this source for each candidate, alongside zero-shot and the other two comparison sources.</p><table class="metric-table"><tr><th>Candidate</th><th>Weight</th><th>Probability × weight</th></tr>'+LABELS.map((label,c)=>'<tr><td>'+SHORT[c]+'</td><td>'+Number(t.weights?.[c]?.[sourceIndex]||0).toPrecision(3)+'</td><td>'+Number((t.sources?.[c]?.[sourceIndex]||0)*(t.weights?.[c]?.[sourceIndex]||0)).toPrecision(3)+'</td></tr>').join('')+'</table><p>The combined probabilities are then normalized across candidates.</p></details>';
+  return body;
+ }
  if(id==='query'||id==='setup'){const v=REAL.query[id==='query'?'motion':'setup'];body+=vectorPlot(v)+'<p>'+v.length+' coordinates; every value is displayed.</p>';}
  if(['mlp','lang','zs'].includes(id))body+=projectionDetail()+'<p>'+safeHTML(REAL.pca.note)+'</p>';
  if(id==='cand')body+='<p>'+LABELS.map((l,i)=>SHORT[i]+' = '+safeHTML(l)).join('<br>')+'</p>';
