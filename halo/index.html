@@ -19,7 +19,7 @@
   .grp{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
   header,.bar{flex-shrink:0}
   button{min-height:36px;touch-action:manipulation}
-  button:focus-visible,.node:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+  button:focus-visible,.node:focus-visible,.comparison-choice:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
   .transport{margin-left:auto;justify-content:flex-end}
   .seg{max-width:100%}
   .grp>label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-right:2px}
@@ -1061,7 +1061,7 @@ function realDetail(id){
  if(sourceIndex){
   body='<p class="hint">Each comparison excludes the query’s entire recording. A candidate with no eligible evidence is masked.</p>';
   if(S.ptype==='empty')return body+'<p><b>This view:</b> The memory bank is empty, so the classifier returns the zero-shot prediction.</p>';
-  body+='<p><b>This replay’s '+safeHTML(SOURCE_NAMES[sourceIndex])+' prediction</b></p><table class="metric-table"><tr><th>Candidate</th><th>Probability</th></tr>'+LABELS.map((label,c)=>'<tr><td>'+safeHTML(label)+'</td><td>'+(t.available?.[c]?.[sourceIndex]===false?'unavailable':Number(t.sources?.[c]?.[sourceIndex]).toFixed(5))+'</td></tr>').join('')+'</table>';
+  body+='<p><b>Prediction from this path</b></p><table class="metric-table"><tr><th>Candidate</th><th>Probability</th></tr>'+LABELS.map((label,c)=>'<tr><td>'+safeHTML(label)+'</td><td>'+(t.available?.[c]?.[sourceIndex]===false?'unavailable':Number(t.sources?.[c]?.[sourceIndex]).toFixed(5))+'</td></tr>').join('')+'</table>';
   body+='<details><summary>How it contributes to the final prediction</summary><p>The table evidence blender learns a separate weight for this source for each candidate, alongside zero-shot and the other two comparison sources.</p><table class="metric-table"><tr><th>Candidate</th><th>Weight</th><th>Probability × weight</th></tr>'+LABELS.map((label,c)=>'<tr><td>'+SHORT[c]+'</td><td>'+Number(t.weights?.[c]?.[sourceIndex]||0).toPrecision(3)+'</td><td>'+Number((t.sources?.[c]?.[sourceIndex]||0)*(t.weights?.[c]?.[sourceIndex]||0)).toPrecision(3)+'</td></tr>').join('')+'</table><p>The combined probabilities are then normalized across candidates.</p></details>';
   return body;
  }
