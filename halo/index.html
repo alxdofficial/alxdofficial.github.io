@@ -233,7 +233,7 @@ def('vecs','root',{at:[1,2], transparent:true, alwaysExp:true, layout:{dir:'col'
 
 // zero-shot path
 def('cand','root',{at:[0,3], kind:'cand', label:'Candidate labels', w:158, h:108});
-def('zs','root',{at:[1,3], fill:'semantic', gfill:'g_semantic', label:'Zero-shot path', sub:'frozen native prediction; always retained', bars:'zs', w:196, h:118, layout:{dir:'row',gap:28,pad:14,head:26}});
+def('zs','root',{at:[1,3], fill:'semantic', gfill:'g_semantic', label:'Zero-shot path', sub:'one of four predictions in the blend', bars:'zs', w:196, h:118, layout:{dir:'row',gap:28,pad:14,head:26}});
   def('mlp','zs',{label:'Frozen linear projection', sub:'128-D motion → 384-D text space', fill:'semantic', w:112, h:52});
   def('lang','zs',{label:'Label-text comparison', sub:'query vs label text', fill:'semantic', w:150, h:56});
   def('p','zs',{label:'Zero-shot prediction', bars:'zs', fill:'semantic', w:136, h:78});
@@ -254,7 +254,8 @@ def('tr','root',{at:[2,3],fill:'support',gfill:'g_support',label:'Comparison pat
       def('ff','block',{label:'Feed-forward',sub:'pre-norm residual block',fill:'support',w:180,h:52});
     def('gate','table',{label:'Predict source weights',sub:'4 mixing logits per candidate → masked softmax',fill:'support',w:202,h:78});
   def('weights','tr',{at:[0,3],label:'Candidate mixing weights',kind:'weights',fill:'support',w:220,h:176});
-def('comb','root',{at:[1,4],label:'Blend & normalize',sub:'weighted probabilities, then normalize across candidates',fill:'semantic',w:184,h:84});
+def('comb','root',{at:[1,4],label:'Blend & normalize',sub:'zero-shot + 3 comparison predictions',fill:'semantic',w:194,h:84});
+def('overviewweights','root',{at:[2,4],onlyCollapsed:'tr',label:'Source weights',sub:'4 learned weights per candidate',fill:'support',w:194,h:72});
 def('final','root',{at:[1,5],label:'Final prediction',bars:'final',fill:'semantic',w:190,h:104});
 def('losses','root',{at:[2,5],only:'train',train:true,label:'Comparison training losses',sub:'frozen forward diagnostics; no update replay',w:222,h:84,layout:{dir:'col',gap:14,pad:12,head:26}});
   def('auxpass','losses',{label:'Tier-specific auxiliary replay',sub:'training only; not a deployment transformation',train:true,w:222,h:96});
@@ -263,7 +264,7 @@ def('losses','root',{at:[2,5],only:'train',train:true,label:'Comparison training
 
 
 // Inputs, feature cells, distributions and predictions are data; all other processing nodes are modules.
-const DATA_NODES = new Set(['win','sup','meta','vecs','query','setup','cand','p','cells','evidence','weights','final','cda']);
+const DATA_NODES = new Set(['win','sup','meta','vecs','query','setup','cand','p','cells','evidence','weights','overviewweights','final','cda']);
 Object.values(N).forEach(n=>{ n.shape=DATA_NODES.has(n.id)||n.chip?'data':'module'; });
 const BASE_NODES=Object.fromEntries(Object.values(N).map(n=>[n.id,{w:n.w,h:n.h,sub:n.sub,kind:n.kind,label:n.label}]));
 const corner = n => n.shape==='data' ? 0 : 9;
@@ -309,6 +310,7 @@ const INFO = {
  lreader:['Full-classifier loss','Cross-entropy penalizes assigning too little final probability to the known training target. The displayed query CE is one post-hoc diagnostic, not the source-balanced training reduction.'],
  laux:['Tier-specific auxiliary','Tier 1 adds expert non-regression at weight 1: penalize final CE exceeding the detached best initial expert when that expert beats zero-shot. Tier 2 adds corruption CE at weight 0.25: independently permute stored original probability columns per physical recording, consistently across its windows. Text embeddings and verified labels never change. Corruption runs only during training, not deployment.']
 };
+INFO.overviewweights=INFO.weights;
 ['patch','hann','nyq','resm','agg','xph','fold','tsa','cda'].forEach(id=>INFO[id]=[N[id].label,'Part of the preserved frozen native encoder: fixed physical-Hz filterbank with polarization features, sensor-level xyz folding, factored acquisition conditioning, three temporal trunk layers and learned recording attention pooling. Native checkpoint configuration is verified separately.']);
 ['cur0','cur1','cur2'].forEach(id=>INFO[id]=[N[id].label,'The current simple training recipe uses same-source/acquisition-key banks and recording-disjoint queries, without the historical mixed-tier curriculum.']);
 
@@ -370,7 +372,7 @@ const CALCULATIONS={infer:[
 
 /* ----------------------------------------------------------------- layout */
 const sum = a => a.reduce((x,y)=>x+y,0);
-function vis(n){ return !n.only || n.only===S.mode; }
+function vis(n){ return (!n.only||n.only===S.mode)&&(!n.onlyCollapsed||!isExp(N[n.onlyCollapsed])); }
 function kids(n){ return n.children.map(i=>N[i]).filter(vis); }
 function isExp(n){ if(n.alwaysExp) return true; return (n.children.length>0 || n.expandable) && S.exp.has(n.id); }
 function tblDims(){ const rows=REAL.memoryRows.length+1; return {w:282+42*LABELS.length, h:30+22+rows*22+68}; }
@@ -410,6 +412,8 @@ function layout(){
 }
 let G = {x0:0,y0:0,x1:1000,y1:600};
 function term(id){
+  // In Overview, keep the weights object visible instead of folding it into its producer.
+  if(id==='weights'&&N.overviewweights.laid)return N.overviewweights;
   const chain=[]; for(let n=N[id]; n; n=N[n.parent]) chain.push(n); chain.reverse();
   for(const n of chain){ if(!n.laid) return null; if(n.terminal) return n; }
   const me=N[id]; return (me.laid && !me.transparent && me.id!=='root') ? me : null;
@@ -502,9 +506,17 @@ function visibleEdges(){
   const map=new Map();
   for(const e of EDG){
     if(e.only&&e.only!==S.mode)continue;
-    const A=term(e.a),B=term(e.b);if(!A||!B||A===B)continue;
+    const A=term(e.a);let B=term(e.b),opt=e;
+    if(N.tr.terminal){
+      // The overview separates the three comparison predictions from their weights.
+      // Zero-shot is also reused by the pattern expert and remains one shared output trunk.
+      if(e.id==='p_evidence'){B=term('comb');opt={...e,sides:['r','l'],desc:'The original zero-shot prediction is one of the four probabilities in the final blend.'};}
+      if(e.id==='evidence_comb')opt={...e,sides:['r','l'],desc:'The three comparison predictions join the zero-shot prediction in the blend.'};
+      if(e.id==='weights_comb')opt={...e,sides:['t','b']};
+    }
+    if(!A||!B||A===B)continue;
     const output=e.output||e.a, key=A.id+'>'+B.id+'|'+output;
-    if(!map.has(key))map.set(key,{A,B,opt:e,ids:[],sourceKey:A.id+'|'+output});map.get(key).ids.push(e.id);
+    if(!map.has(key))map.set(key,{A,B,opt,ids:[],sourceKey:A.id+'|'+output});map.get(key).ids.push(e.id);
   }
   const list=[...map.values()],sources=new Map(),ports=new Map();
   list.forEach(v=>{
@@ -522,12 +534,18 @@ function visibleEdges(){
   const vectors={r:[1,0],l:[-1,0],t:[0,-1],b:[0,1]};
   const occupied=[];
   sources.forEach((src,key)=>{
-    src.origin=pt(src.A,src.sa,src.f);const d=vectors[src.sa];src.junction=[src.origin[0]+d[0]*8,src.origin[1]+d[1]*8];
+    src.origin=pt(src.A,src.sa,src.f);const d=vectors[src.sa];
+    // A reuse dot must not sit on another object's connector.
+    const clearJunction=p=>!occupied.some(([a,b])=>a[0]===b[0]?Math.abs(p[0]-a[0])<5&&p[1]>=Math.min(a[1],b[1])-5&&p[1]<=Math.max(a[1],b[1])+5:Math.abs(p[1]-a[1])<5&&p[0]>=Math.min(a[0],b[0])-5&&p[0]<=Math.max(a[0],b[0])+5);
+    const gaps=src.edges.length>1?[8,16,24]:[8];
+    src.junction=gaps.map(gap=>[src.origin[0]+d[0]*gap,src.origin[1]+d[1]*gap]).find(clearJunction)||[src.origin[0]+d[0]*8,src.origin[1]+d[1]*8];
     src.trunk={trunk:true,A:src.A,ids:[...new Set(src.edges.flatMap(v=>v.ids))],opt:{dashed:src.edges.every(v=>v.opt.dashed)},pts:[src.origin,src.junction]};src.trunk.d=roundPath(src.trunk.pts);
     src.edges.forEach(v=>{
       v.sa=src.sa;v.origin=src.origin;v.pa=src.junction;v.pb=pt(v.B,v.sb,v.fB);v.source=src;
       const d=vectors[v.sb];
-      const boxes=obstacles.filter(n=>n.id!==v.A.id&&n.id!==v.B.id);
+      // The start is already outside the source. Keep its body as an obstacle
+      // so a branch cannot disappear behind it and appear to have a second origin.
+      const boxes=obstacles.filter(n=>n.id!==v.B.id);
       // An inset child can sit close to its group heading; shorten the final approach
       // so the router endpoint never starts inside that heading obstacle.
       const approach=[12,8,4,1,0].map(gap=>[v.pb[0]+d[0]*gap,v.pb[1]+d[1]*gap]).find(p=>!boxes.some(n=>p[0]>n.x0&&p[0]<n.x1&&p[1]>n.y0&&p[1]<n.y1))||v.pb;
@@ -756,7 +774,7 @@ function drawComparison(g,n){
     txt(choice,n.x+n.W/2,y+18,N[id].label,{size:10});
     wire(choice,N[id]);
   });
-  txt(g,n.x+n.W/2,n.y+n.H-12,n.id==='tr'?'Table attention → source weights':'Exclude the query recording',{size:8.3,fill:P.muted});
+  txt(g,n.x+n.W/2,n.y+n.H-12,n.id==='tr'?'Table attention learns source weights':'Exclude the query recording',{size:8.3,fill:P.muted});
   addBadge(g,n,'+');
 }
 function drawLeaf(g,n){
@@ -874,7 +892,7 @@ function showNode(n){
   info.innerHTML=`<h3>${i[0]}</h3>${kind}<p>${i[1]}</p>${i[2]||''}${hint}`+realDetail(n.id);
 }
 function showEdge(v){
-  const d=EDG.find(e=>v.ids.includes(e.id)&&e.desc); if(!d) return;
+  const d=v.opt?.desc?v.opt:EDG.find(e=>v.ids.includes(e.id)&&e.desc); if(!d) return;
   revealDetail();
   info.innerHTML=`<h3>Arrow</h3>${d.detach?'<span class="tag tr">detached in training</span>':''}<p>${d.desc}</p>`;
 }
@@ -1056,6 +1074,7 @@ function vectorPlot(values){
   return `<svg viewBox="0 0 300 105" role="img" aria-label="Actual vector coordinate values" style="width:100%;background:#fafafa"><path d="M12 12 V80 H288 M12 46 H288" fill="none" stroke="#ddd"/><polyline points="${points}" fill="none" stroke="#34618E" stroke-width="1"/><text x="12" y="10" font-size="8">+${scale.toFixed(3)}</text><text x="12" y="92" font-size="8">−${scale.toFixed(3)}</text><text x="288" y="100" text-anchor="end" font-size="8">coordinates 1–${values.length}</text></svg>`;
 }
 function realDetail(id){
+ if(id==='overviewweights')id='weights';
  const t=realCase();let body='<p class="real-badge">Real '+safeHTML(REAL.provenance.dataset)+' · support_classifier_v5_4 · '+safeHTML(t.protocol||'')+'</p>';
  const sourceIndex={neighbor:1,centroid:2,pattern:3}[id];
  if(sourceIndex){
@@ -1081,6 +1100,7 @@ function setBank(kind,{fitView=false}={}){
  LABELS=REAL.labels.slice();SHORT=LABELS.map((_,i)=>'C'+(i+1));ZS=REAL.query.zeroShot.slice();
  POOL={};for(const [key,t] of Object.entries(REAL.variants))POOL[key]={rows:t.rows.map(r=>({...r,g:argmax(r.p),v:r.verified,t:r.tag})),sim:t.rows.map(r=>r.similarityMotion),fin:t.final};
  Object.values(N).forEach(n=>Object.assign(n,BASE_NODES[n.id]));
+ N.overviewweights.sub=S.ptype==='empty'?'Zero-shot fallback; no learned blend':'4 learned weights per candidate';
  N.win.w=240;N.win.h=170;N.lang.kind='projection';N.lang.w=290;N.lang.h=240;
  N.cand.w=Math.max(210,...LABELS.map((l,i)=>textWidth(SHORT[i]+' · '+l,11)+24));N.cand.h=18+candidateRows().reduce((h,r)=>h+r.height+4,0);
  N.sup.w=Math.max(246,40+21*(LABELS.length+2));N.sup.h=Math.max(110,60+11*REAL.memoryRows.length);
