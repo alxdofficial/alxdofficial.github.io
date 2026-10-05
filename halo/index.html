@@ -99,6 +99,9 @@
   .edge.seenf{stroke:#7FA3CB}
   .edge.seenb{stroke:#E0A498}
   .edge.hover{stroke:#000;stroke-width:2.2}
+  .edge.context-dim{opacity:.13}
+  .edge.context-focus{stroke:#315F8A;stroke-width:2.4}
+  .junction.context-dim{opacity:.13}
   .pulse{fill:none;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
   .hit{fill:none;stroke:transparent;stroke-width:12;cursor:help}
   .det{pointer-events:none}
@@ -240,20 +243,20 @@ def('zs','root',{at:[1,3], fill:'semantic', gfill:'g_semantic', label:'Zero-shot
 
 def('setupbuild','root',{at:[2,2],label:'Setup feature builder',sub:'384-D sensor text + 8 metadata features',fill:'encoder',w:190,h:80});
 // Four explicit sources feed candidate-wise mixing weights, not additive corrections.
-def('tr','root',{at:[2,3],fill:'support',gfill:'g_support',label:'Comparison path',sub:'three bank-based predictions',kind:'comparison',w:260,h:186,layout:{gapC:28,gapR:24,pad:18,head:30}});
+def('tr','root',{at:[2,3],fill:'support',gfill:'g_support',label:'Comparison path',sub:'three bank-based predictions',kind:'comparison',w:260,h:186,layout:{gapC:64,gapR:76,pad:26,head:38}});
   def('experts','tr',{at:[0,0],fill:'support',gfill:'g_support',label:'Comparison experts',sub:'exclude the query recording',kind:'comparison',w:242,h:164,layout:{dir:'col',gap:18,pad:12,head:26}});
     def('neighbor','experts',{label:'Motion-neighbor vote',sub:'cosine-weighted label evidence',fill:'support',w:182,h:72});
     def('centroid','experts',{label:'Motion-centroid match',sub:'similarity to soft class centroids',fill:'support',w:182,h:72});
     def('pattern','experts',{label:'Prediction-pattern match',sub:'compare original zero-shot distributions',fill:'support',w:182,h:72});
-  def('evidence','tr',{at:[0,1],label:'Four evidence predictions',kind:'evidence',fill:'support',w:238,h:320});
-  def('table','tr',{at:[0,2],label:'Table evidence blender',sub:'motion | setup | candidate cells',fill:'support',gfill:'g_support',w:192,h:82,layout:{dir:'col',gap:18,pad:12,head:26}});
+  def('evidence','tr',{at:[0,1],label:'Four evidence predictions',kind:'evidence',fill:'support',w:456,h:300});
+  def('table','tr',{at:[1,0],label:'Table evidence blender',sub:'motion | setup | candidate cells',fill:'support',gfill:'g_support',w:192,h:82,layout:{dir:'col',gap:18,pad:12,head:26}});
     def('cells','table',{label:'Table cells',sub:'outcome, strength, current belief, source scores + availability; type embeddings',fill:'support',w:202,h:90});
     def('block','table',{label:'Attention block ×2',sub:'pre-norm; width 64; 4 heads',fill:'support',gfill:'g_support',w:202,h:72,layout:{dir:'col',gap:12,pad:10,head:26}});
       def('rowatt','block',{label:'Row attention',sub:'motion + setup + candidates',fill:'support',w:180,h:64});
       def('colatt','block',{label:'Column attention',sub:'bank rows + summary; similarity bias',fill:'support',w:180,h:64});
       def('ff','block',{label:'Feed-forward',sub:'pre-norm residual block',fill:'support',w:180,h:52});
     def('gate','table',{label:'Predict source weights',sub:'4 mixing logits per candidate → masked softmax',fill:'support',w:202,h:78});
-  def('weights','tr',{at:[0,3],label:'Candidate mixing weights',kind:'weights',fill:'support',w:220,h:176});
+  def('weights','tr',{at:[1,1],label:'Candidate mixing weights',kind:'weights',fill:'support',w:220,h:176});
 def('comb','root',{at:[1,4],label:'Blend & normalize',sub:'zero-shot + 3 comparison predictions',fill:'semantic',w:194,h:84});
 def('overviewweights','root',{at:[2,4],onlyCollapsed:'tr',label:'Source weights',sub:'4 learned weights per candidate',fill:'support',w:194,h:72});
 def('final','root',{at:[1,5],label:'Final prediction',bars:'final',fill:'semantic',w:190,h:104});
@@ -408,6 +411,13 @@ function place(n,x,y){
 function layout(){
   Object.values(N).forEach(n=>{ n.laid=false; n.terminal=false; });
   const r=N.root; measure(r); place(r,0,0);
+  if(!N.tr.terminal){
+    // Align the final blend with its probability input, rather than the zero-shot row.
+    const cy=N.evidence.y+N.evidence.H/2;
+    place(N.comb,N.comb.x,cy-N.comb.H/2);
+    place(N.final,N.final.x,cy-N.final.H/2);
+    if(N.losses.laid)place(N.losses,N.losses.x,N.table.y+(N.table.H-N.losses.H)/2);
+  }
   G = {x0:0,y0:0,x1:r.W,y1:r.H};
 }
 let G = {x0:0,y0:0,x1:1000,y1:600};
@@ -513,6 +523,15 @@ function visibleEdges(){
       if(e.id==='p_evidence'){B=term('comb');opt={...e,sides:['r','l'],desc:'The original zero-shot prediction is one of the four probabilities in the final blend.'};}
       if(e.id==='evidence_comb')opt={...e,sides:['r','l'],desc:'The three comparison predictions join the zero-shot prediction in the blend.'};
       if(e.id==='weights_comb')opt={...e,sides:['t','b']};
+    }
+    if(!N.tr.terminal){
+      if(e.id==='p_pattern')opt={...e,sides:['b','t']};
+      if(['query_cells','setup_cells','bank_cells'].includes(e.id))opt={...e,sides:['r','l']};
+      if(e.id==='cand_cells')opt={...e,sides:['b','l']};
+      if(e.id==='evidence_cells')opt={...e,sides:['r','t']};
+      if(e.id==='evidence_comb')opt={...e,sides:['r','l']};
+      if(e.id==='gate_weights')opt={...e,sides:['r','l']};
+      if(e.id==='weights_comb')opt={...e,sides:['r','b']};
     }
     if(!A||!B||A===B)continue;
     const output=e.output||e.a, key=A.id+'>'+B.id+'|'+output;
@@ -737,13 +756,12 @@ function drawPool(g,n){
 function drawEvidence(g,n){
  const st=styleOf(n);el('rect',{class:'bx',x:n.x,y:n.y,width:n.W,height:n.H,rx:0,fill:st.fill,stroke:st.stroke,'stroke-width':1.25},g);
  txt(g,n.x+n.W/2,n.y+17,'Four evidence predictions',{size:10.5,bold:true});
- let y=n.y+40;
  for(let k=0;k<4;k++){
-  txt(g,n.x+12,y,SOURCE_NAMES[k],{size:9,bold:true,anchor:'start'});
-  drawBars(g,n,n.x+12,y+8,n.W-24,String(k));
+  const w=(n.W-36)/2,x=n.x+12+(k%2)*(w+12),y=n.y+40+Math.floor(k/2)*(40+LABELS.length*15);
+  txt(g,x,y,SOURCE_NAMES[k],{size:9,bold:true,anchor:'start'});
+  drawBars(g,n,x,y+8,w,String(k));
   const available=realCase().available?.some(row=>row[k]);
-  if(available===false)txt(g,n.x+n.W-12,y,'unavailable',{size:8,anchor:'end',fill:P.red});
-  y+=34+LABELS.length*15;
+  if(available===false)txt(g,x+w,y+8+LABELS.length*15+9,'unavailable',{size:8,anchor:'end',fill:P.red});
  }
 }
 function drawWeights(g,n){
@@ -829,7 +847,7 @@ function render(){
     hit.addEventListener('mouseleave',()=>{ p.classList.remove('hover'); scheduleHideDetail(); });
   });
   // A branch dot means the same object is being reused, rather than a new output.
-  for(const src of new Set(vedges.map(v=>v.source))) if(src.edges.length>1) el('circle',{cx:src.junction[0],cy:src.junction[1],r:2.5,fill:P.line},gEdges);
+  for(const src of new Set(vedges.map(v=>v.source))) if(src.edges.length>1) src.dot=el('circle',{class:'junction',cx:src.junction[0],cy:src.junction[1],r:2.5,fill:P.line},gEdges);
   // leaves and collapsed groups
   drawn.filter(n=>n.terminal).forEach(n=>{
     const g=el('g',{class:'node'+((n.children.length||n.expandable)?'':' leaf'),'data-id':n.id},gNodes); nowIds.add(n.id);
@@ -873,7 +891,15 @@ function markCustom(){ document.querySelectorAll('#lvlSeg button').forEach(b=>{b
 const info=document.getElementById('info');
 let detailTimer=null;
 function revealDetail(){clearTimeout(detailTimer);info.hidden=false;}
-function hideDetail(){clearTimeout(detailTimer);info.hidden=true;}
+function focusConnections(ids=null){
+  for(const v of [...(S.vtrunks||[]),...(S.vedges||[])]){
+    const selected=ids&&v.ids.some(id=>ids.has(id));
+    v.el?.classList.toggle('context-dim',!!ids&&!selected);
+    v.el?.classList.toggle('context-focus',!!selected);
+  }
+  for(const src of new Set((S.vedges||[]).map(v=>v.source)))src.dot?.classList.toggle('context-dim',!!ids&&!src.edges.some(v=>v.ids.some(id=>ids.has(id))));
+}
+function hideDetail(){clearTimeout(detailTimer);info.hidden=true;focusConnections();}
 function scheduleHideDetail(){clearTimeout(detailTimer);detailTimer=setTimeout(hideDetail,100);}
 info.addEventListener('mouseenter',()=>clearTimeout(detailTimer));
 info.addEventListener('mouseleave',scheduleHideDetail);
@@ -889,11 +915,15 @@ function showNode(n){
   const kind = n.train ? '<span class="tag tr">training only</span>' : '';
   const hint = (n.children.length||n.expandable) ? `<p class="hint">Click to ${isExp(n)?'collapse':'open'}.</p>`:'';
   revealDetail();
+  const within=id=>{for(let p=N[id];p;p=N[p.parent])if(p===n)return true;return false;};
+  const ids=new Set(EDG.filter(e=>within(e.a)||within(e.b)).map(e=>e.id));
+  focusConnections(ids.size?ids:null);
   info.innerHTML=`<h3>${i[0]}</h3>${kind}<p>${i[1]}</p>${i[2]||''}${hint}`+realDetail(n.id);
 }
 function showEdge(v){
   const d=v.opt?.desc?v.opt:EDG.find(e=>v.ids.includes(e.id)&&e.desc); if(!d) return;
   revealDetail();
+  focusConnections(new Set(v.ids));
   info.innerHTML=`<h3>Arrow</h3>${d.detach?'<span class="tag tr">detached in training</span>':''}<p>${d.desc}</p>`;
 }
 
@@ -1105,7 +1135,7 @@ function setBank(kind,{fitView=false}={}){
  N.cand.w=Math.max(210,...LABELS.map((l,i)=>textWidth(SHORT[i]+' · '+l,11)+24));N.cand.h=18+candidateRows().reduce((h,r)=>h+r.height+4,0);
  N.sup.w=Math.max(246,40+21*(LABELS.length+2));N.sup.h=Math.max(110,60+11*REAL.memoryRows.length);
  for(const id of ['zs','p','final'])N[id].h=Math.max(N[id].h,65+LABELS.length*15);
- N.evidence.h=36+4*(34+LABELS.length*15);N.weights.h=70+LABELS.length*26;
+ N.evidence.h=40+2*(40+LABELS.length*15);N.weights.h=70+LABELS.length*26;
  N.lreader.sub='Post-hoc query CE: '+shownLoss(realCase().queryCE);
  N.auxpass.label=tier()===1?'Best-expert diagnostic':'Corrupted-probability re-run';N.auxpass.sub=tier()===1?'detach best initial expert; no inference oracle':'permute p₀ columns per recording; keep text and labels';
  N.laux.unavailable=!Number.isFinite(lossForNode('laux'));N.auxpass.unavailable=N.laux.unavailable;
