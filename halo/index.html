@@ -917,16 +917,22 @@ function wire(g,n,detailOnly=false){
   g.setAttribute('tabindex','0'); g.setAttribute('role','button');
   g.setAttribute('aria-label',(n.label||n.id)+(expandable?': '+(isExp(n)?'collapse':'expand'):': show explanation'));
   if(expandable) g.setAttribute('aria-expanded',String(isExp(n)));
-  g.addEventListener('mouseenter',ev=>showNode(n,detailOnly,{x:ev.clientX,y:ev.clientY})); g.addEventListener('mouseleave',scheduleHideDetail);
-  g.addEventListener('focus',()=>showNode(n,detailOnly)); g.addEventListener('blur',scheduleHideDetail);
+  const detailPoint=ev=>{
+    const r=g.getBoundingClientRect(),stage=document.getElementById('stage').getBoundingClientRect();
+    if(ev&&Number.isFinite(ev.clientX)&&Number.isFinite(ev.clientY)&&ev.clientX>=r.left&&ev.clientX<=r.right&&ev.clientY>=r.top&&ev.clientY<=r.bottom&&ev.clientX>=stage.left&&ev.clientX<=stage.right&&ev.clientY>=stage.top&&ev.clientY<=stage.bottom)return {x:ev.clientX,y:ev.clientY};
+    const target=expandable?(g.querySelector('circle')||g):g,box=target.getBoundingClientRect();
+    return {x:box.left+box.width/2,y:box.top+box.height/2};
+  };
+  g.addEventListener('mouseenter',ev=>showNode(n,detailOnly,detailPoint(ev))); g.addEventListener('mouseleave',scheduleHideDetail);
+  g.addEventListener('focus',ev=>showNode(n,detailOnly,detailPoint(ev))); g.addEventListener('blur',scheduleHideDetail);
   const activate=point=>{
     if(expandable){ if(S.exp.has(n.id)) S.exp.delete(n.id); else S.exp.add(n.id); markCustom(); render();
       fit();
     }
     showNode(n,detailOnly,point);
   };
-  g.addEventListener('click',ev=>{ ev.stopPropagation(); if(!suppressClick) activate({x:ev.clientX,y:ev.clientY}); });
-  g.addEventListener('keydown',ev=>{ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); activate(); } });
+  g.addEventListener('click',ev=>{ ev.stopPropagation(); if(!suppressClick) activate(detailPoint(ev)); });
+  g.addEventListener('keydown',ev=>{ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); activate(detailPoint(ev)); } });
 }
 function markCustom(){ document.querySelectorAll('#lvlSeg button').forEach(b=>{b.classList.remove('on');b.setAttribute('aria-pressed','false');}); S.level=-1; }
 
