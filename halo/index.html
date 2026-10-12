@@ -216,7 +216,7 @@ def('sup','root',{at:[2,0], kind:'pool', expandable:true, label:'Memory bank', w
 
 // encoder
 def('enc','root',{at:[1,1], fill:'encoder', gfill:'g_encoder', label:'Frozen encoder', sub:'IMU + acquisition context → native motion vector', w:188, h:96, layout:{dir:'row',gap:30,pad:14,head:26}});
-  def('tok','enc',{fill:'freq', gfill:'g_freq', label:'Tokenise', sub:'patches → frequency bins', w:118, h:56, layout:{dir:'col',gap:10,pad:10,head:22}});
+  def('tok','enc',{fill:'freq', gfill:'g_freq', label:'Tokenise', sub:'patches → frequency bins', w:118, h:56, layout:{dir:'col',gap:24,pad:10,head:22}});
     def('patch','tok',{label:'Multi-resolution patches', sub:'0.5 / 1 / 2 / 4 seconds', fill:'patch', w:112, h:42});
     def('hann','tok',{label:'Hann window (dFFT)', fill:'freq', w:112, h:42});
     def('nyq','tok',{label:'Nyquist mask', fill:'freq', w:112, h:42});
@@ -226,8 +226,8 @@ def('enc','root',{at:[1,1], fill:'encoder', gfill:'g_encoder', label:'Frozen enc
     def('fold','tok',{label:'SensorFold (xyz)',fill:'freq',w:112,h:48});
   def('mid','enc',{transparent:true, alwaysExp:true, layout:{dir:'col',gap:30,pad:0,head:0}});
     def('meta','mid',{label:'Acquisition context', sub:'sampling rate, patch size, config text', fill:'white', w:132, h:56});
-    def('embed','mid',{label:'Embed metadata', fill:'encoder', w:116, h:44});
-  def('attn','enc',{fill:'encoder', gfill:'g_encoder', label:'Attend', sub:'temporal trunk per sensor; frozen', w:118, h:56, layout:{dir:'col',gap:12,pad:10,head:22}});
+    def('embed','mid',{label:'Condition sensor tokens', sub:'motion tokens + metadata gates', fill:'encoder', w:132, h:72});
+  def('attn','enc',{fill:'encoder', gfill:'g_encoder', label:'Attend', sub:'temporal trunk per sensor; frozen', w:118, h:56, layout:{dir:'col',gap:24,pad:10,head:22}});
     def('tsa','attn',{label:'Temporal trunk ×3', fill:'encoder', w:112, h:44});
     def('cda','attn',{label:'Contextual sensor tokens', fill:'encoder', w:112, h:44});
   def('apool','enc',{label:'Attention pooling', fill:'encoder', w:112, h:44});
@@ -247,17 +247,17 @@ def('setupbuild','root',{at:[2,2],label:'Setup feature builder',sub:'384-D senso
 
 // V6 builds identity-free relational evidence, then learns bounded reassignment corrections.
 def('tr','root',{at:[2,3],fill:'support',gfill:'g_support',label:'Comparison path · 3 passes',kind:'comparison',w:270,h:194,layout:{gapC:62,gapR:70,pad:26,head:38}});
-  def('experts','tr',{at:[0,0],fill:'support',gfill:'g_support',label:'Rebuild comparison evidence',kind:'comparison',w:260,h:194,layout:{dir:'col',gap:16,pad:12,head:26}});
+  def('experts','tr',{at:[0,0],fill:'support',gfill:'g_support',label:'Rebuild comparison evidence',kind:'comparison',w:260,h:194,layout:{dir:'col',gap:24,pad:12,head:26}});
     def('seed','experts',{label:'Current assignments q(t−1)',bars:'input',fill:'support',w:190,h:154});
     def('centroid','experts',{label:'Recording-excluded centroids',sub:'soft class means from q(t−1)',fill:'support',w:202,h:72});
     def('neighbor','experts',{label:'Neighbor assignment summary',sub:'mean q of top-10 other-recording neighbors',fill:'support',w:202,h:72});
     def('mass','experts',{label:'Class mass',sub:'average assignment across the bank',fill:'support',w:202,h:60});
   def('evidence','tr',{at:[0,1],label:'Comparison evidence',kind:'evidence',fill:'support',w:600,h:164});
-  def('table','tr',{at:[1,0],label:'Relational evidence table',sub:'identity-free profiles; rebuilt each pass',fill:'support',gfill:'g_support',w:220,h:82,layout:{dir:'col',gap:18,pad:12,head:26}});
+  def('table','tr',{at:[1,0],label:'Relational evidence table',sub:'identity-free profiles; rebuilt each pass',fill:'support',gfill:'g_support',w:220,h:82,layout:{dir:'col',gap:24,pad:12,head:26}});
     def('profiles','table',{label:'Evidence profiles',sub:'17 cell · 10 label · 9 window · 3 context features',fill:'support',w:242,h:72});
     def('plr','table',{label:'Numeric feature embedding',sub:'learned sine/cosine features → table tokens',fill:'support',w:242,h:68});
     def('cells','table',{label:'Table tokens',sub:'summary + windows; evidence | context | candidates',fill:'support',w:242,h:72});
-    def('block','table',{label:'Attention block ×2',sub:'pre-norm; width 64; 4 heads',fill:'support',gfill:'g_support',w:242,h:72,layout:{dir:'col',gap:12,pad:10,head:26}});
+    def('block','table',{label:'Attention block ×2',sub:'pre-norm; width 64; 4 heads',fill:'support',gfill:'g_support',w:242,h:72,layout:{dir:'col',gap:24,pad:10,head:26}});
       def('rowatt','block',{label:'Row attention',sub:'read the evidence across one row',fill:'support',w:216,h:64});
       def('colatt','block',{label:'Column attention',sub:'read other recordings + summary; similarity bias',fill:'support',w:216,h:64});
       def('ff','block',{label:'Feed-forward',sub:'pre-norm residual block',fill:'support',w:216,h:52});
@@ -348,15 +348,15 @@ E('bank_seed','sup','seed',{desc:'Pin only the supplied verified labels; query t
 for(const id of ['centroid','neighbor']){
  E('bank_'+id,'sup',id,{desc:'Use real native motion and recording identity; exclude the scored recording.'});
  E('query_'+id,'query',id,{desc:'Fixed unit motion supplies cosine similarities.'});
- E('seed_'+id,'seed',id,{desc:'Use the previous pass assignments of the entire bank.'});
+ E('seed_'+id,'seed',id,{sides:['b','l'],desc:'Use the previous pass assignments of the entire bank.'});
  E(id+'_evidence',id,'evidence',{desc:id==='neighbor'?'Mean current assignment of top-10 neighbors; a feature, not a prediction.':'Recording-excluded centroid similarities and validity.'});
 }
-E('seed_mass','seed','mass');E('mass_evidence','mass','evidence');
+E('seed_mass','seed','mass',{sides:['b','l']});E('mass_evidence','mass','evidence');
 E('query_cells','query','profiles',{desc:'Motion relationships and attention bias, never raw motion identity tokens.'});
 E('setup_cells','setup','profiles',{desc:'Setup relationships and context statistics, never raw setup identity tokens.'});
 E('bank_cells','sup','profiles',{desc:'Recording counts, verification status and bank summary statistics.'});
 E('cand_cells','cand','profiles',{sides:['b','l'],desc:'Only a scalar label-name confusability statistic from text-text similarity; no label-text identity token.'});
-E('seed_profiles','seed','profiles',{desc:'Current window assignments and their label/window summary statistics.'});
+E('seed_profiles','seed','profiles',{sides:['b','l'],desc:'Current window assignments and their label/window summary statistics.'});
 E('p_cells','p','profiles',{desc:'Frozen zero-shot outcome/strength statistics.'});
 E('evidence_cells','evidence','profiles',{desc:'Centroid, neighbor and mass features from q(t−1).'});
 E('profiles_plr','profiles','plr');E('plr_cells','plr','cells');
@@ -886,7 +886,7 @@ function render(){
     const p=el('path',{class:cls,d:v.d,'marker-end':seen?(S.seenDir==='b'?'url(#ahb)':'url(#ahf)'):'url(#ah)'},gEdges); v.el=p;
     if(v.trunk){p.removeAttribute('marker-end');return;}
     const hit=el('path',{class:'hit',d:v.d},gEdges);
-    hit.addEventListener('mouseenter',()=>{ p.classList.add('hover'); showEdge(v); });
+    hit.addEventListener('mouseenter',ev=>{ p.classList.add('hover'); showEdge(v,{x:ev.clientX,y:ev.clientY}); });
     hit.addEventListener('mouseleave',()=>{ p.classList.remove('hover'); scheduleHideDetail(); });
   });
   // A branch dot means the same object is being reused, rather than a new output.
@@ -917,15 +917,15 @@ function wire(g,n,detailOnly=false){
   g.setAttribute('tabindex','0'); g.setAttribute('role','button');
   g.setAttribute('aria-label',(n.label||n.id)+(expandable?': '+(isExp(n)?'collapse':'expand'):': show explanation'));
   if(expandable) g.setAttribute('aria-expanded',String(isExp(n)));
-  g.addEventListener('mouseenter',()=>showNode(n,detailOnly)); g.addEventListener('mouseleave',scheduleHideDetail);
+  g.addEventListener('mouseenter',ev=>showNode(n,detailOnly,{x:ev.clientX,y:ev.clientY})); g.addEventListener('mouseleave',scheduleHideDetail);
   g.addEventListener('focus',()=>showNode(n,detailOnly)); g.addEventListener('blur',scheduleHideDetail);
-  const activate=()=>{
+  const activate=point=>{
     if(expandable){ if(S.exp.has(n.id)) S.exp.delete(n.id); else S.exp.add(n.id); markCustom(); render();
       fit();
     }
-    showNode(n,detailOnly);
+    showNode(n,detailOnly,point);
   };
-  g.addEventListener('click',ev=>{ ev.stopPropagation(); if(!suppressClick) activate(); });
+  g.addEventListener('click',ev=>{ ev.stopPropagation(); if(!suppressClick) activate({x:ev.clientX,y:ev.clientY}); });
   g.addEventListener('keydown',ev=>{ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ev.stopPropagation(); activate(); } });
 }
 function markCustom(){ document.querySelectorAll('#lvlSeg button').forEach(b=>{b.classList.remove('on');b.setAttribute('aria-pressed','false');}); S.level=-1; }
@@ -934,6 +934,15 @@ function markCustom(){ document.querySelectorAll('#lvlSeg button').forEach(b=>{b
 const info=document.getElementById('info');
 let detailTimer=null;
 function revealDetail(){clearTimeout(detailTimer);info.hidden=false;}
+function placeDetail(point=null){
+  info.style.top='14px';info.style.maxHeight='calc(100% - 28px)';
+  if(!point||!Number.isFinite(point.x)||!Number.isFinite(point.y))return;
+  const r=document.getElementById('stage').getBoundingClientRect(),width=Math.min(340,r.width-28);
+  if(point.x<r.left+8||point.x>r.left+14+width+8)return;
+  const above=point.y-r.top-34,below=r.bottom-point.y-34;
+  if(above>=160||above>=below){info.style.maxHeight=Math.max(60,above)+'px';}
+  else{info.style.top=(point.y-r.top+20)+'px';info.style.maxHeight=Math.max(60,below)+'px';}
+}
 function focusConnections(ids=null){
   for(const v of [...(S.vtrunks||[]),...(S.vedges||[])]){
     const selected=ids&&v.ids.some(id=>ids.has(id));
@@ -950,7 +959,7 @@ info.addEventListener('mouseleave',scheduleHideDetail);
 
 function showHome(){hideDetail();info.innerHTML='<h3>HALO V6 full classifier</h3><p>Frozen encoder and zero-shot path, followed by three centroid-refinement passes steered by an identity-free relational table.</p><p>Choose a pass to inspect its actual assignments, coefficients and corrected scores. Play repeats passes without moving the camera. Rounded boxes compute; square boxes hold data. Branches reuse one object.</p>';}
 
-function showNode(n,detailOnly=false){
+function showNode(n,detailOnly=false,point=null){
   const i=INFO[n.id]; if(!i){ return; }
   const kind = n.train ? '<span class="tag tr">training only</span>' : '';
   const hint = !detailOnly&&(n.children.length||n.expandable) ? `<p class="hint">Click to ${isExp(n)?'collapse':'open'}.</p>`:'';
@@ -958,13 +967,13 @@ function showNode(n,detailOnly=false){
   const within=id=>{for(let p=N[id];p;p=N[p.parent])if(p===n)return true;return false;};
   const ids=new Set(EDG.filter(e=>within(e.a)||within(e.b)).map(e=>e.id));
   focusConnections(ids.size?ids:null);
-  info.innerHTML=`<h3>${i[0]}</h3>${kind}<p>${i[1]}</p>${i[2]||''}${hint}`+realDetail(n.id);
+  info.innerHTML=`<h3>${i[0]}</h3>${kind}<p>${i[1]}</p>${i[2]||''}${hint}`+realDetail(n.id);placeDetail(point);
 }
-function showEdge(v){
+function showEdge(v,point=null){
   const d=v.opt?.desc?v.opt:EDG.find(e=>v.ids.includes(e.id)&&e.desc); if(!d) return;
   revealDetail();
   focusConnections(new Set(v.ids));
-  info.innerHTML=`<h3>Arrow</h3>${d.detach?'<span class="tag tr">detached in training</span>':''}<p>${d.desc}</p>`;
+  info.innerHTML=`<h3>Arrow</h3>${d.detach?'<span class="tag tr">detached in training</span>':''}<p>${d.desc}</p>`;placeDetail(point);
 }
 
 /* ----------------------------------------------------------------- pan / zoom */
