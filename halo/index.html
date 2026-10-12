@@ -590,7 +590,13 @@ function visibleEdges(){
     const clearJunction=p=>!occupied.some(([a,b])=>a[0]===b[0]?Math.abs(p[0]-a[0])<5&&p[1]>=Math.min(a[1],b[1])-5&&p[1]<=Math.max(a[1],b[1])+5:Math.abs(p[1]-a[1])<5&&p[0]>=Math.min(a[0],b[0])-5&&p[0]<=Math.max(a[0],b[0])+5);
     const gaps=src.edges.length>1?[8,16,24]:[8];
     src.junction=gaps.map(gap=>[src.origin[0]+d[0]*gap,src.origin[1]+d[1]*gap]).find(clearJunction)||[src.origin[0]+d[0]*8,src.origin[1]+d[1]*8];
-    src.trunk={trunk:true,A:src.A,ids:[...new Set(src.edges.flatMap(v=>v.ids))],opt:{dashed:src.edges.every(v=>v.opt.dashed)},pts:[src.origin,src.junction]};src.trunk.d=roundPath(src.trunk.pts);
+    let trunkPoints=[src.origin,src.junction];
+    // q is an input shared by parallel calculations: keep its branch point in the input lane.
+    if(src.A.id==='seed'&&src.sa==='b'){
+      const y=src.origin[1]+8,lane=[12,20,28,36,44].map(gap=>[N.experts.x-gap,y]).find(clearJunction)||[N.experts.x-20,y];
+      src.junction=lane;trunkPoints=[src.origin,[src.origin[0],y],lane];
+    }
+    src.trunk={trunk:true,A:src.A,ids:[...new Set(src.edges.flatMap(v=>v.ids))],opt:{dashed:src.edges.every(v=>v.opt.dashed)},pts:trunkPoints};src.trunk.d=roundPath(src.trunk.pts);
     src.edges.forEach(v=>{
       v.sa=src.sa;v.origin=src.origin;v.pa=src.junction;v.pb=pt(v.B,v.sb,v.fB);v.source=src;
       const d=vectors[v.sb];
