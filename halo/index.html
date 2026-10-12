@@ -918,6 +918,7 @@ function wire(g,n,detailOnly=false){
   g.setAttribute('aria-label',(n.label||n.id)+(expandable?': '+(isExp(n)?'collapse':'expand'):': show explanation'));
   if(expandable) g.setAttribute('aria-expanded',String(isExp(n)));
   const detailPoint=ev=>{
+    if(expandable){const badge=g.querySelector('circle');if(badge){const b=badge.getBoundingClientRect();return {x:b.left+b.width/2,y:b.top+b.height/2};}}
     const r=g.getBoundingClientRect(),stage=document.getElementById('stage').getBoundingClientRect();
     if(ev&&Number.isFinite(ev.clientX)&&Number.isFinite(ev.clientY)&&ev.clientX>=r.left&&ev.clientX<=r.right&&ev.clientY>=r.top&&ev.clientY<=r.bottom&&ev.clientX>=stage.left&&ev.clientX<=stage.right&&ev.clientY>=stage.top&&ev.clientY<=stage.bottom)return {x:ev.clientX,y:ev.clientY};
     const target=expandable?(g.querySelector('circle')||g):g,box=target.getBoundingClientRect();
@@ -928,6 +929,8 @@ function wire(g,n,detailOnly=false){
   const activate=point=>{
     if(expandable){ if(S.exp.has(n.id)) S.exp.delete(n.id); else S.exp.add(n.id); markCustom(); render();
       fit();
+      const node=svg.querySelector('[data-id="'+n.id+'"]'),badge=node?.querySelector('circle');
+      if(badge){const b=badge.getBoundingClientRect();point={x:b.left+b.width/2,y:b.top+b.height/2};}
     }
     showNode(n,detailOnly,point);
   };
