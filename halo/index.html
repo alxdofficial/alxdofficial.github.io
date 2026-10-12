@@ -257,11 +257,11 @@ def('tr','root',{at:[2,3],fill:'support',gfill:'g_support',label:'Comparison pat
     def('profiles','table',{label:'Evidence profiles',sub:'17 cell · 10 label · 9 window · 3 context features',fill:'support',w:242,h:72});
     def('plr','table',{label:'Numeric feature embedding',sub:'learned sine/cosine features → table tokens',fill:'support',w:242,h:68});
     def('cells','table',{label:'Table tokens',sub:'summary + windows; evidence | context | candidates',fill:'support',w:242,h:72});
-    def('block','table',{label:'Attention block ×2',sub:'pre-norm; width 64; 4 heads',fill:'support',gfill:'g_support',w:242,h:72,layout:{dir:'col',gap:24,pad:10,head:26}});
+    def('block','table',{label:'Blocks ×2',sub:'pre-norm; width 64; 4 heads',fill:'support',gfill:'g_support',w:242,h:72,layout:{dir:'col',gap:24,pad:10,head:26}});
       def('rowatt','block',{label:'Row attention',sub:'read the evidence across one row',fill:'support',w:216,h:64});
       def('colatt','block',{label:'Column attention',sub:'read other recordings + summary; similarity bias',fill:'support',w:216,h:64});
       def('ff','block',{label:'Feed-forward',sub:'pre-norm residual block',fill:'support',w:216,h:52});
-    def('heads','table',{label:'Bounded correction heads',fill:'support',gfill:'g_support',w:242,h:70,layout:{dir:'row',gap:18,pad:12,head:26}});
+    def('heads','table',{label:'Heads A/B',fill:'support',gfill:'g_support',w:242,h:70,layout:{dir:'row',gap:18,pad:12,head:26}});
       def('headA','heads',{label:'Head A',sub:'summary label cells → a, λ, β',fill:'support',w:180,h:68});
       def('headB','heads',{label:'Head B',sub:'window label cells → correction δ',fill:'support',w:180,h:68});
   def('weights','tr',{at:[1,1],label:'Update coefficients & correction',kind:'weights',fill:'support',w:352,h:242});
@@ -581,7 +581,12 @@ function visibleEdges(){
   });
   list.forEach(v=>addPort(v.B.id+':'+v.sb,{v,c:(v.sb==='l'||v.sb==='r')?v.A.y+v.A.H/2:v.A.x+v.A.W/2}));
   ports.forEach(arr=>{arr.sort((a,b)=>a.c-b.c);arr.forEach((p,i)=>{const f=arr.length===1?.5:.22+.56*i/(arr.length-1);if(p.src)p.src.f=f;else p.v.fB=f;});});
-  const obstacles=Object.values(N).filter(n=>n.laid&&n.id!=='root'&&!n.transparent).map(n=>({id:n.id,x0:n.x-3,x1:n.x+n.W+3,y0:n.y-3,y1:n.terminal?n.y+n.H+3:n.y+22}));
+  const obstacles=Object.values(N).filter(n=>n.laid&&n.id!=='root'&&!n.transparent).flatMap(n=>{
+    if(n.terminal)return [{id:n.id,x0:n.x-3,x1:n.x+n.W+3,y0:n.y-3,y1:n.y+n.H+3}];
+    // Keep title text and the expansion badge clear; blank header space is a valid entry lane.
+    return [{id:n.id+'-title',x0:n.x+10,x1:Math.min(n.x+n.W-27,n.x+18+textWidth(n.label||'',10.5,true)),y0:n.y+3,y1:n.y+22},
+            {id:n.id+'-badge',x0:n.x+n.W-23,x1:n.x+n.W-1,y0:n.y+1,y1:n.y+23}];
+  });
   const vectors={r:[1,0],l:[-1,0],t:[0,-1],b:[0,1]};
   const occupied=[];
   sources.forEach((src,key)=>{
