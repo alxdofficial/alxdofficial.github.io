@@ -63,3 +63,34 @@
 .thumb:hover .play,.thumb:focus-visible .play,.button.primary:hover{background:var(--warm-strong);border-color:var(--warm-strong);color:var(--bg)}
 .player .load-video:hover .watch-cta,.player .load-video:focus-visible .watch-cta{background:var(--warm-strong);border-color:var(--warm-strong)}
 .top nav a::after{background:var(--warm-strong)}
+
+/* Reference button light: stationary labels; warm, role-specific controls.
+   Secondary: 60% × 32% blurred oval -> full sharp rectangle in 260ms.
+   Primary Watch actions deliberately start as solid rectangles for readability. */
+:root{--button-ease:cubic-bezier(.2,.6,.2,1);--button-time:260ms}
+.glow-control{position:relative;isolation:isolate;background:transparent!important;border-color:transparent;color:var(--ink);transition:color var(--button-time) var(--button-ease),border-color var(--button-time) var(--button-ease)}
+.glow-control::before{content:"";position:absolute;z-index:-1;left:50%;top:50%;width:60%;height:32%;transform:translate(-50%,-50%);border-radius:50%;background:var(--warm-strong);opacity:.38;filter:blur(7px);pointer-events:none;transition:width var(--button-time) var(--button-ease),height var(--button-time) var(--button-ease),border-radius var(--button-time) var(--button-ease),filter var(--button-time) var(--button-ease),opacity var(--button-time) var(--button-ease),background var(--button-time) var(--button-ease)}
+.top nav .glow-control{padding-left:12px;padding-right:12px}
+.top nav .glow-control::after{content:none}
+.glow-control:focus-visible{box-shadow:0 1px 0 currentColor;outline:2px solid currentColor;outline-offset:3px}
+@media(hover:hover){
+ .glow-control:hover:not(:disabled):not([aria-disabled="true"]){color:var(--bg)}
+ .glow-control:hover:not(:disabled):not([aria-disabled="true"])::before{width:100%;height:100%;border-radius:0;filter:blur(0);opacity:1;background:radial-gradient(circle at var(--glow-x,50%) var(--glow-y,50%),#fff2df 0%,var(--warm-strong) 38%,var(--warm) 100%)}
+}
+.glow-control:active:not(:disabled):not([aria-disabled="true"]){color:var(--bg)}
+.glow-control:active:not(:disabled):not([aria-disabled="true"])::before{width:100%;height:100%;border-radius:0;filter:none;opacity:1;background:var(--warm-strong);transition-duration:0ms}
+.glow-control:disabled,.glow-control[aria-disabled="true"]{color:var(--muted);cursor:default}
+.glow-control:disabled::before,.glow-control[aria-disabled="true"]::before{opacity:0;filter:none}
+.thumb .play,.watch-cta,.button.primary{transition:background var(--button-time) var(--button-ease),border-color var(--button-time) var(--button-ease),color var(--button-time) var(--button-ease)}
+.thumb:hover .play,.thumb:focus-visible .play{transform:translate(-50%,-50%)}
+.player .load-video:hover .watch-cta,.player .load-video:focus-visible .watch-cta{transform:none}
+@media(hover:hover){
+ .thumb:hover .play,.player .load-video:hover .watch-cta,.button.primary:hover{background:radial-gradient(circle at var(--glow-x,50%) var(--glow-y,50%),#fff2df 0%,var(--warm-strong) 38%,var(--warm) 100%)}
+}
+.thumb:active .play,.player .load-video:active .watch-cta,.button.primary:active{background:var(--warm-strong);filter:none;transition-duration:0ms}
+@media(hover:none){
+ .glow-control::before{width:100%;height:100%;border-radius:0;filter:none;opacity:.16}
+}
+@media(prefers-reduced-motion:reduce){
+ .glow-control,.glow-control::before,.thumb .play,.watch-cta,.button.primary{transition:none!important}
+}

@@ -69,3 +69,30 @@ if (menuButton && mainNav) {
   });
   mobile.addEventListener('change', () => setMenu(false));
 }
+
+// Pointer-localized button light. It never moves the label or click target.
+const reducedButtonMotion = matchMedia('(prefers-reduced-motion: reduce)');
+document.querySelectorAll('.top nav a, .rss, .button:not(.primary), .filters button, .menu-toggle, .text-link').forEach(control => control.classList.add('glow-control'));
+document.querySelectorAll('.glow-control, .thumb, .load-video, .button.primary').forEach(control => {
+  let frame = 0;
+  let point = null;
+  function resetLight() {
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0; point = null;
+    control.style.removeProperty('--glow-x');
+    control.style.removeProperty('--glow-y');
+  }
+  control.addEventListener('pointermove', event => {
+    if (reducedButtonMotion.matches || event.pointerType === 'touch' || control.matches(':disabled,[aria-disabled="true"]')) return;
+    const bounds = control.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return;
+    point = [Math.max(0, Math.min(100, (event.clientX - bounds.left) / bounds.width * 100)), Math.max(0, Math.min(100, (event.clientY - bounds.top) / bounds.height * 100))];
+    if (!frame) frame = requestAnimationFrame(() => {
+      control.style.setProperty('--glow-x', point[0].toFixed(2) + '%');
+      control.style.setProperty('--glow-y', point[1].toFixed(2) + '%');
+      frame = 0;
+    });
+  });
+  control.addEventListener('pointerleave', resetLight);
+  reducedButtonMotion.addEventListener('change', resetLight);
+});
