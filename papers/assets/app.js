@@ -47,32 +47,91 @@ document.querySelectorAll('.load-video').forEach(button => button.addEventListen
   iframe.focus();
 }));
 
-const menuButton = document.querySelector('.menu-toggle');
-const mainNav = document.querySelector('#main-nav');
-if (menuButton && mainNav) {
+// Source-informed shared menu aura/floor. Native buttons and links keep keyboard access.
+const menuRoot = document.querySelector('.reference-nav');
+if (menuRoot) {
   document.documentElement.classList.add('js');
-  menuButton.hidden = false;
-  const mobile = matchMedia('(max-width: 680px)');
-  function setMenu(open, restoreFocus = false) {
-    menuButton.setAttribute('aria-expanded', String(open));
-    mainNav.classList.toggle('is-open', open);
-    menuButton.querySelector('span').textContent = open ? '−' : '+';
-    if (restoreFocus) menuButton.focus();
+  const bar = menuRoot.querySelector('.nav-bar');
+  const panel = menuRoot.querySelector('.menu-panel');
+  const toggle = menuRoot.querySelector('.menu-toggle');
+  const triggers = [...menuRoot.querySelectorAll('.menu-trigger')];
+  const sections = [...panel.querySelectorAll('.menu-section')];
+  const mobileMenu = matchMedia('(max-width:680px)');
+  let active = null, closeTimer = 0, retainTimer = 0, lastTrigger = toggle;
+  let previousY = window.scrollY, downward = 0;
+  toggle.hidden = false;
+  function cancelClose() { clearTimeout(closeTimer); closeTimer = 0; }
+  function measureMenu() {
+    const height = Math.min(520, panel.scrollHeight, mobileMenu.matches ? Math.max(120, innerHeight - 100) : 520);
+    menuRoot.style.setProperty('--menu-height', height + 'px');
   }
-  menuButton.addEventListener('click', () => setMenu(menuButton.getAttribute('aria-expanded') !== 'true'));
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') setMenu(false, true);
+  function closeMenu(restoreFocus = false, immediate = false) {
+    cancelClose(); clearTimeout(retainTimer);
+    active = null; menuRoot.dataset.open = 'false';
+    toggle.setAttribute('aria-expanded','false');
+    triggers.forEach(button => button.setAttribute('aria-expanded','false'));
+    panel.inert = true;
+    const finish = () => { panel.hidden = true; menuRoot.dataset.retained = 'false'; sections.forEach(s => { s.hidden = true; }); };
+    if (immediate) finish(); else retainTimer = setTimeout(finish,320);
+    if (restoreFocus) lastTrigger.focus();
+  }
+  function openMenu(key,button) {
+    cancelClose(); clearTimeout(retainTimer);
+    lastTrigger = button || toggle;
+    active = key;
+    sections.forEach(section => { section.hidden = key !== 'mobile' && section.dataset.menuKey !== key; });
+    panel.hidden = false; panel.inert = false;
+    menuRoot.dataset.retained = 'true';
+    measureMenu();
+    if (button && !mobileMenu.matches) {
+      const bounds = button.getBoundingClientRect(), rootBounds = menuRoot.getBoundingClientRect();
+      menuRoot.style.setProperty('--aura-x', ((bounds.left + bounds.width/2-rootBounds.left)/rootBounds.width*100).toFixed(2)+'%');
+    }
+    // Force a closed layout before expansion when the panel was hidden.
+    panel.getBoundingClientRect();
+    menuRoot.dataset.open = 'true';
+    menuRoot.dataset.mobileHidden = 'false';
+    toggle.setAttribute('aria-expanded',String(key==='mobile'));
+    triggers.forEach(trigger => trigger.setAttribute('aria-expanded',String(trigger.dataset.menu===key)));
+  }
+  function delayedClose() { cancelClose(); closeTimer = setTimeout(() => closeMenu(),140); }
+  triggers.forEach(button => {
+    button.addEventListener('mouseenter',()=>{ if (!mobileMenu.matches) openMenu(button.dataset.menu,button); });
+    button.addEventListener('click',()=>{
+      if (active===button.dataset.menu) closeMenu(); else openMenu(button.dataset.menu,button);
+    });
+    button.addEventListener('keydown',event=>{
+      if (event.key==='ArrowDown') { event.preventDefault(); openMenu(button.dataset.menu,button); panel.querySelector('.menu-section:not([hidden]) a')?.focus(); }
+    });
   });
-  mainNav.addEventListener('click', event => { if (event.target.closest('a')) setMenu(false); });
-  document.addEventListener('click', event => {
-    if (!event.target.closest('.top') && menuButton.getAttribute('aria-expanded') === 'true') setMenu(false);
-  });
-  mobile.addEventListener('change', () => setMenu(false));
+  bar.addEventListener('mouseenter',cancelClose);
+  bar.addEventListener('mouseleave',()=>{ if (!mobileMenu.matches && active) delayedClose(); });
+  panel.addEventListener('mouseenter',cancelClose);
+  panel.addEventListener('mouseleave',()=>{ if (!mobileMenu.matches && active) delayedClose(); });
+  toggle.addEventListener('click',()=>{ if (active) closeMenu(); else openMenu('mobile',toggle); });
+  document.addEventListener('keydown',event=>{ if(event.key==='Escape' && active) closeMenu(true); });
+  document.addEventListener('click',event=>{ if(mobileMenu.matches && active && !event.target.closest('.reference-nav')) closeMenu(); });
+  panel.addEventListener('click',event=>{ if(event.target.closest('a')) closeMenu(); });
+  menuRoot.addEventListener('focusout',()=>setTimeout(()=>{ if(active && !menuRoot.contains(document.activeElement)) closeMenu(); },0));
+  function updateScroll() {
+    const y=window.scrollY,dy=y-previousY;
+    menuRoot.dataset.scrolled=String(y>8);
+    if(mobileMenu.matches) {
+      if(y<40) { downward=0; menuRoot.dataset.mobileHidden='false'; }
+      else if(dy>0) { if(active) closeMenu(); downward+=dy; if(downward>24) menuRoot.dataset.mobileHidden='true'; }
+      else if(dy < -2) { downward=0; menuRoot.dataset.mobileHidden='false'; }
+    }
+    previousY=y;
+  }
+  addEventListener('scroll',updateScroll,{passive:true});
+  addEventListener('resize',()=>{ if(active) measureMenu(); });
+  mobileMenu.addEventListener('change',()=>{ closeMenu(false,true); menuRoot.dataset.mobileHidden='false'; downward=0; });
+  updateScroll();
 }
 
 // Pointer-localized button light. It never moves the label or click target.
 const reducedButtonMotion = matchMedia('(prefers-reduced-motion: reduce)');
-document.querySelectorAll('.top nav a, .rss, .button:not(.primary), .filters button, .menu-toggle, .text-link').forEach(control => control.classList.add('glow-control'));
+document.querySelectorAll('.button:not(.primary), .filters button, .text-link').forEach(control => control.classList.add('glow-control'));
 document.querySelectorAll('.glow-control, .thumb, .load-video, .button.primary').forEach(control => {
   let frame = 0;
   let point = null;

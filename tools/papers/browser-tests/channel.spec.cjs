@@ -19,7 +19,8 @@ for (const width of [320,390,768,1440]) {
       await expect(menu).toHaveAttribute('aria-expanded','false');
       await expect(menu).toBeFocused();
       await menu.click();
-      await page.locator('#main-nav').getByRole('link',{name:'Episodes'}).click();
+      await menu.click();
+      await page.waitForTimeout(360);
       await expect(menu).toHaveAttribute('aria-expanded','false');
     }
     await page.screenshot({path:'test-results/home-'+width+'.png',fullPage:true});
@@ -96,5 +97,43 @@ test('touch retains readable solid primary and stable secondary controls',async(
   expect(state.filter).toBe('none');expect(state.radius).toBe('0px');expect(state.opacity).toBe('0.16');
   expect(await page.locator('.watch-cta').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(247, 223, 201)');
   await page.screenshot({path:'test-results/touch-reference-controls.png',fullPage:true});
+  await context.close();
+});
+
+test('desktop reference menu hover, delayed close, click, keyboard and shadow floor',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});await page.goto('/papers/');
+  const root=page.locator('.reference-nav'), trigger=page.getByRole('button',{name:'Episodes',exact:true}), panel=page.locator('#main-nav');
+  await trigger.hover();await expect(trigger).toHaveAttribute('aria-expanded','true');await page.waitForTimeout(360);
+  await expect(panel).toContainText(source.episodes[0].title);
+  const style=await root.evaluate(el=>{const a=getComputedStyle(el.querySelector('.nav-aura')),f=getComputedStyle(el.querySelector('.nav-floor')),t=getComputedStyle(el.querySelector('.menu-trigger'),'::before');return {filter:a.filter,height:parseFloat(a.height),duration:a.transitionDuration,floor:f.backgroundColor,glow:t.display};});
+  expect(style.filter).toBe('blur(10px)');expect(style.height).toBeGreaterThan(80);expect(style.duration).toContain('0.32s');expect(style.floor).toBe('rgb(30, 34, 36)');expect(style.glow).toBe('none');
+  await panel.hover();await page.waitForTimeout(180);await expect(trigger).toHaveAttribute('aria-expanded','true');
+  await page.screenshot({path:'test-results/desktop-menu-open-1440.png',fullPage:true});
+  await page.mouse.move(5,850);await page.waitForTimeout(70);await expect(trigger).toHaveAttribute('aria-expanded','true');await page.waitForTimeout(100);await expect(trigger).toHaveAttribute('aria-expanded','false');
+  await trigger.hover();await trigger.click();await expect(trigger).toHaveAttribute('aria-expanded','false');
+  await trigger.focus();await page.keyboard.press('ArrowDown');await expect(trigger).toHaveAttribute('aria-expanded','true');
+  await expect(panel.locator('a:visible').first()).toBeFocused();
+  await page.evaluate(()=>scrollTo(0,100));await expect(root).toHaveAttribute('data-scrolled','true');await expect(trigger).toHaveAttribute('aria-expanded','true');
+  await page.keyboard.press('Escape');await expect(trigger).toBeFocused();await expect(trigger).toHaveAttribute('aria-expanded','false');
+});
+test('mobile reference menu remains opaque during open and close, outside tap and scroll',async({browser})=>{
+  const context=await browser.newContext({baseURL:'http://127.0.0.1:8765',viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  const page=await context.newPage();await page.goto('/papers/');
+  const root=page.locator('.reference-nav'),menu=page.getByRole('button',{name:/Menu/}),panel=page.locator('#main-nav');
+  let b=await menu.boundingBox();expect(Math.round(b.width)).toBe(148);expect(Math.round(b.height)).toBe(52);expect(Math.round(390-b.x-b.width)).toBe(10);expect(Math.round(844-b.y-b.height)).toBe(16);
+  await menu.tap();await page.waitForTimeout(380);await expect(menu).toHaveAttribute('aria-expanded','true');
+  expect(await panel.evaluate(e=>getComputedStyle(e).backgroundColor)).toBe('rgb(30, 34, 36)');
+  const floor=page.locator('.nav-floor');expect(await floor.evaluate(e=>getComputedStyle(e).backgroundColor)).toBe('rgb(30, 34, 36)');
+  expect((await floor.boundingBox()).height).toBeGreaterThan(200);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+  await page.screenshot({path:'test-results/mobile-menu-open-390.png',fullPage:true});
+  await page.touchscreen.tap(10,200);await expect(menu).toHaveAttribute('aria-expanded','false');
+  await page.waitForTimeout(100);await expect(root).toHaveAttribute('data-retained','true');expect((await floor.boundingBox()).height).toBeGreaterThan(200);
+  await page.screenshot({path:'test-results/mobile-menu-closing-390.png',fullPage:true});
+  await page.waitForTimeout(260);await expect(panel).toBeHidden();
+  await page.evaluate(()=>scrollTo(0,120));await expect(root).toHaveAttribute('data-mobile-hidden','true');
+  await page.evaluate(()=>scrollTo(0,80));await expect(root).toHaveAttribute('data-mobile-hidden','false');
+  await page.evaluate(()=>scrollTo(0,0));await menu.tap();await page.keyboard.press('Escape');await expect(menu).toBeFocused();
+  await page.emulateMedia({reducedMotion:'reduce'});expect(await panel.evaluate(e=>getComputedStyle(e).transitionDuration)).toBe('0s');
   await context.close();
 });
