@@ -109,7 +109,15 @@ test('desktop reference menu hover, delayed close, click, keyboard and shadow fl
   expect(style.filter).toBe('blur(10px)');expect(style.height).toBeGreaterThan(80);expect(style.duration).toContain('0.32s');expect(style.floor).toBe('rgb(30, 34, 36)');expect(style.glow).toBe('none');
   await panel.hover();await page.waitForTimeout(180);await expect(trigger).toHaveAttribute('aria-expanded','true');
   await page.screenshot({path:'test-results/desktop-menu-open-1440.png',fullPage:true});
-  await page.mouse.move(5,850);await page.waitForTimeout(70);await expect(trigger).toHaveAttribute('aria-expanded','true');await page.waitForTimeout(100);await expect(trigger).toHaveAttribute('aria-expanded','false');
+  await trigger.hover();await panel.hover();
+  const elapsed=await panel.evaluate(el=>new Promise(resolve=>{
+    const button=document.querySelector('[data-menu="episodes"]'),start=performance.now();
+    const observer=new MutationObserver(()=>{if(button.getAttribute('aria-expanded')==='false'){observer.disconnect();resolve(performance.now()-start);}});
+    observer.observe(button,{attributes:true,attributeFilter:['aria-expanded']});
+    el.dispatchEvent(new MouseEvent('mouseleave'));
+  }));
+  expect(elapsed).toBeGreaterThanOrEqual(130);expect(elapsed).toBeLessThan(300);
+  await page.mouse.move(5,850);
   await trigger.hover();await trigger.click();await expect(trigger).toHaveAttribute('aria-expanded','false');
   await trigger.focus();await page.keyboard.press('ArrowDown');await expect(trigger).toHaveAttribute('aria-expanded','true');
   await expect(panel.locator('a:visible').first()).toBeFocused();
