@@ -1,0 +1,31 @@
+Enhancing Latent World Models with Associative Memory
+16 October 2026 | arXiv:2610.19683v1
+
+1. Problem, importance, and difficulty
+Mem W M asks whether learned memory can help an agent plan from images. A latent world model predicts compact representations of future observations instead of generating pixels. Accurate next-step predictions do not guarantee useful multi-stage plans. Representations can collapse, losing distinctions that control needs. Do these representations improve decisions?
+
+2. Demonstrated and potential applications
+The paper tests simulated navigation, reaching, pushing a T-shaped object, and manipulating a cube. This original figure compares real cube observations with decoded imagined states; a decoder is used for visualization. Activity sensing and event-camera transfers remain untested.
+
+3. Prior approaches and narrow novelty
+LeWorldModel already learns a compact predictor directly from pixels. DINO-WM instead builds on frozen pretrained visual features. Hierarchical models add explicit temporal abstraction. Mem W M contributes an associative bank conditioning a shared predictor, plus slot regularizers. Learned associative priors themselves have earlier precedents.
+
+4. Method
+A visual encoder produces a latent state. That state queries ten learned keys, and attention mixes their matching memory values. The retrieved mixture conditions the predictor first; the action conditions the same predictor second, producing the next latent state. Training jointly learns the model and slots offline, using prediction error, anti-collapse regularization, slot diversity, and balanced average slot usage. Crucially, the paper specifies no inference-time memory-write rule. These are learned priors, rather than a growing record of new episodes.
+
+5. Results
+Across four environments, author-reported mean success is eighty-nine point nine percent, versus eighty-five point eight for LeWorldModel: a four point one percentage-point gain, with nineteen versus eighteen million parameters. DINO-WM scores eighty-nine point three and wins two tasks. Evaluation uses three seeds on the same fifty trajectories, with a fifty-step interaction budget and a five-step planning horizon. The paper does not clearly define its error bars, so small differences deserve caution.
+
+6. Comments, limitations, and reusable idea
+Removing usage balance lowers mean success to eighty-six point seven percent. But balancing average attention does not prove that slots specialize over time. Sharing predictor weights also does not establish faster computation. The reusable idea is compact latent conditioning. Before calling it continual memory, test an explicit write mechanism, longer histories, and fair compute-matched controls. This small simulation study does not yet establish those capabilities.
+
+Credits and disclosure (not spoken narration)
+
+This research explainer summarizes author-reported results; it is not an independent experimental reproduction and does not imply endorsement by paper authors or voice contributors.
+
+Synthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .
+Anna preset: derived from VCTK p228, CSTR VCTK Corpus v0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh, CC BY 4.0, https://doi.org/10.7488/ds/2645 . Preset source: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav . This is newly generated synthetic speech, not a recording of the contributor reading this paper. The model and voice embedding are unchanged; audio was converted to PCM, reduced by a constant gain for headroom and minimally padded for frame alignment, without pitch or tempo shifting. License: https://creativecommons.org/licenses/by/4.0/ .
+
+Typography: Playfair Display (https://github.com/google/fonts/tree/main/ofl/playfairdisplay) and JetBrains Mono (https://github.com/JetBrains/JetBrainsMono), SIL Open Font License 1.1.
+
+Paper artwork: Sun and Zhu (2026), Enhancing Latent World Models with Associative Memory, arXiv:2610.19683v1, CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Figure 1 memory/predictor detail is cropped and resized, omitting the surrounding rollout: https://arxiv.org/html/2610.19683v1#S3.F1 . Figure 2 is resized with content unchanged: https://arxiv.org/html/2610.19683v1#S4.F2 . The latter is a static qualitative author figure, not motion-demo footage; its decoder was trained for visualization.

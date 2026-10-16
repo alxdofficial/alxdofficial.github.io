@@ -1,0 +1,33 @@
+Latent Compaction with Test-Time Training
+16 October 2026 | arXiv:2610.20582v1
+
+1. Problem, importance, and difficulty
+Latent Compaction asks whether a language model can preserve a long document in a smaller attention cache. Tomorrow's question may need a detail that looks unimportant today. Simply deleting entries or summarizing text can erase that detail. The goal is reusable memory for unseen questions.
+
+2. Demonstrated and potential applications
+The authors test synthetic retrieval, exact phonebook lookup, and natural-document understanding. Repeated queries about a fixed reference document could share one prepared cache. Streaming personal memory, multimodal sensors, and neuromorphic deployment remain untested.
+
+3. Prior approaches and narrow novelty
+Earlier methods already select important cache entries, train compact memories, or match attention behavior. It combines importance-and-diversity initialization, fitting that protects selected entries, and a final stage refining everything. Novelty lies in this specific recipe.
+
+4. Method
+The language model’s weights stay frozen. What changes are document-specific keys, values, and scalar attention biases. Three quarters of the compact budget starts with important original entries. The rest mixes high-attention anchors with keys chosen for diversity. Stage one freezes the important entries and fits the other slots to the full cache’s attention outputs and log-normalizers. Matching the normalizers helps compressed memory compete correctly with newly arriving tokens. Stage two updates every compact slot, matching the full-cache model’s output probabilities and preferred next tokens. Both stages use generic document prompts. Downstream questions stay hidden, and the finished cache is fixed during reuse.
+
+5. Results
+With Qwen three, one-point-seven billion parameters, at sixteen-times compression, Phonebook Lookup averaged eighty point six seven percent accuracy across three document lengths. Removing stage one reduced that to thirteen point nine two percent. Removing stage two scored seventy point six seven percent. These ablations show that both stages matter. They are author-reported results, without independent replication here.
+
+6. Comments, limitations, and reusable idea
+Preparation is expensive: four hundred eighty teacher rollouts, one thousand fitting updates per layer, then one thousand joint updates per document. And sixteen-times compression counts logical key-value pairs, not measured physical memory savings or speed. The reusable idea is to preserve both what a memory returns and its attention strength. Test exact recall and preparation cost together. This preprint does not establish an efficient production system.
+
+Credits and disclosure (not spoken narration)
+
+This research explainer summarizes author-reported results; it is not an independent experimental reproduction and does not imply endorsement by paper authors or voice contributors.
+
+Synthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .
+Anna preset: derived from VCTK p228, CSTR VCTK Corpus v0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh, CC BY 4.0, https://doi.org/10.7488/ds/2645 . Preset source: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav . This is newly generated synthetic speech, not a recording of the contributor reading this paper. The model and voice embedding are unchanged; audio was converted to PCM, reduced by a constant gain for headroom and minimally padded for frame alignment, without pitch or tempo shifting. License: https://creativecommons.org/licenses/by/4.0/ .
+
+Typography: Playfair Display (https://github.com/google/fonts/tree/main/ofl/playfairdisplay) and JetBrains Mono (https://github.com/JetBrains/JetBrainsMono), SIL Open Font License 1.1.
+
+Paper artwork: Chen et al. (2026), Latent Compaction with Test-Time Training, arXiv:2610.20582v1. Figure 2 (page 3), Table 2 (page 8), and Table 3 (page 9), rasterized/cropped/resized from https://arxiv.org/pdf/2610.20582v1 . All table rows and captions are retained; source content is unchanged. These source materials and adaptations remain CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/ . No blanket license over other third-party elements is asserted.
+
+Video distribution license: The complete Latent Compaction research-explainer video, including its original narration, explanatory graphics, and adaptation of the cited paper artwork, is distributed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0): https://creativecommons.org/licenses/by-sa/4.0/ . You may share and adapt it with attribution, a license link, an indication of changes, and ShareAlike licensing for adaptations. Credit this explainer and Chen et al. (2026), retain the paper and synthetic-voice credits above, and do not imply endorsement. This grant does not replace separately applicable font/software licenses or grant trademark, privacy, or publicity rights.

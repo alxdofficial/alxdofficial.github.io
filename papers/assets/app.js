@@ -1,0 +1,48 @@
+'use strict';
+const form = document.querySelector('.filters');
+if (form) {
+  const search = document.querySelector('#search'), playlist = document.querySelector('#playlist'), date = document.querySelector('#date');
+  const cards = [...document.querySelectorAll('#episodes .episode')];
+  function fromURL() {
+    const p = new URLSearchParams(location.search);
+    search.value = p.get('q') || '';
+    playlist.value = [...playlist.options].some(o => o.value === p.get('playlist')) ? p.get('playlist') : 'all';
+    date.value = [...date.options].some(o => o.value === p.get('date')) ? p.get('date') : 'all';
+    filter(false);
+  }
+  function filter(update = true) {
+    const words = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let count = 0;
+    cards.forEach(c => {
+      c.hidden = !words.every(w => c.dataset.search.includes(w)) || (playlist.value !== 'all' && !c.dataset.playlists.split(' ').includes(playlist.value)) || (date.value !== 'all' && date.value !== c.dataset.date);
+      if (!c.hidden) count++;
+    });
+    document.querySelector('#results').textContent = `${count} episode${count === 1 ? '' : 's'}`;
+    document.querySelector('#empty').hidden = count !== 0;
+    document.querySelector('#empty-detail').textContent = ['health','across-ai'].includes(playlist.value) ? 'This playlist has no published episodes yet. Explore Research for the launch edition.' : 'Try another playlist, date, or search.';
+    if (update) {
+      const p = new URLSearchParams();
+      if (search.value.trim()) p.set('q', search.value.trim());
+      if (playlist.value !== 'all') p.set('playlist', playlist.value);
+      if (date.value !== 'all') p.set('date', date.value);
+      history.replaceState(null, '', location.pathname + (p.size ? '?' + p : '') + location.hash);
+    }
+  }
+  form.addEventListener('submit', e => { e.preventDefault(); filter(); });
+  form.addEventListener('input', () => filter());
+  form.addEventListener('change', () => filter());
+  form.addEventListener('reset', () => { search.value=''; playlist.value='all'; date.value='all'; filter(); });
+  window.addEventListener('popstate', fromURL);
+  fromURL();
+}
+document.querySelectorAll('.load-video').forEach(button => button.addEventListener('click', () => {
+  const container = button.closest('.player');
+  if (container.querySelector('iframe')) return;
+  const iframe = document.createElement('iframe');
+  iframe.src = container.dataset.embed;
+  iframe.title = document.querySelector('h1').textContent + ' video player';
+  iframe.allow = 'autoplay; fullscreen';
+  iframe.allowFullscreen = true;
+  container.replaceChildren(iframe);
+  iframe.focus();
+}));

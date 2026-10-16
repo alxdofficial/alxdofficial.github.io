@@ -1,0 +1,111 @@
+{
+  "title": "Paper Channel",
+  "url": "https://alxdofficial.github.io/papers/",
+  "updated": "2026-10-16",
+  "playlists": [
+    {
+      "id": "research",
+      "name": "Research"
+    },
+    {
+      "id": "health",
+      "name": "Health & neurodevelopment AI"
+    },
+    {
+      "id": "across-ai",
+      "name": "Across AI"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "cortex",
+      "short_title": "Cortex",
+      "title": "Cortex: Consolidating Context into Parametric Memory",
+      "headline": "When context becomes lasting memory",
+      "description": "Can useful context survive after the prompt disappears? A careful look at learning new behavior while preserving the old.",
+      "takeaway": "Retest older examples after every update, even when the original weights stay frozen.",
+      "caveat": "Fifty compatible factual edits are not indefinite lifelong learning. Replay also changes the optimization budget.",
+      "tags": [
+        "memory",
+        "continual learning",
+        "language models"
+      ],
+      "playlists": [
+        "research"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-14",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.20399v1",
+      "duration_seconds": 173.967,
+      "url": "https://alxdofficial.github.io/papers/cortex/",
+      "thumbnail_url": "https://alxdofficial.github.io/papers/assets/cortex.jpg",
+      "transcript_url": "https://alxdofficial.github.io/papers/cortex/transcript.txt",
+      "video_id": "1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D",
+      "video_url": "https://drive.google.com/file/d/1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D/view",
+      "embed_url": "https://drive.google.com/file/d/1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D/preview",
+      "download_url": "https://drive.google.com/uc?export=download&id=1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D",
+      "transcript": "Cortex: Consolidating Context into Parametric Memory\n16 October 2026 | arXiv:2610.20399v1\n\n1. Problem, importance, and difficulty\nToday's must-read is Cortex. A model can use a manual in its prompt, then lose the benefit when it disappears. Cortex asks whether useful context can become lasting model behavior. Learn new behavior while preserving what already works.\n\n2. Demonstrated applications\nThe authors test new Python APIs, factual edits, agent experience, behavioral steering, and answering restrictions. These are text-based experiments. The API test covers fifteen packages and one hundred fifty executable-test problems. A multimodal backbone appears, but sensor or visual-memory transfer is not demonstrated.\n\n3. Prior approaches and narrow novelty\nEarlier work distills context, edits factual associations, or adds adapters. Cortex combines anticipated-use questions, feed-forward-only writes, and consolidation-versus-retention evaluation. Its novelty is this particular combination. The results do not establish universal superiority over retrieval.\n\n4. Method\nThe frozen pre-update model generates questions anticipating uses of the new context. It answers with the context available. A context-free student matches the teacher's output probabilities and intermediate representations. Only new feed-forward parameters change. The synaptic version learns low-rank weight updates; the structural version adds nonlinear channels. Earlier weights stay frozen. Sequential learning replays stored questions, regenerating their answers from the pre-update model. At inference, learned changes operate inside the model without source-document lookup.\n\n5. Results\nAfter fifty factual edits on the Qwen two point five fourteen billion instruction model, Structural Cortex recovers eighty-eight point nine percent of the context-induced gain, versus twenty-eight point five for ROME. These matched results average three training runs. Consolidation rate measures recovered benefit, not raw accuracy. Retention is ninety-nine point eight percent of the original aggregate score on locality, MMLU, SimpleQA, and GSM8K. Structural adds roughly seven hundred forty thousand parameters per edit in this setup.\n\n6. Comments, limitations, and reusable idea\nFrozen weights do not guarantee stable behavior. Replay keeps average original-and-rephrased accuracy above ninety-six percent for the same first twenty-five facts after twenty-five further edits; without replay, Structural reaches forty point five percent. But replay also changes the optimization budget. This is one fixed sequence of fifty compatible facts, not indefinite lifelong learning. For frozen-memory classifiers, retest older examples after each update, even when only surrounding components change.\n\nCredits and disclosure (not spoken narration)\n\nThis research explainer summarizes author-reported results; it is not an independent experimental reproduction and does not imply endorsement by paper authors or voice contributors.\n\nSynthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .\nAnna preset: derived from VCTK p228, CSTR VCTK Corpus v0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh, CC BY 4.0, https://doi.org/10.7488/ds/2645 . Preset source: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav . This is newly generated synthetic speech, not a recording of the contributor reading this paper. The model and voice embedding are unchanged; audio was converted to PCM, reduced by a constant gain for headroom and minimally padded for frame alignment, without pitch or tempo shifting. License: https://creativecommons.org/licenses/by/4.0/ .\n\nTypography: Playfair Display (https://github.com/google/fonts/tree/main/ofl/playfairdisplay) and JetBrains Mono (https://github.com/JetBrains/JetBrainsMono), SIL Open Font License 1.1.\n\nVisual attribution: The Cortex method diagram is an independently drawn explanatory diagram based on Zhang et al. (2026), Cortex: Consolidating Context into Parametric Memory, arXiv:2610.20399v1, https://arxiv.org/abs/2610.20399v1 . No original-paper image is reproduced in this version. The drawing summarizes the method for research commentary; it is not a new experimental result and does not imply endorsement by the authors.\n"
+    },
+    {
+      "id": "latent",
+      "short_title": "Latent Compaction",
+      "title": "Latent Compaction with Test-Time Training",
+      "headline": "A smaller cache. What survives?",
+      "description": "Compress a document’s attention cache for questions that have not been asked yet.",
+      "takeaway": "Preserve both what a memory returns and how strongly it competes for attention.",
+      "caveat": "16× describes logical key-value compression, not measured physical memory savings or faster inference. Preparation is expensive.",
+      "tags": [
+        "memory",
+        "attention",
+        "test-time training"
+      ],
+      "playlists": [
+        "research"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-14",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.20582v1",
+      "duration_seconds": 164.5,
+      "url": "https://alxdofficial.github.io/papers/latent/",
+      "thumbnail_url": "https://alxdofficial.github.io/papers/assets/latent.jpg",
+      "transcript_url": "https://alxdofficial.github.io/papers/latent/transcript.txt",
+      "video_id": "1RYMggX2STFYOpVouk82ZOiTxDjucTCOv",
+      "video_url": "https://drive.google.com/file/d/1RYMggX2STFYOpVouk82ZOiTxDjucTCOv/view",
+      "embed_url": "https://drive.google.com/file/d/1RYMggX2STFYOpVouk82ZOiTxDjucTCOv/preview",
+      "download_url": "https://drive.google.com/uc?export=download&id=1RYMggX2STFYOpVouk82ZOiTxDjucTCOv",
+      "transcript": "Latent Compaction with Test-Time Training\n16 October 2026 | arXiv:2610.20582v1\n\n1. Problem, importance, and difficulty\nLatent Compaction asks whether a language model can preserve a long document in a smaller attention cache. Tomorrow's question may need a detail that looks unimportant today. Simply deleting entries or summarizing text can erase that detail. The goal is reusable memory for unseen questions.\n\n2. Demonstrated and potential applications\nThe authors test synthetic retrieval, exact phonebook lookup, and natural-document understanding. Repeated queries about a fixed reference document could share one prepared cache. Streaming personal memory, multimodal sensors, and neuromorphic deployment remain untested.\n\n3. Prior approaches and narrow novelty\nEarlier methods already select important cache entries, train compact memories, or match attention behavior. It combines importance-and-diversity initialization, fitting that protects selected entries, and a final stage refining everything. Novelty lies in this specific recipe.\n\n4. Method\nThe language model’s weights stay frozen. What changes are document-specific keys, values, and scalar attention biases. Three quarters of the compact budget starts with important original entries. The rest mixes high-attention anchors with keys chosen for diversity. Stage one freezes the important entries and fits the other slots to the full cache’s attention outputs and log-normalizers. Matching the normalizers helps compressed memory compete correctly with newly arriving tokens. Stage two updates every compact slot, matching the full-cache model’s output probabilities and preferred next tokens. Both stages use generic document prompts. Downstream questions stay hidden, and the finished cache is fixed during reuse.\n\n5. Results\nWith Qwen three, one-point-seven billion parameters, at sixteen-times compression, Phonebook Lookup averaged eighty point six seven percent accuracy across three document lengths. Removing stage one reduced that to thirteen point nine two percent. Removing stage two scored seventy point six seven percent. These ablations show that both stages matter. They are author-reported results, without independent replication here.\n\n6. Comments, limitations, and reusable idea\nPreparation is expensive: four hundred eighty teacher rollouts, one thousand fitting updates per layer, then one thousand joint updates per document. And sixteen-times compression counts logical key-value pairs, not measured physical memory savings or speed. The reusable idea is to preserve both what a memory returns and its attention strength. Test exact recall and preparation cost together. This preprint does not establish an efficient production system.\n\nCredits and disclosure (not spoken narration)\n\nThis research explainer summarizes author-reported results; it is not an independent experimental reproduction and does not imply endorsement by paper authors or voice contributors.\n\nSynthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .\nAnna preset: derived from VCTK p228, CSTR VCTK Corpus v0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh, CC BY 4.0, https://doi.org/10.7488/ds/2645 . Preset source: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav . This is newly generated synthetic speech, not a recording of the contributor reading this paper. The model and voice embedding are unchanged; audio was converted to PCM, reduced by a constant gain for headroom and minimally padded for frame alignment, without pitch or tempo shifting. License: https://creativecommons.org/licenses/by/4.0/ .\n\nTypography: Playfair Display (https://github.com/google/fonts/tree/main/ofl/playfairdisplay) and JetBrains Mono (https://github.com/JetBrains/JetBrainsMono), SIL Open Font License 1.1.\n\nPaper artwork: Chen et al. (2026), Latent Compaction with Test-Time Training, arXiv:2610.20582v1. Figure 2 (page 3), Table 2 (page 8), and Table 3 (page 9), rasterized/cropped/resized from https://arxiv.org/pdf/2610.20582v1 . All table rows and captions are retained; source content is unchanged. These source materials and adaptations remain CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/ . No blanket license over other third-party elements is asserted.\n\nVideo distribution license: The complete Latent Compaction research-explainer video, including its original narration, explanatory graphics, and adaptation of the cited paper artwork, is distributed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0): https://creativecommons.org/licenses/by-sa/4.0/ . You may share and adapt it with attribution, a license link, an indication of changes, and ShareAlike licensing for adaptations. Credit this explainer and Chen et al. (2026), retain the paper and synthetic-voice credits above, and do not imply endorsement. This grant does not replace separately applicable font/software licenses or grant trademark, privacy, or publicity rights.\n"
+    },
+    {
+      "id": "memwm",
+      "short_title": "MemWM",
+      "title": "Enhancing Latent World Models with Associative Memory",
+      "headline": "Better plans through associative memory",
+      "description": "A compact memory bank helps a world model predict latent states and plan from images.",
+      "takeaway": "Compact latent conditioning can help planning, but a learned prior is not a growing episodic memory.",
+      "caveat": "Small simulation study; no inference-time write rule. The paper does not clearly define its error bars.",
+      "tags": [
+        "world models",
+        "reinforcement learning",
+        "associative memory"
+      ],
+      "playlists": [
+        "research"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-14",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.19683v1",
+      "duration_seconds": 171.867,
+      "url": "https://alxdofficial.github.io/papers/memwm/",
+      "thumbnail_url": "https://alxdofficial.github.io/papers/assets/memwm.jpg",
+      "transcript_url": "https://alxdofficial.github.io/papers/memwm/transcript.txt",
+      "video_id": "1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_",
+      "video_url": "https://drive.google.com/file/d/1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_/view",
+      "embed_url": "https://drive.google.com/file/d/1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_/preview",
+      "download_url": "https://drive.google.com/uc?export=download&id=1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_",
+      "transcript": "Enhancing Latent World Models with Associative Memory\n16 October 2026 | arXiv:2610.19683v1\n\n1. Problem, importance, and difficulty\nMem W M asks whether learned memory can help an agent plan from images. A latent world model predicts compact representations of future observations instead of generating pixels. Accurate next-step predictions do not guarantee useful multi-stage plans. Representations can collapse, losing distinctions that control needs. Do these representations improve decisions?\n\n2. Demonstrated and potential applications\nThe paper tests simulated navigation, reaching, pushing a T-shaped object, and manipulating a cube. This original figure compares real cube observations with decoded imagined states; a decoder is used for visualization. Activity sensing and event-camera transfers remain untested.\n\n3. Prior approaches and narrow novelty\nLeWorldModel already learns a compact predictor directly from pixels. DINO-WM instead builds on frozen pretrained visual features. Hierarchical models add explicit temporal abstraction. Mem W M contributes an associative bank conditioning a shared predictor, plus slot regularizers. Learned associative priors themselves have earlier precedents.\n\n4. Method\nA visual encoder produces a latent state. That state queries ten learned keys, and attention mixes their matching memory values. The retrieved mixture conditions the predictor first; the action conditions the same predictor second, producing the next latent state. Training jointly learns the model and slots offline, using prediction error, anti-collapse regularization, slot diversity, and balanced average slot usage. Crucially, the paper specifies no inference-time memory-write rule. These are learned priors, rather than a growing record of new episodes.\n\n5. Results\nAcross four environments, author-reported mean success is eighty-nine point nine percent, versus eighty-five point eight for LeWorldModel: a four point one percentage-point gain, with nineteen versus eighteen million parameters. DINO-WM scores eighty-nine point three and wins two tasks. Evaluation uses three seeds on the same fifty trajectories, with a fifty-step interaction budget and a five-step planning horizon. The paper does not clearly define its error bars, so small differences deserve caution.\n\n6. Comments, limitations, and reusable idea\nRemoving usage balance lowers mean success to eighty-six point seven percent. But balancing average attention does not prove that slots specialize over time. Sharing predictor weights also does not establish faster computation. The reusable idea is compact latent conditioning. Before calling it continual memory, test an explicit write mechanism, longer histories, and fair compute-matched controls. This small simulation study does not yet establish those capabilities.\n\nCredits and disclosure (not spoken narration)\n\nThis research explainer summarizes author-reported results; it is not an independent experimental reproduction and does not imply endorsement by paper authors or voice contributors.\n\nSynthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .\nAnna preset: derived from VCTK p228, CSTR VCTK Corpus v0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh, CC BY 4.0, https://doi.org/10.7488/ds/2645 . Preset source: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav . This is newly generated synthetic speech, not a recording of the contributor reading this paper. The model and voice embedding are unchanged; audio was converted to PCM, reduced by a constant gain for headroom and minimally padded for frame alignment, without pitch or tempo shifting. License: https://creativecommons.org/licenses/by/4.0/ .\n\nTypography: Playfair Display (https://github.com/google/fonts/tree/main/ofl/playfairdisplay) and JetBrains Mono (https://github.com/JetBrains/JetBrainsMono), SIL Open Font License 1.1.\n\nPaper artwork: Sun and Zhu (2026), Enhancing Latent World Models with Associative Memory, arXiv:2610.19683v1, CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Figure 1 memory/predictor detail is cropped and resized, omitting the surrounding rollout: https://arxiv.org/html/2610.19683v1#S3.F1 . Figure 2 is resized with content unchanged: https://arxiv.org/html/2610.19683v1#S4.F2 . The latter is a static qualitative author figure, not motion-demo footage; its decoder was trained for visualization.\n"
+    }
+  ]
+}
