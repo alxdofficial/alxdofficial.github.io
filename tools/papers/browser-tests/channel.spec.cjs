@@ -73,7 +73,7 @@ test('reference secondary glow, pointer light, fixed labels, primary clarity and
   expect(state.duration.split(',').every(v=>v.trim()==='0.26s')).toBeTruthy();
   expect(state.easing).toContain('cubic-bezier(0.2, 0.6, 0.2, 1)');
   const before=await secondary.boundingBox();
-  await secondary.hover({position:{x:20,y:15}});await page.waitForTimeout(300);
+  await secondary.hover({position:{x:20,y:15}});await expect.poll(async()=>(await read()).radius).toBe('0px');
   state=await read();expect(state.width/state.hostWidth).toBeCloseTo(1,1);expect(state.height/state.hostHeight).toBeCloseTo(1,1);
   expect(state.radius).toBe('0px');expect(state.filter).toBe('blur(0px)');expect(state.opacity).toBe('1');
   expect(state.x).not.toBe('');expect(state.background).toContain('radial-gradient');
