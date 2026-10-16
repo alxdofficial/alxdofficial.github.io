@@ -19,7 +19,7 @@ if (form) {
     });
     document.querySelector('#results').textContent = `${count} episode${count === 1 ? '' : 's'}`;
     document.querySelector('#empty').hidden = count !== 0;
-    document.querySelector('#empty-detail').textContent = ['health','across-ai'].includes(playlist.value) ? 'This playlist has no published episodes yet. Explore Research for the launch edition.' : 'Try another playlist, date, or search.';
+    document.querySelector('#empty-detail').textContent = playlist.value !== 'all' && !cards.some(c => c.dataset.playlists.split(' ').includes(playlist.value)) ? 'This playlist has no published episodes yet. Explore Research for the launch edition.' : 'Try another playlist, date, or search.';
     if (update) {
       const p = new URLSearchParams();
       if (search.value.trim()) p.set('q', search.value.trim());
@@ -46,3 +46,26 @@ document.querySelectorAll('.load-video').forEach(button => button.addEventListen
   container.replaceChildren(iframe);
   iframe.focus();
 }));
+
+const menuButton = document.querySelector('.menu-toggle');
+const mainNav = document.querySelector('#main-nav');
+if (menuButton && mainNav) {
+  document.documentElement.classList.add('js');
+  menuButton.hidden = false;
+  const mobile = matchMedia('(max-width: 680px)');
+  function setMenu(open, restoreFocus = false) {
+    menuButton.setAttribute('aria-expanded', String(open));
+    mainNav.classList.toggle('is-open', open);
+    menuButton.querySelector('span').textContent = open ? '−' : '+';
+    if (restoreFocus) menuButton.focus();
+  }
+  menuButton.addEventListener('click', () => setMenu(menuButton.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') setMenu(false, true);
+  });
+  mainNav.addEventListener('click', event => { if (event.target.closest('a')) setMenu(false); });
+  document.addEventListener('click', event => {
+    if (!event.target.closest('.top') && menuButton.getAttribute('aria-expanded') === 'true') setMenu(false);
+  });
+  mobile.addEventListener('change', () => setMenu(false));
+}

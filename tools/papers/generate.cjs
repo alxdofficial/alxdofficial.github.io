@@ -1,0 +1,62 @@
+'use strict';
+function generate(source, transcripts, templates) {
+  const E=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fill=(t,v)=>t.replace(/\{\{([A-Z]+)\}\}/g,(_,k)=>{if(!(k in v))throw Error('Missing template value: '+k);return v[k];});
+  const dateOK=d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&new Date(d+'T00:00:00Z').toISOString().slice(0,10)===d;
+  const display=d=>d==='unknown'?'Date not verified':new Date(d+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
+  const short=d=>d==='unknown'?'DATE NOT VERIFIED':new Date(d+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).toUpperCase();
+  const duration=e=>{const n=Math.round(e.duration_seconds);return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
+  const base=source.url;
+  if(base!=='https://alxdofficial.github.io/papers/')throw Error('Unexpected public site URL');
+  if(!Array.isArray(source.episodes)||!source.episodes.length)throw Error('At least one episode required');
+  const playlists=source.playlists, pids=playlists.map(p=>p.id), ids=new Set();
+  if(pids.some(p=>!/^[-a-z0-9]+$/.test(p))||new Set(pids).size!==pids.length)throw Error('Duplicate playlist');
+  const episodes=source.episodes.map(e=>{
+    if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(e.id)||ids.has(e.id))throw Error('Invalid or duplicate episode id: '+e.id);
+    ids.add(e.id);
+    for(const k of ['short_title','title','headline','description','takeaway','caveat','publication_status','venue','verified_source_url'])if(typeof e[k]!=='string'||!e[k].trim())throw Error(e.id+': missing '+k);
+    if(!dateOK(e.published)||(e.paper_date!=='unknown'&&(!dateOK(e.paper_date)||e.paper_date>e.published)))throw Error(e.id+': invalid dates');
+    if(!/^https:\/\/[^\s<>\"']+$/.test(e.paper_url))throw Error(e.id+': HTTPS primary source URL required');
+    if(!['preprint','published','unknown'].includes(e.publication_status))throw Error(e.id+': explicit publication status required');
+    if(e.verified_source_url!==e.paper_url)throw Error(e.id+': verify publication metadata against the primary source URL');
+    if(typeof e.paper_version!=='string'||!e.paper_version.trim())throw Error(e.id+': version or explicit unknown required');
+    if(e.venue==='arXiv'&&(!/^v\d+$/.test(e.paper_version)||!e.paper_url.endsWith(e.paper_version)))throw Error(e.id+': arXiv version mismatch');
+    if(!Number.isFinite(e.duration_seconds)||e.duration_seconds<=0)throw Error(e.id+': invalid duration');
+    if(!/^[A-Za-z0-9_-]{20,}$/.test(e.video_id)||/REPLACE|TODO/.test(e.video_id))throw Error(e.id+': invalid Drive video id');
+    if(e.transcript_path!==e.id+'/transcript.txt'||!/^assets\/[a-z0-9-]+\.(jpg|png|webp)$/.test(e.thumbnail_path))throw Error(e.id+': unsafe asset path');
+    if(!Array.isArray(e.playlists)||!e.playlists.length||e.playlists.some(p=>!pids.includes(p))||new Set(e.playlists).size!==e.playlists.length)throw Error(e.id+': invalid playlists');
+    if(!Array.isArray(e.tags)||!e.tags.length||e.tags.some(t=>typeof t!=='string'||!t.trim()))throw Error(e.id+': tags required');
+    const transcript=transcripts[e.id];
+    if(typeof transcript!=='string'||!transcript.includes('Credits and disclosure (not spoken narration)')||!transcript.startsWith(e.title+'\n'))throw Error(e.id+': complete matching transcript and credits required');
+    if(e.video_license_url&&!/^https:\/\/creativecommons.org\/licenses\/[a-z-]+\/4\.0\/$/.test(e.video_license_url))throw Error(e.id+': invalid video license');
+    return {...e,url:base+e.id+'/',thumbnail_url:base+e.thumbnail_path,transcript_url:base+e.transcript_path,video_url:'https://drive.google.com/file/d/'+e.video_id+'/view',embed_url:'https://drive.google.com/file/d/'+e.video_id+'/preview',download_url:'https://drive.google.com/uc?export=download&id='+e.video_id,transcript};
+  }).sort((a,b)=>b.published.localeCompare(a.published)); // Stable ordering within each day's edition.
+  const latest=episodes[0].published, dates=[...new Set(episodes.map(e=>e.published))],outputs={};
+  const script='<script src="/papers/assets/app.js" defer></script>';
+  const shell=(title,description,body,path='',schema='')=>fill(templates.shell,{TITLE:E(title),DESCRIPTION:E(description),URL:base+path,BODY:body+script,SCHEMA:schema?'<script type="application/ld+json">'+JSON.stringify(schema).replace(/</g,'\\u003c')+'</script>':''});
+  const play='<span class="play" aria-hidden="true"><span class="play-icon">▶</span><span>Watch</span></span>';
+  const thumb=(e,extra='')=>`<a class="${extra}thumb" href="/papers/${e.id}/" aria-label="Watch ${E(e.title)} (${duration(e)})"><img src="/papers/${e.thumbnail_path}" width="960" height="540" alt="" loading="lazy">${play}<span class="duration">${duration(e)}</span></a>`;
+  const tags=e=>'<div class="tags">'+e.tags.map(t=>'<span>'+E(t)+'</span>').join('')+'</div>';
+  const card=e=>`<article class="episode" data-playlists="${e.playlists.join(' ')}" data-date="${e.published}" data-search="${E([e.title,e.headline,e.description,...e.tags].join(' ').toLowerCase())}">${thumb(e)}<div class="card-meta">${e.playlists.map(id=>E(playlists.find(p=>p.id===id).name)).join(' · ')} <span>EPISODE · ${short(e.published)}</span></div><h3><a href="/papers/${e.id}/">${E(e.title)}</a></h3><p class="citation-meta">${E(e.venue)} · ${E(e.publication_status)} · ${short(e.paper_date)} · ${E(e.paper_version)}</p><p>${E(e.description)}</p>${tags(e)}</article>`;
+  const latestEpisodes=episodes.filter(e=>e.published===latest),feature=latestEpisodes[0];
+  const edition=`<div class="edition"><span>LATEST EDITION</span><strong>${display(latest)}</strong><span>${latestEpisodes.length} episodes · about ${Math.round(latestEpisodes.reduce((n,e)=>n+e.duration_seconds,0)/60)} minutes</span></div>`;
+  const featured=`<section class="featured" aria-label="Featured episode">${thumb(feature,'feature-image ')}<div class="feature-copy"><div class="eyebrow">LATEST EDITION / FEATURED</div><h2>${E(feature.title)}</h2><p>${E(feature.description)}</p><a class="button primary" href="/papers/${feature.id}/">Watch ${E(feature.short_title)} <span>↗</span></a><span class="small">${E(feature.venue)} · ${E(feature.publication_status)} · ${short(feature.paper_date)} · ${E(feature.paper_version)}</span></div></section>`;
+  const playlistCards=playlists.map((p,i)=>{const n=episodes.filter(e=>e.playlists.includes(p.id)).length;return `<a class="playlist" href="?playlist=${p.id}#episodes"><span class="eyebrow">${String(i+1).padStart(2,'0')} / ${n?n+' EPISODES':'NO EPISODES YET'}</span><h3>${E(p.name)}</h3><p>${E(p.description)}${n?'':' This playlist is still empty.'}</p><span class="arrow">↗</span></a>`;}).join('');
+  const archive=dates.map(d=>`<a href="?date=${d}#episodes"><span>${d.slice(0,4)}</span><strong>${E(display(d).replace(' '+d.slice(0,4),''))}</strong><span>${episodes.filter(e=>e.published===d).length} EPISODES ↗</span></a>`).join('');
+  outputs['index.html']=shell('Good papers. Clearer thinking.','Short, source-linked AI research films, full transcripts, and candid caveats.',fill(templates.home,{EDITION:edition,FEATURED:featured,PLAYLISTS:playlistCards,DATES:dates.map(d=>`<option value="${d}">${display(d)}</option>`).join(''),COUNT:episodes.length,CARDS:episodes.map(card).join(''),ARCHIVE:archive}));
+  const linkify=s=>E(s).replace(/https:\/\/[^\s]+/g,m=>{const url=m.replace(/[.,)]+$/,'');return '<a href="'+url+'">'+url+'</a>'+m.slice(url.length);});
+  for(const e of episodes) {
+    const [narrative,credits]=e.transcript.split('Credits and disclosure (not spoken narration)');
+    const transcript=narrative.trim().split('\n\n').slice(1).map(p=>{const at=p.indexOf('\n');if(at<0)throw Error(e.id+': malformed transcript section');return '<section><h3>'+E(p.slice(0,at))+'</h3><p>'+E(p.slice(at+1))+'</p></section>';}).join('');
+    const schema={'@context':'https://schema.org','@type':'VideoObject',name:e.title,description:e.description,thumbnailUrl:[e.thumbnail_url],uploadDate:e.published+'T00:00:00Z',duration:'PT'+e.duration_seconds+'S',embedUrl:e.embed_url,url:e.url,transcript:narrative.trim(),isBasedOn:e.paper_url,...(e.video_license_url?{license:e.video_license_url}:{})};
+    const body=`<main id="main" class="watch"><a class="back small" href="/papers/#episodes">← ALL EPISODES</a><div class="eyebrow">${e.playlists.map(p=>E(playlists.find(x=>x.id===p).name)).join(' / ')} / ${duration(e)} / ${short(e.published)}</div><h1>${E(e.title)}</h1><p class="watch-intro">${E(e.description)}</p><div class="player" data-embed="${e.embed_url}"><img src="/papers/${e.thumbnail_path}" width="960" height="540" alt=""><button class="load-video" type="button" aria-label="Watch ${E(e.title)} video from Google Drive"><span class="watch-cta"><span class="play-icon" aria-hidden="true">▶</span><span>Watch video</span></span></button></div><p class="player-note small">Playback loads Google Drive. If the player is unavailable, <a href="${e.video_url}" target="_blank" rel="noopener">open the video in Drive ↗</a>. Downloads may open a Google Drive confirmation page.</p><noscript><p><a href="${e.video_url}">Watch the video on Google Drive</a>.</p></noscript><div class="actions"><a class="button primary" href="${e.paper_url}" target="_blank" rel="noopener">Read the paper ↗</a><a class="button" href="transcript.txt" download>Download transcript ↓</a><a class="button" href="${E(e.download_url)}">Download video ↓</a><a class="text-link" href="#transcript">Read transcript</a></div><div class="paper-meta small">EPISODE: ${display(e.published).toUpperCase()} <span>PAPER: ${display(e.paper_date).toUpperCase()} · ${e.paper_version} · ${E(e.venue)} · ${E(e.publication_status).toUpperCase()}</span></div><div class="insights"><section><div class="eyebrow">THE TAKEAWAY</div><p>${E(e.takeaway)}</p></section><section><div class="eyebrow">KEEP IN MIND</div><p>${E(e.caveat)}</p></section></div><div class="reading-layout"><article id="transcript" class="transcript"><div class="eyebrow">READ / COMPLETE NARRATION</div><h2>The transcript.</h2>${transcript}</article><aside><div class="eyebrow">IN THIS EPISODE</div><h3>${E(e.short_title)}</h3>${tags(e)}<p>Author-reported findings. No independent experimental reproduction.</p><a href="${e.paper_url}">Primary source ↗</a><p><a href="#credits">Credits &amp; licensing ↓</a></p></aside></div><section id="credits" class="credits"><div class="eyebrow">NOT SPOKEN IN THE VIDEO</div><h2>Credits &amp; disclosure.</h2>${credits.trim().split('\n\n').map(p=>'<p>'+linkify(p)+'</p>').join('')}</section><section class="next"><div class="section-heading"><h2>Keep exploring.</h2><a href="/papers/">All episodes ↗</a></div><div class="episode-grid">${episodes.filter(o=>o.id!==e.id).slice(0,2).map(card).join('')}</div></section></main>`;
+    outputs[e.id+'/index.html']=shell(e.title,e.description,body,e.id+'/',schema);
+  }
+  const catalog={title:source.title,url:base,updated:latest,playlists,episodes};
+  outputs['catalog.json']=JSON.stringify(catalog,null,2)+'\n';
+  const rssDate=d=>new Date(d+'T00:00:00Z').toUTCString();
+  outputs['feed.xml']='<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>'+E(source.title)+'</title><link>'+base+'</link><description>Short, source-linked AI research explainers.</description><language>en</language><lastBuildDate>'+rssDate(latest)+'</lastBuildDate><atom:link href="'+base+'feed.xml" rel="self" type="application/rss+xml"/>'+episodes.map(e=>'<item><title>'+E(e.title)+'</title><link>'+e.url+'</link><guid isPermaLink="true">'+e.url+'</guid><pubDate>'+rssDate(e.published)+'</pubDate><description>'+E(e.title+'. '+e.venue+' '+e.publication_status+', '+e.paper_date+', '+e.paper_version+'. '+e.description+' Takeaway: '+e.takeaway+' Caveat: '+e.caveat)+'</description>'+e.playlists.map(p=>'<category>'+E(playlists.find(x=>x.id===p).name)+'</category>').join('')+'</item>').join('')+'</channel></rss>';
+  outputs['sitemap.xml']='<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+[{url:base,published:latest},...episodes].map(e=>'<url><loc>'+e.url+'</loc><lastmod>'+e.published+'</lastmod></url>').join('')+'</urlset>';
+  return outputs;
+}
+module.exports = generate;

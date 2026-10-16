@@ -5,15 +5,18 @@
   "playlists": [
     {
       "id": "research",
-      "name": "Research"
+      "name": "Research",
+      "description": "Memory, continual learning, reinforcement learning, sensing, neuromorphic systems & world models."
     },
     {
       "id": "health",
-      "name": "Health & neurodevelopment AI"
+      "name": "Health & neurodevelopment AI",
+      "description": "Evidence-led AI research in health and neurodevelopment."
     },
     {
       "id": "across-ai",
-      "name": "Across AI"
+      "name": "Across AI",
+      "description": "Popular and broadly useful work from across artificial intelligence."
     }
   ],
   "episodes": [
@@ -38,10 +41,15 @@
       "paper_version": "v1",
       "paper_url": "https://arxiv.org/abs/2610.20399v1",
       "duration_seconds": 173.967,
+      "video_id": "1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D",
+      "transcript_path": "cortex/transcript.txt",
+      "thumbnail_path": "assets/cortex.jpg",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "verified_source_url": "https://arxiv.org/abs/2610.20399v1",
       "url": "https://alxdofficial.github.io/papers/cortex/",
       "thumbnail_url": "https://alxdofficial.github.io/papers/assets/cortex.jpg",
       "transcript_url": "https://alxdofficial.github.io/papers/cortex/transcript.txt",
-      "video_id": "1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D",
       "video_url": "https://drive.google.com/file/d/1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D/view",
       "embed_url": "https://drive.google.com/file/d/1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D/preview",
       "download_url": "https://drive.google.com/uc?export=download&id=1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D",
@@ -68,10 +76,16 @@
       "paper_version": "v1",
       "paper_url": "https://arxiv.org/abs/2610.20582v1",
       "duration_seconds": 164.5,
+      "video_id": "1RYMggX2STFYOpVouk82ZOiTxDjucTCOv",
+      "transcript_path": "latent/transcript.txt",
+      "thumbnail_path": "assets/latent.jpg",
+      "video_license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "verified_source_url": "https://arxiv.org/abs/2610.20582v1",
       "url": "https://alxdofficial.github.io/papers/latent/",
       "thumbnail_url": "https://alxdofficial.github.io/papers/assets/latent.jpg",
       "transcript_url": "https://alxdofficial.github.io/papers/latent/transcript.txt",
-      "video_id": "1RYMggX2STFYOpVouk82ZOiTxDjucTCOv",
       "video_url": "https://drive.google.com/file/d/1RYMggX2STFYOpVouk82ZOiTxDjucTCOv/view",
       "embed_url": "https://drive.google.com/file/d/1RYMggX2STFYOpVouk82ZOiTxDjucTCOv/preview",
       "download_url": "https://drive.google.com/uc?export=download&id=1RYMggX2STFYOpVouk82ZOiTxDjucTCOv",
@@ -98,10 +112,15 @@
       "paper_version": "v1",
       "paper_url": "https://arxiv.org/abs/2610.19683v1",
       "duration_seconds": 171.867,
+      "video_id": "1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_",
+      "transcript_path": "memwm/transcript.txt",
+      "thumbnail_path": "assets/memwm.jpg",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "verified_source_url": "https://arxiv.org/abs/2610.19683v1",
       "url": "https://alxdofficial.github.io/papers/memwm/",
       "thumbnail_url": "https://alxdofficial.github.io/papers/assets/memwm.jpg",
       "transcript_url": "https://alxdofficial.github.io/papers/memwm/transcript.txt",
-      "video_id": "1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_",
       "video_url": "https://drive.google.com/file/d/1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_/view",
       "embed_url": "https://drive.google.com/file/d/1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_/preview",
       "download_url": "https://drive.google.com/uc?export=download&id=1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_",

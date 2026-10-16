@@ -1,0 +1,37 @@
+name: Paper channel checks
+on:
+  push:
+    branches: [main, "paper-channel-*"]
+    paths: ['papers/**', 'tools/papers/**', '.github/workflows/papers-check.yml']
+  pull_request:
+    paths: ['papers/**', 'tools/papers/**', '.github/workflows/papers-check.yml']
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate catalog and generated output
+        run: |
+          node tools/papers/build.cjs --check
+          node tools/papers/test.cjs
+      - name: Install browser test dependencies
+        working-directory: tools/papers
+        run: |
+          npm install --ignore-scripts --no-package-lock
+          npx playwright install --with-deps chromium
+      - name: Desktop and mobile interaction tests
+        working-directory: tools/papers
+        run: npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: paper-channel-browser-checks
+          path: |
+            tools/papers/test-results/
+            tools/papers/playwright-report/
+          retention-days: 7

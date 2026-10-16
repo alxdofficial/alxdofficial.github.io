@@ -1,0 +1,26 @@
+{
+  "id": "paper-slug",
+  "short_title": "Short label",
+  "title": "Exact full scientific paper title",
+  "headline": "One clear editorial takeaway",
+  "description": "A short, evidence-led description.",
+  "takeaway": "What the reader can reuse.",
+  "caveat": "The most important limitation.",
+  "tags": [
+    "memory"
+  ],
+  "playlists": [
+    "research"
+  ],
+  "published": "2026-10-17",
+  "paper_date": "2026-10-16",
+  "publication_status": "preprint",
+  "venue": "arXiv",
+  "paper_version": "v1",
+  "paper_url": "https://arxiv.org/abs/2610.00000v1",
+  "verified_source_url": "https://arxiv.org/abs/2610.00000v1",
+  "duration_seconds": 180,
+  "video_id": "REPLACE_WITH_PUBLIC_DRIVE_FILE_ID",
+  "transcript_path": "paper-slug/transcript.txt",
+  "thumbnail_path": "assets/paper-slug.jpg"
+}

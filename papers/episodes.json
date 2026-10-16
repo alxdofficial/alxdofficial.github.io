@@ -1,0 +1,108 @@
+{
+  "title": "Paper Channel",
+  "url": "https://alxdofficial.github.io/papers/",
+  "playlists": [
+    {
+      "id": "research",
+      "name": "Research",
+      "description": "Memory, continual learning, reinforcement learning, sensing, neuromorphic systems & world models."
+    },
+    {
+      "id": "health",
+      "name": "Health & neurodevelopment AI",
+      "description": "Evidence-led AI research in health and neurodevelopment."
+    },
+    {
+      "id": "across-ai",
+      "name": "Across AI",
+      "description": "Popular and broadly useful work from across artificial intelligence."
+    }
+  ],
+  "episodes": [
+    {
+      "id": "cortex",
+      "short_title": "Cortex",
+      "title": "Cortex: Consolidating Context into Parametric Memory",
+      "headline": "When context becomes lasting memory",
+      "description": "Can useful context survive after the prompt disappears? A careful look at learning new behavior while preserving the old.",
+      "takeaway": "Retest older examples after every update, even when the original weights stay frozen.",
+      "caveat": "Fifty compatible factual edits are not indefinite lifelong learning. Replay also changes the optimization budget.",
+      "tags": [
+        "memory",
+        "continual learning",
+        "language models"
+      ],
+      "playlists": [
+        "research"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-14",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.20399v1",
+      "duration_seconds": 173.967,
+      "video_id": "1UECr9CiNCDuWsf2C3pT9GIzfnRoT4G9D",
+      "transcript_path": "cortex/transcript.txt",
+      "thumbnail_path": "assets/cortex.jpg",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "verified_source_url": "https://arxiv.org/abs/2610.20399v1"
+    },
+    {
+      "id": "latent",
+      "short_title": "Latent Compaction",
+      "title": "Latent Compaction with Test-Time Training",
+      "headline": "A smaller cache. What survives?",
+      "description": "Compress a document’s attention cache for questions that have not been asked yet.",
+      "takeaway": "Preserve both what a memory returns and how strongly it competes for attention.",
+      "caveat": "16× describes logical key-value compression, not measured physical memory savings or faster inference. Preparation is expensive.",
+      "tags": [
+        "memory",
+        "attention",
+        "test-time training"
+      ],
+      "playlists": [
+        "research"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-14",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.20582v1",
+      "duration_seconds": 164.5,
+      "video_id": "1RYMggX2STFYOpVouk82ZOiTxDjucTCOv",
+      "transcript_path": "latent/transcript.txt",
+      "thumbnail_path": "assets/latent.jpg",
+      "video_license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "verified_source_url": "https://arxiv.org/abs/2610.20582v1"
+    },
+    {
+      "id": "memwm",
+      "short_title": "MemWM",
+      "title": "Enhancing Latent World Models with Associative Memory",
+      "headline": "Better plans through associative memory",
+      "description": "A compact memory bank helps a world model predict latent states and plan from images.",
+      "takeaway": "Compact latent conditioning can help planning, but a learned prior is not a growing episodic memory.",
+      "caveat": "Small simulation study; no inference-time write rule. The paper does not clearly define its error bars.",
+      "tags": [
+        "world models",
+        "reinforcement learning",
+        "associative memory"
+      ],
+      "playlists": [
+        "research"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-14",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.19683v1",
+      "duration_seconds": 171.867,
+      "video_id": "1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_",
+      "transcript_path": "memwm/transcript.txt",
+      "thumbnail_path": "assets/memwm.jpg",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "verified_source_url": "https://arxiv.org/abs/2610.19683v1"
+    }
+  ]
+}
