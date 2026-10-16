@@ -108,7 +108,8 @@ test('desktop reference menu hover, delayed close, click, keyboard and shadow fl
   const style=await root.evaluate(el=>{const a=getComputedStyle(el.querySelector('.nav-aura')),f=getComputedStyle(el.querySelector('.nav-floor')),t=getComputedStyle(el.querySelector('.menu-trigger'),'::before');return {filter:a.filter,height:parseFloat(a.height),duration:a.transitionDuration,floor:f.backgroundColor,glow:t.display};});
   expect(style.filter).toBe('blur(10px)');expect(style.height).toBeGreaterThan(80);expect(style.duration).toContain('0.32s');expect(style.floor).toBe('rgb(30, 34, 36)');expect(style.glow).toBe('none');
   await panel.hover();await page.waitForTimeout(180);await expect(trigger).toHaveAttribute('aria-expanded','true');
-  await page.screenshot({path:'test-results/desktop-menu-open-1440.png',fullPage:true});
+  await trigger.hover();await page.waitForTimeout(360);await expect(panel.locator('a:visible').first()).toBeVisible();
+  await page.screenshot({path:'test-results/desktop-menu-open-1440.png',fullPage:false});
   await trigger.hover();await panel.hover();
   const elapsed=await panel.evaluate(el=>new Promise(resolve=>{
     const button=document.querySelector('[data-menu="episodes"]'),start=performance.now();
