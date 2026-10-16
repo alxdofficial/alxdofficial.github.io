@@ -168,3 +168,6 @@
 @media(prefers-reduced-motion:reduce){
  .reference-nav .nav-aura,.reference-nav .nav-floor,.reference-nav .menu-panel,.reference-nav .menu-toggle,.reference-nav .burger i{transition:none!important}
 }
+
+/* Keep all latest-episode links reachable when a daily edition fills the panel. */
+@media(min-width:681px){.reference-nav[data-open="true"] .menu-panel{overflow-y:auto;overscroll-behavior:contain}}

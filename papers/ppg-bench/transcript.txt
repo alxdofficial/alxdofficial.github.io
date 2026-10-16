@@ -1,0 +1,43 @@
+PPG-Bench: A Unified Benchmark for PPG Foundation Models
+
+Paper: https://arxiv.org/abs/2610.13435v1
+First submitted: 2026-10-09
+Episode: 16 October 2026
+Status: Preprint; author-reported results.
+Narration: locally synthesized with the official Kyutai Pocket TTS Anna preset.
+
+A foundation model should earn its complexity. PPG-Bench asks whether previously trained pulse-signal models beat classical physiological features and a general time-series model. Its contribution is a controlled comparison, and the results challenge several easy assumptions about wearable AI.
+
+PPG is the optical pulse waveform recorded by many wearables. A pretrained encoder converts that waveform into reusable features. Researchers then train a small predictor for heart rate, sleep, activity, or health-related labels. The difficulty is that different papers use different datasets, signal preparation, labels, and training recipes. A higher score can reflect an easier experiment rather than a better representation.
+
+PPG-Bench evaluates five released PPG models across nine datasets. Seventeen primary tasks are tested with four adaptation methods, producing sixty-eight task-and-method combinations. Nine secondary tasks are reported separately. The four methods are a linear probe, a random forest, a frozen neural head, and end-to-end finetuning.
+
+The important addition is three levels of control. First, a predictor that always chooses the training majority or mean. Second, classical pulse-rate-variability features. Third, MOMENT, a general time-series foundation model. Together, these ask whether the task has usable signal, whether learned features outperform simple physiology, and whether PPG-specific models improve on a general alternative.
+
+The authors report subject-disjoint outer cross-validation and separate tuning within the training data. For labels attached to a participant, they combine window predictions before calculating the final score. A hundred windows from one person do not become a hundred independent patients. The participant-identification task needs additional protocol clarification because closed-set identity prediction does not fit a blanket unseen-subject evaluation claim.
+
+Now the headline result. In twenty-four of sixty-eight combinations, no PPG foundation model meaningfully improves on the constant control. In fifty-seven, none beats both physiological features and MOMENT. Those two groups overlap; they are not two slices of a pie.
+
+There are real successes. Under the same linear-probe protocol on DaLiA, AnyPPG achieves heart-rate mean absolute error of seven point three nine beats per minute. MOMENT records eight point two four, and the physiological-feature control eleven point one nine. Here, lower is better, and the specialized model adds measurable value.
+
+Under the same linear-probe protocol, other tasks are less convincing. For glucose, the best PPG-model error is one point two two, compared with one point two three for the constant predictor. For questionnaire-defined depression, the best specialized model has balanced accuracy around fifty-one point five percent, while the dummy control is around fifty-two percent. These are not demonstrated diagnostic capabilities.
+
+Finetuning is also conditional. When frozen representations already beat the controls, finetuning improves most model-task pairs. When they do not, additional flexibility often makes performance worse. The reported relative metric changes are not accuracy percentage points.
+
+There are important limits. These results compare particular released architectures and training recipes, so they do not prove that PPG-specific pretraining is intrinsically ineffective. The tuning search frequently selects boundary values, suggesting some models might benefit from wider searches. Confidence-interval overlap is not proof of equivalence. And multiple retrospective datasets do not establish prospective clinical utility.
+
+The advertised code repository was unavailable during this review, so the results were not independently reproduced. For sensing research, match the evaluation unit to the label. Preserve physiological information when preparing signals. Require gains over cheap controls before claiming a general health representation.
+
+Credits and disclosure (not spoken narration)
+
+Source: https://arxiv.org/abs/2610.13435v1
+
+Visual diagrams and charts independently drawn from reported methods and data. Original paper artwork is not reproduced.
+
+All findings are preprint claims, not independent replications. No prospective clinical effectiveness is established by the health studies. Synthetic narration has automated waveform, timing and model-assisted speech-content checks; this is not a human listening certification.
+
+Synthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .
+
+Anna preset: derived from VCTK p228, CSTR VCTK Corpus v0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh, CC BY 4.0, https://doi.org/10.7488/ds/2645 . Preset source: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav . Newly generated synthetic speech, not a recording of the contributor reading this paper. Audio was edited for gain, timing and synchronization. License: https://creativecommons.org/licenses/by/4.0/ .
+
+Typography: Playfair Display and JetBrains Mono, SIL Open Font License 1.1.

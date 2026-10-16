@@ -147,3 +147,15 @@ test('mobile reference menu remains opaque during open and close, outside tap an
   await page.emulateMedia({reducedMotion:'reduce'});expect(await panel.evaluate(e=>getComputedStyle(e).transitionDuration)).toBe('0s');
   await context.close();
 });
+
+test('all catalog episodes have complete read, source, media and download routes',async({page})=>{
+ for(const episode of source.episodes){
+  await page.goto('/papers/'+episode.id+'/');
+  await expect(page.locator('h1')).toHaveText(episode.title);
+  await expect(page.locator('#credits')).toContainText('Synthetic narration');
+  await expect(page.locator('.paper-meta')).toContainText(episode.paper_version);
+  const txt=await page.request.get('/papers/'+episode.transcript_path);expect(txt.ok()).toBeTruthy();expect(await txt.text()).toContain('Credits and disclosure (not spoken narration)');
+  await expect(page.getByRole('link',{name:'Download video'})).toHaveAttribute('href',new RegExp(episode.video_id));
+  await expect(page.getByRole('link',{name:/Read the paper/})).toHaveAttribute('href',episode.paper_url);
+ }
+});

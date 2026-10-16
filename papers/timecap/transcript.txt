@@ -1,0 +1,51 @@
+TimeCap: A Scalable Open-Source Pipeline for Captioning Wearable Health Time-Series Data
+
+Paper: https://arxiv.org/abs/2610.21274v1
+First submitted: 2026-10-15
+Episode: 16 October 2026
+Status: Preprint; author-reported results.
+Narration: locally synthesized with the official Kyutai Pocket TTS Anna preset.
+
+Can simple, auditable rules turn wearable measurements into better training data for language models? TimeCap explores that question with millions of grounded sensor captions.
+
+The problem is straightforward. Wearables collect enormous amounts of data, but researchers need descriptions paired with those signals to teach models how measurements connect to language. Large existing collections are often closed. Having another language model write the descriptions can introduce unsupported claims and make the annotation process difficult to reproduce.
+
+TimeCap uses fixed signal-processing rules and templates instead. No language model writes its captions.
+
+There are four layers. The statistical layer summarizes each channel with quantities such as its mean and range. The structural layer detects peaks and sustained upward or downward trends. The semantic layer extracts intervals already marked as sleep or particular activities. Finally, the cross-channel layer combines those intervals with synchronized measurements. A walking episode can be described alongside its heart rate, steps, distance, and energy expenditure.
+
+That last distinction matters: the system enriches an existing walking label. It does not independently discover walking from raw physiology.
+
+Applied to nineteen Apple HealthKit channels, TimeCap produces about seven million captions from nine hundred nine thousand person-days, contributed by just over two thousand participants. A smaller demonstration on fifteen WESAD participants shows that the same core pipeline can accommodate laboratory physiology, including electrodermal activity and respiration.
+
+The predictive experiment compares the same OpenTSLM architecture trained with outcome labels alone, or with labels plus captions. Both one-billion and three-billion parameter models receive one week of hourly sensor data. Statistical captions are excluded from the added supervision because the input prompts already include summary statistics.
+
+Participants are split sixty percent for training, ten percent for validation, and thirty percent for testing. Nobody appears in more than one split. After quality filtering, there are six hundred four test participants, although missing survey labels reduce each task’s sample.
+
+Six outcomes are used during fine-tuning. Four conditions, including diabetes and atrial fibrillation, are withheld from that stage to test transfer.
+
+Captions improve twenty-nine of thirty-two participant-level comparisons. That is eight binary outcomes, two metrics, and two model sizes, rather than thirty-two different diseases.
+
+For the one-billion model, atrial-fibrillation AUROC rises from about sixty to sixty-eight. Diabetes rises from about fifty-seven to sixty-five. But improvement is not universal: the larger model’s diabetes AUROC falls slightly.
+
+And the atrial-fibrillation result includes only fifteen positive test participants. Its precision-recall area remains about seven on a hundred-point scale. That is a ranking metric, not diagnostic accuracy. The paper reports no confidence intervals, so the gains’ stability is uncertain.
+
+These outcomes are self-reported existing attributes, not clinically confirmed diagnoses or forecasts of future events. There is no external clinical validation. Missing or zero-filled sensor periods can still generate misleading captions, and the study does not compare its rules with language-model-written captions or leading vision-language models. The original cohort also skews male, white, and United States-based.
+
+Finally, the code is public under the MIT license, but the caption dataset is planned for a later release to qualified researchers under restricted research-use terms. It is not an unrestricted download today.
+
+The useful advance is auditable sensor-language infrastructure, with preliminary evidence that caption supervision helps prediction. Deterministic captions make errors easier to trace and correct. They do not, by themselves, make a wearable model clinically reliable.
+
+Credits and disclosure (not spoken narration)
+
+Source: https://arxiv.org/abs/2610.21274v1
+
+Visual diagrams and charts independently drawn from reported methods and data. Original paper artwork is not reproduced.
+
+All findings are preprint claims, not independent replications. No prospective clinical effectiveness is established by the health studies. Synthetic narration has automated waveform, timing and model-assisted speech-content checks; this is not a human listening certification.
+
+Synthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .
+
+Anna preset: derived from VCTK p228, CSTR VCTK Corpus v0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh, CC BY 4.0, https://doi.org/10.7488/ds/2645 . Preset source: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav . Newly generated synthetic speech, not a recording of the contributor reading this paper. Audio was edited for gain, timing and synchronization. License: https://creativecommons.org/licenses/by/4.0/ .
+
+Typography: Playfair Display and JetBrains Mono, SIL Open Font License 1.1.

@@ -52,9 +52,9 @@
       "short_title": "Latent Compaction",
       "title": "Latent Compaction with Test-Time Training",
       "headline": "A smaller cache. What survives?",
-      "description": "Compress a document’s attention cache for questions that have not been asked yet.",
+      "description": "Compress a document\u2019s attention cache for questions that have not been asked yet.",
       "takeaway": "Preserve both what a memory returns and how strongly it competes for attention.",
-      "caveat": "16× describes logical key-value compression, not measured physical memory savings or faster inference. Preparation is expensive.",
+      "caveat": "16\u00d7 describes logical key-value compression, not measured physical memory savings or faster inference. Preparation is expensive.",
       "tags": [
         "memory",
         "attention",
@@ -103,6 +103,179 @@
       "publication_status": "preprint",
       "venue": "arXiv",
       "verified_source_url": "https://arxiv.org/abs/2610.19683v1"
+    },
+    {
+      "id": "timecap",
+      "short_title": "TimeCap",
+      "title": "TimeCap: A Scalable Open-Source Pipeline for Captioning Wearable Health Time-Series Data",
+      "headline": "Auditable captions for wearable signals",
+      "description": "Auditable rule-based captions for wearable time series, with preliminary prediction gains and clinical limitations.",
+      "takeaway": "Use deterministic signal-language rules when reproducible annotations matter.",
+      "caveat": "Self-reported outcomes, only fifteen positive atrial-fibrillation test participants and no external clinical validation; caption access is restricted.",
+      "tags": [
+        "wearables",
+        "time series",
+        "captioning"
+      ],
+      "playlists": [
+        "health"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-15",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.21274v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.21274v1",
+      "duration_seconds": 259.033,
+      "video_id": "12zA3RlTfwKrIfoun6y0y0lFuxAm-pGSw",
+      "transcript_path": "timecap/transcript.txt",
+      "thumbnail_path": "assets/timecap.jpg"
+    },
+    {
+      "id": "ppg-bench",
+      "short_title": "PPG-Bench",
+      "title": "PPG-Bench: A Unified Benchmark for PPG Foundation Models",
+      "headline": "Make a foundation model earn its complexity",
+      "description": "A controlled benchmark asks when pulse-signal foundation models beat simple physiological and general-purpose controls.",
+      "takeaway": "Compare pulse-signal models with constant, physiological-feature and general time-series controls using participant-level evaluation.",
+      "caveat": "Retrospective benchmark results do not establish clinical utility. Confidence-interval overlap is not equivalence, and released recipes may not be optimally tuned.",
+      "tags": [
+        "wearables",
+        "benchmarks",
+        "foundation models"
+      ],
+      "playlists": [
+        "health"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-09",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.13435v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.13435v1",
+      "duration_seconds": 267.433,
+      "video_id": "1s0Vh1ma9mwUQoMhslPZm58RaXMc2mObI",
+      "transcript_path": "ppg-bench/transcript.txt",
+      "thumbnail_path": "assets/ppg-bench.jpg"
+    },
+    {
+      "id": "agitation",
+      "short_title": "Agitation sensing",
+      "title": "Detecting Agitation Before Behavioral Escalation in Autistic Youth Through Multimodal Wearable Sensing",
+      "headline": "Temporal evaluation changes the result",
+      "description": "A small personalized sensing study reveals how temporal evaluation changes apparent agitation-detection performance.",
+      "takeaway": "Audit personalization, labels, sensor contributions and chronological splits before treating a sensing model as an early-warning system.",
+      "caveat": "Fifteen participants in clinician-led sessions; no unseen-child validation or demonstrated prevention of escalation. Earlier windows were not independently labeled as agitation.",
+      "tags": [
+        "neurodevelopment",
+        "wearable sensing",
+        "evaluation"
+      ],
+      "playlists": [
+        "health"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-09-21",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v2",
+      "paper_url": "https://arxiv.org/abs/2609.24791v2",
+      "verified_source_url": "https://arxiv.org/abs/2609.24791v2",
+      "duration_seconds": 253.367,
+      "video_id": "1uP2zX_m7nODXzBGiPLLjfYbdQYGvczVV",
+      "transcript_path": "agitation/transcript.txt",
+      "thumbnail_path": "assets/agitation.jpg",
+      "paper_revised": "2026-09-25",
+      "backfill": true
+    },
+    {
+      "id": "priming",
+      "short_title": "Priming",
+      "title": "Are We Overthinking One-Step Generation?",
+      "headline": "Reconstruct first, generate in one step",
+      "description": "Reconstruction pretraining improves the quality-compute frontier of one-step image generation.",
+      "takeaway": "An easy reconstruction objective can prepare a generator for harder distribution matching; compare the complete quality-compute frontier.",
+      "caveat": "Compute multipliers depend on the baseline. Video prediction resets from real observations and does not establish stable simulation or improved control.",
+      "tags": [
+        "image generation",
+        "training efficiency",
+        "world models"
+      ],
+      "playlists": [
+        "across-ai"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-14",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.20331v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.20331v1",
+      "duration_seconds": 247.767,
+      "video_id": "1fuu3D6zYdRzlD6eGTR8_mZyHuGSWswOK",
+      "transcript_path": "priming/transcript.txt",
+      "thumbnail_path": "assets/priming.jpg",
+      "presentation_note": "Some labels in the original paper figures are small in this edition. Open the linked paper for full-resolution figures."
+    },
+    {
+      "id": "repr",
+      "short_title": "RePR",
+      "title": "Generative Representation Learning for Scalable Latent Tokenization",
+      "headline": "Count representation learning in the budget",
+      "description": "Representation geometry learned from predictive information is evaluated under a full generative-training compute budget.",
+      "takeaway": "Learn representation geometry from conditional prediction advantage and evaluate generation under the full training budget.",
+      "caveat": "Large encoder-compute savings are extrapolated scaling projections, not measured end-to-end speedups. No runnable release was verified at review time.",
+      "tags": [
+        "representation learning",
+        "tokenization",
+        "generative models"
+      ],
+      "playlists": [
+        "across-ai"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-14",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.20533v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.20533v1",
+      "duration_seconds": 251.633,
+      "video_id": "1ZxSqm_7lHjQpjYJ8R467nozPi7vuSLOT",
+      "transcript_path": "repr/transcript.txt",
+      "thumbnail_path": "assets/repr.jpg",
+      "presentation_note": "Some labels in the original paper figures are small in this edition. Open the linked paper for full-resolution figures."
+    },
+    {
+      "id": "hybrid-agents",
+      "short_title": "Hybrid Reasoning Agents",
+      "title": "Hybrid Reasoning Agents",
+      "headline": "Continuous thought, explicit tool calls",
+      "description": "Continuous internal reasoning combines with explicit text tool calls and persistent mixed attention state.",
+      "takeaway": "Combine latent recurrence with text actions and persistent mixed state, then measure complete latency, memory and correctness.",
+      "caveat": "The attention cache grows. Estimated decoding cost excludes prompt processing and external tools; readable latent readouts are not proof of faithful explanations.",
+      "tags": [
+        "agents",
+        "latent reasoning",
+        "tool use"
+      ],
+      "playlists": [
+        "across-ai"
+      ],
+      "published": "2026-10-16",
+      "paper_date": "2026-10-13",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.18861v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.18861v1",
+      "duration_seconds": 260.7,
+      "video_id": "13KdVu3Ttan8pXBi92-tM-WRSHTJKvXRf",
+      "transcript_path": "hybrid-agents/transcript.txt",
+      "thumbnail_path": "assets/hybrid-agents.jpg",
+      "presentation_note": "Some labels in the original paper figures are small in this edition. Open the linked paper for full-resolution figures."
     }
   ]
 }

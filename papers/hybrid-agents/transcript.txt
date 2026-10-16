@@ -1,0 +1,45 @@
+Hybrid Reasoning Agents
+
+Paper: https://arxiv.org/abs/2610.18861v1
+First submitted: 2026-10-13
+Episode: 16 October 2026
+Status: Preprint; author-reported results.
+Narration: locally synthesized with the official Kyutai Pocket TTS Anna preset.
+
+Can an AI agent think in continuous representations, but still use ordinary text to call tools? Hybrid Reasoning Agents tries to combine those two capabilities in one generation process.
+
+Most tool-using agents write intermediate reasoning token by token. Latent reasoning instead feeds internal vectors back into the model. That can be more efficient, but a latent vector is not a Python call or a search query. It also cannot simply be copied into a conventional text transcript between turns.
+
+The paper introduces a small adapter called HybridLink. It maps the model’s final hidden state back into the input-embedding space using two linear layers and a residual connection. A special token starts a latent span. Within that span, the adapted vector becomes the next input. The agent returns to text when it reaches an exit condition, and can then produce a tool call or final answer.
+
+The second architectural decision is just as important. The agent keeps the full attention key-value state across turns, including latent positions and tool observations. This preserves the mixed context without translating it back into text. It is not compressed long-term memory: the cache still grows with the sequence.
+
+Training happens in stages. First, supervised examples teach the format and align the adapter. Then self-conditioning exposes the model to its own predicted latent inputs, rather than only ideal target embeddings. That addresses a training-versus-inference mismatch. Finally, reinforcement learning improves task performance over complete hybrid trajectories.
+
+The reinforcement-learning detail is subtle. Text tokens are sampled, but latent steps are deterministic vectors. The training system records those vectors, replays the same mixed context, and computes probability-ratio updates at sampled text positions. It does not pretend that each latent vector has an ordinary token probability.
+
+What changes empirically? The cleanest comparisons use the same base model size. At fourteen billion parameters, the hybrid agent scores fifty-two point four on the G A I A benchmark. The A R P O baseline scores forty-three point seven. On WebWalker, it scores forty-nine point five versus forty point five. Gains on other tasks are smaller. On the MATH five hundred benchmark, accuracy improves from eighty-seven to eighty-eight point two. The paper’s headline average should not be read as ten extra percentage points on every benchmark.
+
+The ablations also matter. Without the full self-conditioning stage, mathematical accuracy is substantially lower. Replacing latent spans with vectors from another problem severely hurts performance. Shuffling their order also hurts. Those interventions support the claim that latent content and sequence are doing real work.
+
+The authors can display nearest-token versions of latent vectors as pseudo-text. That is useful for inspection, but readable output is not proof that every internal computation is faithfully explained. Replacing the vectors with their nearest actual token loses a little accuracy, suggesting the continuous state contains something beyond its readable label.
+
+Efficiency needs careful accounting. The reported cost model charges every latent step a full model forward pass. For the eight-billion-parameter model, estimated decoding compute falls from sixty-two point five to seventeen point two teraflops per question. But the dollar estimates leave out prompt processing, attention growth and external tools. They are not measured end-to-end service bills.
+
+The practical takeaway is an interface: continuous internal recurrence, explicit external actions, persistent mixed state, and training that matches that runtime. Released code includes an inspector that can show latent readouts beside tool calls. A useful lab demo would test one arithmetic task, then compare complete latency, cache memory and correctness with an equally optimized text-only agent.
+
+Credits and disclosure (not spoken narration)
+
+Source: https://arxiv.org/abs/2610.18861v1
+
+Jiaru Zou, Yunzhe Qi, Sirui Chen, Federico Bianchi, Shang Zhu, Pan Lu, Jingrui He, James Zou. Hybrid Reasoning Agents. arXiv:2610.18861v1. CC BY 4.0. Cropped from original.
+License: https://creativecommons.org/licenses/by/4.0/
+Crops/resizing are disclosed on screen.
+
+All findings are preprint claims, not independent replications. No prospective clinical effectiveness is established by the health studies. Synthetic narration has automated waveform, timing and model-assisted speech-content checks; this is not a human listening certification.
+
+Synthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .
+
+Anna preset: derived from VCTK p228, CSTR VCTK Corpus v0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh, CC BY 4.0, https://doi.org/10.7488/ds/2645 . Preset source: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav . Newly generated synthetic speech, not a recording of the contributor reading this paper. Audio was edited for gain, timing and synchronization. License: https://creativecommons.org/licenses/by/4.0/ .
+
+Typography: Playfair Display and JetBrains Mono, SIL Open Font License 1.1.

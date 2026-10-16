@@ -1,0 +1,43 @@
+Detecting Agitation Before Behavioral Escalation in Autistic Youth Through Multimodal Wearable Sensing
+
+Paper: https://arxiv.org/abs/2609.24791v2
+First submitted: 2026-09-21
+Episode: 16 October 2026
+Status: Preprint; author-reported results.
+Narration: locally synthesized with the official Kyutai Pocket TTS Anna preset.
+
+Can wearable sensing help someone notice a child’s distress earlier? This study examines that question in fifteen autistic young people. It also shows how an evaluation choice can make a model look almost perfect, even when its more realistic performance is much more modest.
+
+The task is individualized agitation detection during thirty clinician-led sessions. It is not autism diagnosis. The researchers observed movement, vocalization and physiological changes, with clinicians marking each child’s signs of distress. The intended application is supportive, timely assistance. The study does not demonstrate that an alert prevents escalation or improves wellbeing.
+
+The sensing setup includes upper-body motion sensors, a lapel microphone, and a wrist or ankle device recording physiological signals. Rather than learn every representation from this small cohort, the model reuses four pretrained encoders: one each for movement, audio, the optical pulse waveform, and skin conductance.
+
+Each encoder’s output is combined with engineered signal features and projected into one hundred twenty-eight dimensions. The four branches are concatenated and fused into a shared representation. But an important detail is easy to miss: the shared group model still has a separate prediction head for each child, selected using participant identity. It shares learned features; it does not eliminate personalization.
+
+The labels also deserve attention. A positive example is a fifteen-second window ending at a clinician’s annotated onset. The timestamp marks when a sign became recognizable, not necessarily when distress truly began. Background windows are sampled away from those onsets. To examine earlier signals, the authors move the input window backward while keeping its positive label.
+
+Evaluation uses five chronological blocks within each participant. One block is held out, and the other four are used for training. This is stronger than randomly mixing nearby windows, but it is not a test on unseen children, and it is not strictly forward-in-time prediction.
+
+At annotated onset, the fine-tuned group model reaches a macro AUC of zero point seven two four, with a participant-bootstrap confidence interval from approximately zero point six five to zero point seven nine. Macro means that each child receives equal weight. The same architecture trained from scratch reaches zero point five eight three. Frozen pretrained features reach zero point seven zero eight, so the small additional gain from finetuning is not clearly established.
+
+Audio contributes most of the signal. Removing it reduces AUC by zero point one two six. A watch-only setup is much weaker: on the seven participants with suitable recordings, it reaches zero point five six, compared with zero point six nine nine for the full sensor setup on those same seven. Comparing that subset against the full fifteen-person headline would be misleading.
+
+The striking evaluation contrast is an AUC of zero point nine nine four under a random, class-balanced window protocol on the same data. That protocol changes both splitting and class balancing, so it does not isolate a single causal factor. But it demonstrates how nearby, correlated recordings can make performance appear far stronger.
+
+Thirty seconds before annotation, the group model reaches an AUC of zero point six zero eight. Those windows were not independently confirmed as agitation, and temporal correlation remains a possible explanation. This is not proof of predicting dangerous behavior thirty seconds ahead.
+
+The next evidence needed is clear: new participants, new settings, realistic false-alarm rates, and prospective testing of whether alerts help. The transferable lesson is to audit modality contributions, personalization, labels and temporal splits before turning an encouraging sensing result into an early-warning claim.
+
+Credits and disclosure (not spoken narration)
+
+Source: https://arxiv.org/abs/2609.24791v2
+
+Visual diagrams and charts independently drawn from reported methods and data. Original paper artwork is not reproduced.
+
+All findings are preprint claims, not independent replications. No prospective clinical effectiveness is established by the health studies. Synthetic narration has automated waveform, timing and model-assisted speech-content checks; this is not a human listening certification.
+
+Synthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .
+
+Anna preset: derived from VCTK p228, CSTR VCTK Corpus v0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh, CC BY 4.0, https://doi.org/10.7488/ds/2645 . Preset source: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav . Newly generated synthetic speech, not a recording of the contributor reading this paper. Audio was edited for gain, timing and synchronization. License: https://creativecommons.org/licenses/by/4.0/ .
+
+Typography: Playfair Display and JetBrains Mono, SIL Open Font License 1.1.
