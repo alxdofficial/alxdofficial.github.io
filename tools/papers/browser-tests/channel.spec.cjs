@@ -140,6 +140,7 @@ test('mobile reference menu remains opaque during open and close, outside tap an
   await page.waitForTimeout(100);await expect(root).toHaveAttribute('data-retained','true');expect((await floor.boundingBox()).height).toBeGreaterThan(200);
   await page.screenshot({path:'test-results/mobile-menu-closing-390.png',fullPage:true});
   await page.waitForTimeout(260);await expect(panel).toBeHidden();
+  await page.waitForTimeout(360);expect((await floor.boundingBox()).height).toBe(0);
   await page.evaluate(()=>scrollTo(0,120));await expect(root).toHaveAttribute('data-mobile-hidden','true');
   await page.evaluate(()=>scrollTo(0,80));await expect(root).toHaveAttribute('data-mobile-hidden','false');
   await page.evaluate(()=>scrollTo(0,0));await menu.tap();await page.keyboard.press('Escape');await expect(menu).toBeFocused();
