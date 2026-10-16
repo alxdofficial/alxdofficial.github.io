@@ -62,6 +62,8 @@ test('reference secondary glow, pointer light, fixed labels, primary clarity and
     const p=getComputedStyle(el,'::before'),s=getComputedStyle(el),r=el.getBoundingClientRect();
     return {width:parseFloat(p.width),height:parseFloat(p.height),hostWidth:r.width,hostHeight:r.height,opacity:p.opacity,filter:p.filter,radius:p.borderRadius,duration:p.transitionDuration,easing:p.transitionTimingFunction,background:p.backgroundImage,color:s.color,shadow:s.boxShadow,x:el.style.getPropertyValue('--glow-x'),y:el.style.getPropertyValue('--glow-y')};
   });
+  await secondary.scrollIntoViewIfNeeded();
+  await page.evaluate(() => document.fonts.ready);
   await page.mouse.move(0,0);
   let state=await read();
   expect(state.width/state.hostWidth).toBeCloseTo(.6,1);
