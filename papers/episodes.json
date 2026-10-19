@@ -70,11 +70,17 @@
       "duration_seconds": 164.5,
       "video_id": "1RYMggX2STFYOpVouk82ZOiTxDjucTCOv",
       "transcript_path": "latent/transcript.txt",
-      "thumbnail_path": "assets/latent.jpg",
+      "thumbnail_path": "assets/latent-figure.png",
       "video_license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
       "publication_status": "preprint",
       "venue": "arXiv",
-      "verified_source_url": "https://arxiv.org/abs/2610.20582v1"
+      "verified_source_url": "https://arxiv.org/abs/2610.20582v1",
+      "thumbnail_figure": "Figure 2, attention-fitting panel",
+      "thumbnail_credit": "Chen et al. (2026)",
+      "thumbnail_source_url": "https://arxiv.org/pdf/2610.20582v1#page=3",
+      "thumbnail_license": "CC BY-SA 4.0",
+      "thumbnail_license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "thumbnail_changes": "Cropped to stage 1; frozen/trainable legend retained. Other stages omitted."
     },
     {
       "id": "memwm",
@@ -99,10 +105,16 @@
       "duration_seconds": 171.867,
       "video_id": "1EjW9UkwpQgMIxUcYoYLTLqspyu0EVNr_",
       "transcript_path": "memwm/transcript.txt",
-      "thumbnail_path": "assets/memwm.jpg",
+      "thumbnail_path": "assets/memwm-figure.png",
       "publication_status": "preprint",
       "venue": "arXiv",
-      "verified_source_url": "https://arxiv.org/abs/2610.19683v1"
+      "verified_source_url": "https://arxiv.org/abs/2610.19683v1",
+      "thumbnail_figure": "Figure 1, memory/predictor detail",
+      "thumbnail_credit": "Sun and Zhu (2026)",
+      "thumbnail_source_url": "https://arxiv.org/html/2610.19683v1#S3.F1",
+      "thumbnail_license": "CC BY 4.0",
+      "thumbnail_license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "thumbnail_changes": "Cropped to memory/predictor detail; surrounding rollout omitted."
     },
     {
       "id": "timecap",
@@ -216,8 +228,14 @@
       "duration_seconds": 247.767,
       "video_id": "1fuu3D6zYdRzlD6eGTR8_mZyHuGSWswOK",
       "transcript_path": "priming/transcript.txt",
-      "thumbnail_path": "assets/priming.jpg",
-      "presentation_note": "Some labels in the original paper figures are small in this edition. Open the linked paper for full-resolution figures."
+      "thumbnail_path": "assets/priming-figure.png",
+      "presentation_note": "Some labels in the original paper figures are small in this edition. Open the linked paper for full-resolution figures.",
+      "thumbnail_figure": "Figure 1, compute-quality panel",
+      "thumbnail_credit": "Park et al. (2026)",
+      "thumbnail_source_url": "https://arxiv.org/pdf/2610.20331v1#page=1",
+      "thumbnail_license": "CC BY 4.0",
+      "thumbnail_license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "thumbnail_changes": "Left panel cropped; axes and model labels retained. Right panel omitted."
     },
     {
       "id": "repr",
@@ -245,8 +263,14 @@
       "duration_seconds": 251.633,
       "video_id": "1ZxSqm_7lHjQpjYJ8R467nozPi7vuSLOT",
       "transcript_path": "repr/transcript.txt",
-      "thumbnail_path": "assets/repr.jpg",
-      "presentation_note": "Some labels in the original paper figures are small in this edition. Open the linked paper for full-resolution figures."
+      "thumbnail_path": "assets/repr-figure.png",
+      "presentation_note": "Some labels in the original paper figures are small in this edition. Open the linked paper for full-resolution figures.",
+      "thumbnail_figure": "Figure 4, conditional-generation panel",
+      "thumbnail_credit": "Baade et al. (2026)",
+      "thumbnail_source_url": "https://arxiv.org/pdf/2610.20533v1#page=9",
+      "thumbnail_license": "CC BY 4.0",
+      "thumbnail_license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "thumbnail_changes": "Top panel cropped; axes and legend retained. Unconditional panel omitted."
     },
     {
       "id": "hybrid-agents",
@@ -274,8 +298,14 @@
       "duration_seconds": 260.7,
       "video_id": "13KdVu3Ttan8pXBi92-tM-WRSHTJKvXRf",
       "transcript_path": "hybrid-agents/transcript.txt",
-      "thumbnail_path": "assets/hybrid-agents.jpg",
-      "presentation_note": "Some labels in the original paper figures are small in this edition. Open the linked paper for full-resolution figures."
+      "thumbnail_path": "assets/hybrid-agents-figure.png",
+      "presentation_note": "Some labels in the original paper figures are small in this edition. Open the linked paper for full-resolution figures.",
+      "thumbnail_figure": "Figure 1, HybridAgent architecture",
+      "thumbnail_credit": "Zou et al. (2026)",
+      "thumbnail_source_url": "https://arxiv.org/pdf/2610.18861v1#page=1",
+      "thumbnail_license": "CC BY 4.0",
+      "thumbnail_license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "thumbnail_changes": "Right panel cropped; text/latent-mode labels retained. Adapter detail omitted."
     }
   ]
 }

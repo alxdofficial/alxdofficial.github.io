@@ -33,3 +33,9 @@ Edit `papers/episodes.json`, the transcript files, thumbnail files, or templates
 The dependency-free generator is `tools/papers/generate.cjs`; the command wrapper is `build.cjs`. Unit tests simulate a future episode entirely in memory, with no dummy page publication. GitHub Actions checks that generated output is current and tests 320, 390, 768, and 1440px layouts, keyboard/mobile navigation, search, no-JavaScript transcript access, reduced motion, and player-button construction. External playback is not simulated as a pass: browser tests replace the external iframe with a local test response.
 
 The workflow only validates and uploads short-lived test artifacts. It has read-only repository permissions and does not add future auto-publishing or change any existing schedule.
+
+## Paper-figure thumbnails
+
+Prefer a focused, legible original figure panel when reuse has been verified. Preserve axes, legends, labels and scientific context. The existing title below the image supplies the title treatment; do not shrink a whole page into a thumbnail. A labeled adaptation remains appropriate when original reuse is unclear.
+
+For a verified original, use `thumbnail_figure`, `thumbnail_credit`, `thumbnail_source_url`, `thumbnail_license`, `thumbnail_license_url`, and `thumbnail_changes`. The generator displays attribution, license, the selected panel/crop, and a full-size image link. Original figures use contain sizing and playback controls below the artwork so labels are not cropped or obscured. These rights apply to the figure asset; they do not automatically license the whole video.

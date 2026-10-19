@@ -191,3 +191,20 @@ test('video creation dates control channel, every playlist and archive filters',
   await expect(page.locator('#episodes .episode:visible h3')).toHaveText(expected.slice(0,2));
   await expect(page.locator('#episodes .episode:visible .citation-meta').first()).toContainText('1 SEPT 2026');
 });
+
+test('original figure thumbnails preserve labels and place controls outside artwork',async({page})=>{
+  for(const width of [390,1440]){
+    await page.setViewportSize({width,height:1000});await page.goto('/papers/');
+    for(const e of source.episodes.filter(e=>e.thumbnail_source_url)){
+      const thumb=page.locator('#episodes .figure-thumb[href="/papers/'+e.id+'/"]');
+      await thumb.scrollIntoViewIfNeeded();
+      const img=thumb.locator('img');await expect(img).toHaveAttribute('alt',e.thumbnail_figure);
+      expect(await img.evaluate(el=>getComputedStyle(el).objectFit)).toBe('contain');
+      expect(await thumb.evaluate(el=>getComputedStyle(el,'::after').display)).toBe('none');
+      const imageBox=await img.boundingBox(),controlBox=await thumb.locator('.play').boundingBox();
+      expect(controlBox.y).toBeGreaterThanOrEqual(imageBox.y+imageBox.height);
+      await expect(thumb.locator('..').locator('.thumbnail-credit')).toContainText(e.thumbnail_credit);
+      await thumb.locator('..').screenshot({path:'test-results/figure-'+e.id+'-'+width+'.png'});
+    }
+  }
+});

@@ -171,3 +171,13 @@
 
 /* Keep all latest-episode links reachable when a daily edition fills the panel. */
 @media(min-width:681px){.reference-nav[data-open="true"] .menu-panel{overflow-y:auto;overscroll-behavior:contain}}
+
+/* Source figures retain all labels; playback controls sit below the artwork. */
+.thumb.figure-thumb{padding-bottom:60px;background:var(--surface)}
+.thumb.figure-thumb img{height:auto;aspect-ratio:auto;object-fit:contain;background:#fff}
+.thumb.figure-thumb::after{display:none}
+.thumb.figure-thumb .play,.thumb.figure-thumb:hover .play,.thumb.figure-thumb:focus-visible .play{top:auto;left:8px;bottom:7px;transform:none;min-height:44px;padding:10px 16px;box-shadow:none}
+.thumb.figure-thumb .duration{bottom:17px}
+.thumbnail-credit{color:var(--muted);font-size:10px;line-height:1.6;margin:10px 0;overflow-wrap:anywhere}
+.episode>p.thumbnail-credit{font-size:10px}
+.figure-player>img{object-fit:contain;background:#fff}

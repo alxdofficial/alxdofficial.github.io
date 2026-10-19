@@ -19,6 +19,10 @@ function runTests(generate,source,transcripts,templates) {
   const cat=JSON.parse(a['catalog.json']).episodes.find(x=>x.id===e.id);
   assert(cat.transcript===transcripts[e.id],'Transcript parity '+e.id);
   assert(cat.verified_source_url===e.paper_url,'Source verification URL '+e.id);
+  if(e.thumbnail_source_url){
+   assert(html.includes(e.thumbnail_credit)&&html.includes(e.thumbnail_license_url)&&html.includes(e.thumbnail_changes),'Visible thumbnail attribution and changes '+e.id);
+   assert(html.includes('/papers/'+e.thumbnail_path)&&html.includes('Full figure'),'Full-size original figure link '+e.id);
+  }
   const schema=JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1]);
   assert(schema.name===e.title&&schema.duration==='PT'+e.duration_seconds+'S','Schema '+e.id);
   assert(!html.includes('{{'),'No unresolved template');
@@ -54,7 +58,7 @@ function runTests(generate,source,transcripts,templates) {
  assert(home.indexOf('value="2026-10-21"')<home.indexOf('value="2026-10-20"'),'Creation date options newest first');
  assert(home.indexOf('?date=2026-10-21#episodes')<home.indexOf('?date=2026-10-20#episodes'),'Archive groups newest first');
  assert(home.includes('data-date="2026-10-21"')&&!home.includes('data-date="2026-09-01"'),'Groups use creation date, not paper date');
- assert(home.includes('class="feature-image thumb" href="/papers/'+expected[0]+'/"'),'Latest video featured');
+ assert(home.match(/<section class="featured"[\s\S]*?<a [^>]*href="([^"]+)"/)[1]==='/papers/'+expected[0]+'/','Latest video featured');
  for(const id of expected){
    assert(ordered[id+'/index.html'].includes('VIDEO CREATED:'),'Watch page labels creation date');
    assert(ordered[id+'/index.html'].includes('PAPER:')&&ordered[id+'/index.html'].includes('REVISED'),'Paper and version dates remain separate');
@@ -67,7 +71,8 @@ function runTests(generate,source,transcripts,templates) {
   s=>s.episodes[0].transcript_path='../private.txt',
   s=>s.episodes[0].duration_seconds=-1,
   s=>s.episodes[0].paper_date='2026-02-30',
-  s=>s.episodes[0].video_id='bad'
+  s=>s.episodes[0].video_id='bad',
+  s=>s.episodes[0].thumbnail_source_url='https://example.com/unverified.png'
  ]) {
   const bad=JSON.parse(JSON.stringify(source));mutate(bad);let failed=false;
   try{generate(bad,transcripts,templates);}catch{failed=true;}assert(failed,'Invalid record rejected');
