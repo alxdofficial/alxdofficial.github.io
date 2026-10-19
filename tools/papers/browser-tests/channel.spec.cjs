@@ -159,3 +159,35 @@ test('all catalog episodes have complete read, source, media and download routes
   await expect(page.getByRole('link',{name:/Read the paper/})).toHaveAttribute('href',episode.paper_url);
  }
 });
+
+// Synthetic records stay in memory and are never added to the public catalog.
+test('video creation dates control channel, every playlist and archive filters', async ({page})=>{
+  const fs=require('node:fs'),path=require('node:path'),generate=require('../generate.cjs');
+  const root=path.resolve(__dirname,'../../..');
+  const fixture=JSON.parse(JSON.stringify(source));
+  fixture.episodes=source.episodes.slice(0,3).map((e,i)=>({...e,
+    published:['2026-10-20','2026-10-21','2026-10-21'][i],
+    paper_date:['2026-10-19','2026-09-01','2026-09-02'][i],
+    playlists:source.playlists.map(p=>p.id)
+  }));
+  const transcripts=Object.fromEntries(fixture.episodes.map(e=>[e.id,fs.readFileSync(path.join(root,'papers',e.transcript_path),'utf8')]));
+  const templates=Object.fromEntries(['home','shell'].map(k=>[k,fs.readFileSync(path.join(__dirname,'../templates',k+'.html'),'utf8')]));
+  const html=generate(fixture,transcripts,templates)['index.html'];
+  await page.route('**/papers/?*',route=>route.fulfill({contentType:'text/html',body:html}));
+  const expected=[fixture.episodes[1],fixture.episodes[2],fixture.episodes[0]].map(e=>e.title);
+  for(const playlist of ['all',...source.playlists.map(p=>p.id)]){
+    await page.goto('/papers/?playlist='+playlist+'#episodes');
+    await expect(page.locator('#episodes .episode:visible h3')).toHaveText(expected);
+    await expect(page.getByRole('combobox',{name:'Video created',exact:true})).toBeVisible();
+    await page.locator('#date').selectOption('2026-10-21');
+    await expect(page.locator('#episodes .episode:visible h3')).toHaveText(expected.slice(0,2));
+    await page.reload();
+    await expect(page.locator('#episodes .episode:visible h3')).toHaveText(expected.slice(0,2));
+    await page.getByRole('button',{name:'Reset'}).click();
+    await expect(page.locator('#episodes .episode:visible h3')).toHaveText(expected);
+  }
+  await expect(page.locator('#archive a').first()).toHaveAttribute('href','?date=2026-10-21#episodes');
+  await page.locator('#archive a').first().click();
+  await expect(page.locator('#episodes .episode:visible h3')).toHaveText(expected.slice(0,2));
+  await expect(page.locator('#episodes .episode:visible .citation-meta').first()).toContainText('1 SEPT 2026');
+});

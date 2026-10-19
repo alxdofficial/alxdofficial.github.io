@@ -35,6 +35,31 @@ function runTests(generate,source,transcripts,templates) {
  assert(c['feed.xml'].includes('/test-future/'),'RSS new episode');
  assert(c['sitemap.xml'].includes('/test-future/'),'Sitemap new episode');
  assert(c['index.html'].includes('02 / '+(source.episodes.filter(e=>e.playlists.includes('health')).length+1)+' EPISODES'),'Playlist updated');
+ // Creation order deliberately differs from paper publication and revision order.
+ const chronology=JSON.parse(JSON.stringify(source));
+ chronology.episodes=source.episodes.slice(0,3).map((e,i)=>({...e,
+   published:['2026-10-20','2026-10-21','2026-10-21'][i],
+   paper_date:['2026-10-19','2026-09-01','2026-09-02'][i],
+   paper_revised:['2026-10-19','2026-09-03','2026-09-04'][i],
+   playlists:['research','health','across-ai']
+ }));
+ const ordered=generate(chronology,transcripts,templates), home=ordered['index.html'];
+ const expected=[chronology.episodes[1],chronology.episodes[2],chronology.episodes[0]].map(e=>e.id);
+ const catalog=JSON.parse(ordered['catalog.json']);
+ assert(JSON.stringify(catalog.episodes.map(e=>e.id))===JSON.stringify(expected),'Video creation order with stable same-day ties, independent of paper dates');
+ const cards=[...home.matchAll(/<article class="episode"[\s\S]*?<h3><a href="\/papers\/([^/]+)\//g)].map(m=>m[1]);
+ assert(JSON.stringify(cards)===JSON.stringify(expected),'Static channel creation order');
+ assert(home.includes('Video created<select id="date"'),'Date filter names video creation');
+ assert(home.includes('By video creation day.'),'Archive names video creation');
+ assert(home.indexOf('value="2026-10-21"')<home.indexOf('value="2026-10-20"'),'Creation date options newest first');
+ assert(home.indexOf('?date=2026-10-21#episodes')<home.indexOf('?date=2026-10-20#episodes'),'Archive groups newest first');
+ assert(home.includes('data-date="2026-10-21"')&&!home.includes('data-date="2026-09-01"'),'Groups use creation date, not paper date');
+ assert(home.includes('class="feature-image thumb" href="/papers/'+expected[0]+'/"'),'Latest video featured');
+ for(const id of expected){
+   assert(ordered[id+'/index.html'].includes('VIDEO CREATED:'),'Watch page labels creation date');
+   assert(ordered[id+'/index.html'].includes('PAPER:')&&ordered[id+'/index.html'].includes('REVISED'),'Paper and version dates remain separate');
+ }
+ assert(ordered['feed.xml'].indexOf('/'+expected[0]+'/')<ordered['feed.xml'].indexOf('/'+expected[2]+'/'),'Feed follows video creation order');
  for(const mutate of [
   s=>s.episodes.push({...s.episodes[0]}),
   s=>delete s.episodes[0].publication_status,
@@ -47,6 +72,6 @@ function runTests(generate,source,transcripts,templates) {
   const bad=JSON.parse(JSON.stringify(source));mutate(bad);let failed=false;
   try{generate(bad,transcripts,templates);}catch{failed=true;}assert(failed,'Invalid record rejected');
  }
- return 'PASS: deterministic generation, title/publication metadata, transcript parity, schema, duration, synthetic daily ingestion, archive/playlists/feed/sitemap, invalid-input rejection.';
+ return 'PASS: deterministic generation, title/publication metadata, transcript parity, schema, duration, synthetic daily ingestion, video creation chronology, archive/playlists/feed/sitemap, invalid-input rejection.';
 }
 console.log(runTests(generate, source, transcripts, templates));

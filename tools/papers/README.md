@@ -16,7 +16,7 @@ For several episodes, add one record at a time or edit the episodes array and ru
 ## Required publication metadata
 
 - `title`: complete, untruncated scientific title, not an editorial rewrite.
-- `published`: video episode date (YYYY-MM-DD), distinct from the paper date.
+- `published`: original video creation date (YYYY-MM-DD), retained under the existing catalog key for compatibility. This is the sole date used for newest-first episode order, latest edition, playlist results, date filters, and archive groups. Same-day episodes keep their catalog order. Keep this date when uploading, replacing, or remaking an existing episode; do not substitute the paper date, file modification time, or later upload/remake date. Verify it against the original production record before adding an episode; if it is unknown, hold the record for verification rather than inventing a date.
 - `paper_date`: verified paper publication/preprint date; use literal `unknown` when not verified.
 - `publication_status`: `preprint`, `published`, or `unknown`. Never infer acceptance from an arXiv listing.
 - `venue`: verified journal/conference or preprint source; use `Not verified` when unknown.
@@ -24,7 +24,7 @@ For several episodes, add one record at a time or edit the episodes array and ru
 - `paper_url` and `verified_source_url`: the same canonical primary source used to verify this metadata.
 - `video_license_url`: optional explicit whole-video license. Do not infer this from a paper or voice license.
 
-The three launch papers are arXiv v1 preprints dated 14 October 2026. No conference/journal publication is asserted.
+The nine currently published videos retain their original 16 October 2026 creation day, supported by the dated production collection and the original October 16 catalog commits. The three launch papers are arXiv v1 preprints dated 14 October 2026. Paper publication and revision dates remain separate and do not affect video ordering. No conference/journal publication is asserted.
 
 ## Source and generated files
 
