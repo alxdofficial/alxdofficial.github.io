@@ -12,7 +12,7 @@ function walk(dir) {
 }
 assert.deepEqual(walk(output).sort(), [...expected].sort(), 'Only approved files are deployed');
 for (const file of expected) assert.deepEqual(fs.readFileSync(path.join(output,file)),fs.readFileSync(path.join(root,file)), 'Public asset parity: ' + file);
-for (const excluded of ['tools', '.git', '.github', 'README.md', 'papers/episodes.json', 'node_modules']) assert(!fs.existsSync(path.join(output,excluded)), 'Internal source excluded: ' + excluded);
+for (const excluded of ['tools', '.git', '.github', 'README.md', 'papers/episodes.json', 'node_modules', 'spain-2026']) assert(!fs.existsSync(path.join(output,excluded)), 'Internal source excluded: ' + excluded);
 const halo = fs.readFileSync(path.join(output,'halo/index.html'),'utf8');
 assert(!/\/(?:home|Users)\//.test(halo), 'No local user paths in HALO');
 assert(!/"(?:training_args|source_provenance|oof_cache)"/.test(halo), 'No internal training bookkeeping in HALO');

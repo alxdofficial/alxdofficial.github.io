@@ -2,7 +2,6 @@
 
 - `/papers/`: research films, source links, transcripts, playlists and archive.
 - `/halo/`: interactive research explainer.
-- `/spain-2026/`: encrypted older travel page, retained pending an explicit removal decision.
 
 ## Source and publication boundaries
 
