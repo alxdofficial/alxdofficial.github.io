@@ -1,0 +1,39 @@
+Memorilla: Latent Semantic Memory for LLMs
+
+Memorilla separates what a system stores from what its language model reads. Each incoming document becomes an embedding, a reusable numerical representation, and joins a growing store. For every new question, a small learned module reads that store and creates sixteen memory tokens for a frozen language model. These tokens are vectors, not a sixteen-word summary. The attraction is a bounded decoder input that can still combine evidence from many documents, instead of selecting a few passages or inserting the entire collection.
+
+Here is the mechanism. Sixteen learned slots first receive information from the question embedding. Because the question is one vector, that attention step supplies a shared update, while the slots' different starting values preserve their identities. The conditioned slots then attend across every stored document embedding. A projection converts the resulting vectors into the frozen language model's input space. Only this memory module learns. The document encoder and answering model stay fixed, but the module is trained on millions of examples and then benchmark training data.
+
+The main experiments use Qwen, an open language-model family. They test personalization, long-document questions, and evidence-heavy questions. On FactKG, which asks whether claims follow from a knowledge graph, Memorilla reaches eighty-four point three three percent, versus eighty point four three with all documents supplied as text. Its readout uses one hundred and eight times fewer document tokens. The composition panel shows why collection-wide access might help: ordinary retrieval weakens as more facts must be combined. Memorilla wins the primary metric on five of eight benchmarks.
+
+The result is not that compression always beats reading. On NarrativeQA, a benchmark of questions about books and screenplays, Memorilla is stronger on why and how questions, while retrieved text helps with who and which. Exact names can disappear in an embedding bottleneck. On PubMedQA, whose evidence is only a few short biomedical abstracts, Memorilla scores fifty-nine percent while the best baseline scores sixty-nine. A proposed hybrid could combine latent synthesis with exact retrieval, but the paper's union result is an oracle upper bound, not a working hybrid.
+
+The authors also train a memory module for TextWorld, a simulator where an agent navigates rooms and manipulates objects using text commands. Here eight memory tokens supplement the same full textual history available to the baseline; they do not replace it. Reinforcement learning updates only the memory module. Average success across three attempts rises from eighteen point six to twenty-four point two percent, and success in any of three attempts rises from twenty-five to thirty-seven point five. The pictured routes illustrate fewer repeated navigation loops.
+
+There are important boundaries. The game test has forty prompts but only thirty distinct games, with a fifty-turn cap and modified memory handling for the longest games. It does not establish lifelong retention across environments. The reported twenty-seven-fold latency advantage uses five hundred and twelve documents on one H100 GPU, with indexing paid separately and a particular full-context serving stack. The persistent store still grows, and the module still reads every embedding. The transferable idea is a learned, query-conditioned interface between large storage and small context, with exact-detail retrieval as a natural complement.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.21375v1 · 15 Oct 2026
+https://arxiv.org/abs/2610.21375v1
+Preprint; author-reported COLM 2026 workshop; CC BY 4.0
+
+First submitted: 2026-10-15 06:55:55 UTC
+Figure 2: persistent document embeddings · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 2: question-conditioned memory slots · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 2: latent tokens enter frozen decoder · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 2: read and project document evidence · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Table 11: FactKG accuracy and compression · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 4b–c; shared source legend repositioned · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 4a; shared source legend repositioned · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Table 11: PubMedQA accuracy · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 4a: complementary question types; proposed hybrid unevaluated · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 7b–c: illustrative routes · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 8: measured TextWorld outcomes · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 8: bounded TextWorld test · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Table 14: serving cost at 512 documents · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 2: growing store, bounded readout · Source: Fallahpour et al. (2026), arXiv:2610.21375v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

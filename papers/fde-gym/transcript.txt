@@ -1,0 +1,38 @@
+FDE-Gym: The Last Mile of AI Delivery
+
+FDE Gym asks a harder question than whether an agent can write working code: does the delivered system improve the customer's business? Its ninety-five tasks are adapted from twenty delivery scenarios across eighteen sectors. In the drilling example, a sponsor asks for summaries and a chat interface. The real problem is downtime attributed to the wrong party, blocking compensation. Useful work requires discovering contractual rules and obtaining change approval. This is a simulated benchmark of customer-delivery judgment, not a test on live customer systems.
+
+Potential applications include evaluating enterprise coding agents, training delivery engineers, and diagnosing whether failures come from discovery or implementation. The tasks include booking, claims, incident response, triage, and operational workflows. Here, the agent inherits a running system, documents, historical records, and people it can question. After handover, the system is evaluated on held-out data. That structure rewards changes that survive deployment. It does not establish readiness for unsupervised use in healthcare or finance, and the reference solution is not a measured human baseline.
+
+Several ingredients already existed. S W E bench, first released in October twenty twenty-three, evaluates repository repairs. The Agent Company, from December twenty twenty-four, simulates workplace tasks and colleagues. Long Horizon Augmented Workflows, from February twenty twenty-six, studies missing information and clarification cost. September's hyper tau benchmark already evaluates end-to-end agent construction. FDE Gym's contribution is the combination: ambiguous customer briefs, discoverable operational constraints, executable deliverables, and a business-outcome score. It therefore extends several research lines rather than establishing the first benchmark for building agents.
+
+The mechanism has four instruction levels. Level zero supplies the problem, constraints, and scoring criteria. Level one leaves only the problem statement. Level two makes the request vague; level three can misdirect it. The environment and grader stay fixed. Stakeholder responses are scripted, with a model routing questions to topics. Business uplift compares the delivered system with the unchanged baseline and an expert reference. Operational incidents erase positive uplift, and stakeholder contact costs reduce the score. A task is resolved at a score of at least zero point eight, without an incident. The mean also floors extreme losses before aggregation.
+
+On all ninety-five level-three tasks, Claude Opus five point five has the highest mean score: zero point five six, with a ninety-five percent interval of zero point five zero to zero point six two. It resolves fourteen tasks. Sonnet resolves fifteen despite its lower mean. The stronger diagnostic uses the same twenty originals: withholding constraints and scoring information reduces the top three models' scores by zero point two eight. Further ambiguity and misdirection reduce them by only zero point zero four, with uncertainty that includes no change. Those are author-reported results under one framework, three runs per condition, and common resource limits.
+
+The caveats are important. Contact prices are designed by experts, not measured customer costs. A resolved task is not the same as any positive improvement: Opus reaches strong business uplift on forty tasks before contact costs, but fourteen satisfy the final threshold. There is no human baseline yet, and ninety-five tasks share only twenty scenario worlds. Public code is available, but only three example cases are open; the rest require access or remain held out. The useful research direction is better constraint discovery and more reliable implementation, not a sweeping claim about replacing engineers.
+
+Credits and disclosure (not spoken narration)
+Yang et al. · arXiv:2610.22350v1
+https://arxiv.org/abs/2610.22350v1
+Preprint, v1; author-reported results. No independent benchmark rerun.
+Paper figures reused under CC BY 4.0, credited to Yang et al.; original crops, disclosed rearrangements and faithful enlarged excerpts. This does not assign a license to the entire video. Code and datasets have separate licenses.
+First submitted: 2026-10-15T17:57:23Z
+Fig. 4 · sponsor brief · Original crop · CC BY 4.0
+Fig. 4 · underlying constraint · Original crop · CC BY 4.0
+Fig. 3 · task inputs · Original crop · CC BY 4.0
+Fig. 3 · deployment evaluation · Original crop · CC BY 4.0
+Table 4 · selected categories · Faithful enlarged excerpt · CC BY 4.0
+Fig. 3 · delivery loop · Original crop · CC BY 4.0
+Table 1 · information levels · Faithful shortened labels · CC BY 4.0
+Eqs. 1–5 · score definition · Faithful enlarged labels · CC BY 4.0
+Fig. 2 + Table 3 · L3, 95 tasks · Original rows/axis rearranged; enlarged labels · CC BY 4.0
+Table 3 · matched 20 originals · Faithful enlarged table subset · CC BY 4.0
+§5.2 · paired uncertainty · Faithful enlarged values · CC BY 4.0
+§5.3 · uplift versus net score · Faithful enlarged values · CC BY 4.0
+§4 + dataset card · release status · Faithful availability summary
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

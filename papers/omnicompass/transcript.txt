@@ -1,0 +1,37 @@
+OmniCompass: A Holistic Benchmark for Omni-Modal Video Grounding and Understanding
+
+OmniCompass asks whether a video model can find and understand the same target when the reference changes. One prompt describes the target in words. A paired prompt uses an image plus corresponding words. The video, target, task, and correct answer stay fixed. The model must identify when the target appears, where it is, and what happens. This is an evaluation design rather than a new model architecture. It addresses a subtle failure: good average answers do not necessarily mean the model consistently binds its answer to the intended evidence.
+
+The vision-language track contains eight hundred twenty videos and three tasks per video, for two thousand four hundred sixty instances. A two-hundred-forty-video subset adds tasks requiring synchronized sound. Temporal grounding asks for the relevant time interval. Spatial grounding asks for target boxes at the supplied interval's start and end. Question answering asks what happened. Videos span seven domains and range from thirty seconds to over eighty-eight minutes. The supplied time boundaries matter: spatial localization is tested without forcing the model to first solve temporal localization, so this is not an end-to-end tracking score.
+
+The key metric is the cross-specification consistency score. For question answering, both references must produce the correct answer to receive credit. Agreeing on a wrong answer earns nothing. For grounding, overlap is measured as intersection divided by union, either between time intervals or image boxes. The score takes the smallest of three overlaps: each prediction against the truth, and the two predictions against each other. This prevents two individually plausible but incompatible predictions from looking reliable. The overall score averages the three task scores; it is not simply the percentage of questions answered correctly.
+
+Fifty distinct models are evaluated across the two tracks. On the vision-language track, Gemini-3.8-Flash leads the overall consistency score at 42.8, while Kimi-K3 leads the open-source group at 39.6. Across all tested models, the best temporal score is only 27.1 and the best spatial score 34.9, compared with 69.1 for paired question answering. Those are separate task maxima, not one model's three results. The gap suggests that answering what happened can be substantially easier than placing the evidence precisely in time and space under both reference formats.
+
+On the audio-visual track, Gemini-3.8-Flash reaches an overall consistency score of 57.4, compared with 24.6 for MiMo-V2.5, the strongest open-source model in this protocol. Both use sixty-four sampled frames. MiMo's ordinary question-answering accuracies look similar across the two references: 59.2 and 58.7 percent. But only 47.3 percent of paired questions are answered correctly in both settings. Similar aggregate accuracy can therefore conceal different errors on individual examples. Do not compare this track's overall score directly with the vision-only track to estimate the benefit of sound: the tasks also differ.
+
+The study also shows that reference images do not help every model, and explicit frame timestamps usually improve the tested configurations. There are important limits. Frame budgets differ across models, from sixteen to sixty-four, and sparse uniform sampling can miss brief events. The paired wording changes along with the reference image, potentially removing descriptive information. Human curation also shapes the domain mix. The useful lesson is to evaluate correctness together with consistency under controlled changes of reference, while reporting observation budgets. This October thirteenth preprint is a recent backfill selected for strong current attention, rather than a release inside seventy-two hours.
+
+Credits and disclosure (not spoken narration)
+Liu et al. · arXiv:2610.18829v1 · October 2026
+https://arxiv.org/abs/2610.18829v1
+Preprint, v1, 13 October 2026; no peer-reviewed venue established. Original paper visuals: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); cropped/enlarged and selected panels reflowed.
+Author-created paper diagrams, tables and equations reproduced under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/), with attribution in figure credits. Panels cropped, enlarged or reflowed; faithful metric headings added. Third-party video footage and separately licensed demo media are excluded.
+First submitted: 2026-10-13
+Figure 2 · original task headings; footage excluded · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · original track labels and video/instance counts · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 4(b) · video duration bins in seconds · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Question answering · both answers equal truth · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Temporal grounding · minimum of three overlaps · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 2 · overall cross-specification score (%) · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 2 · separate task maxima (%) · temporal / spatial / QA · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 3 · overall cross-specification score (%) · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 3 · sampled frames per video · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 3 · MiMo · accuracy Text / Text+Image and paired CS (%) · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 6 · VL temporal grounding consistency (%) · complete original timestamp legend · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 3 · model frame budgets differ · Liu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

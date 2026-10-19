@@ -1,0 +1,34 @@
+All-in-One Memory: Process-Rewarded Reinforcement Learning for Memory Agents
+
+A memory agent can find the right source and still write the wrong conclusion. It might confuse who did something, repeat old notes, miss a crucial clue, or stop searching too early. All-in-One Memory, released on October fifteenth, trains those decisions together. The central idea is to reward the quality of the evidence-handling process, rather than judging only the final answer. The paper is explicitly marked work in progress.
+
+The tested uses include questions over long conversations, document retrieval, learning from supplied interactions, and reasoning about changing user preferences. A practical assistant could use this structure to retain a dated, source-linked note instead of an unsupported summary. Each stored event has several searchable views, including raw text and a summary, but keeps a link to its original evidence. Actual deployment with personal histories would still need access controls, correction, and deletion safeguards.
+
+Retrieval-augmented generation dates to twenty twenty, and later agent-memory systems added persistent notes, memory tiers, and graph organization. Search R one trained search behavior with reinforcement learning in twenty twenty-five. By twenty twenty-six, methods including Mem T already used richer feedback for memory operations. All-in-One Memory should therefore not be described as the first trained memory system. Its narrower contribution is one shared evidence state and a semantic reward model covering search, writing, skipping, and stopping.
+
+First, compile the history into events that preserve their source locations. For a question, the policy either searches for missing evidence or stops. After a search, it adds a useful, source-bound note or skips the result. The accumulated notes go to a separate answer model. Offline training uses a reward model to score each action. It first learns from rules about evidence coverage and provenance. It is then refined using preference training on semantic judgments from another language model. Scores are averaged within action types before being combined, so repeated searches do not overwhelm a rare stopping decision. Importantly, these process scores become one reward for the whole sequence of memory decisions. The policy's tokens share that trajectory-level advantage. At deployment, notes change, but the trained policy does not run new reinforcement learning or update its weights online.
+
+The strongest within-framework comparison is training versus leaving the policy untrained. On LoCoMo, answer F one, a score balancing precision and recall, rises from fifty-five point eight to sixty-one. The same analysis shows higher recall of the gold evidence during search. Across nine selected MemoryAgentBench tasks, the reported mean is seventy-four point seven, compared with sixty-six point four for Fine Mem. That is a comparison between different complete systems, not an isolated estimate of the memory policy's effect. The LoCoMo answer model also receives training on that dataset, which complicates comparisons with other systems.
+
+The better average hides regressions. On the CLINC intent-classification task, Fine Mem scores eighty-nine and All-in-One Memory scores seventy-three. The paper also gives conflicting retrieval-width settings: ten events in its main configuration, but twenty in an appendix. A public implementation was promised but not verified. Nor does bounded working context make storage and retrieval free as the history grows. The useful research direction is learning when evidence is sufficient and whether notes remain faithful. Clearer matched baselines and reproducibility details are the next requirements.
+
+Credits and disclosure (not spoken narration)
+Wang et al. · arXiv:2610.21147v1
+https://arxiv.org/pdf/2610.21147v1
+Preprint; author-reported results; independent reproduction not performed.
+Original author figure and table excerpts used for research explanation with attribution. Cropping and enlarged readouts are disclosed; authors retain source rights. No whole-video license is asserted.
+First submitted: 2026-10-15T03:02:24Z
+Figure 2 · p. 3 · evidence-state loop · Wang et al.; original panel crop, enlarged readouts
+Figure 2 · traceable multi-view event bank · Wang et al.; original panel crop, enlarged readouts
+Figure 1 · p. 2 · author comparison schematic · Wang et al.; original panel crop, enlarged readouts
+Figure 2 · memory policy loop · Wang et al.; original panel crop, enlarged readouts
+Figure 2 · reward training and aggregation · Wang et al.; original panel crop, enlarged readouts
+Figure 12c · p. 23 · trained vs untrained · Wang et al.; original panel crop, enlarged readouts
+Figure 12a · search evidence recall · Wang et al.; original panel crop, enlarged readouts
+Figure 3 · p. 7 · nine-task average · Wang et al.; original panel crop, enlarged readouts
+Figure 3 · CLINC column; labels rearranged · Wang et al.; original panel crop, enlarged readouts
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

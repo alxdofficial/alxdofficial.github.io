@@ -24,7 +24,9 @@ For several episodes, add one record at a time or edit the episodes array and ru
 - `paper_url` and `verified_source_url`: the same canonical primary source used to verify this metadata.
 - `video_license_url`: optional explicit whole-video license. Do not infer this from a paper or voice license.
 
-The nine currently published videos retain their original 16 October 2026 creation day, supported by the dated production collection and the original October 16 catalog commits. The three launch papers are arXiv v1 preprints dated 14 October 2026. Paper publication and revision dates remain separate and do not affect video ordering. No conference/journal publication is asserted.
+The nine October 16 videos retain their original 16 October 2026 creation day, supported by the dated production collection and the original October 16 catalog commits. The three launch papers are arXiv v1 preprints dated 14 October 2026. Paper publication and revision dates remain separate and do not affect video ordering. No conference/journal publication is asserted.
+
+The thirteen approved October 17–18 episodes retain their original dated production dates. Optional `source_credit` text displays linked source-component attribution beside the player/downloads, preserving the frozen transcript and its voice credits. Source-component licenses do not imply a whole-video license.
 
 ## Source and generated files
 

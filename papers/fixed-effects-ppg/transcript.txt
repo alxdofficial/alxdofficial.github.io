@@ -1,0 +1,31 @@
+Teaching PPG How, Not Who: Fixed-Effects Distillation from ECG
+
+A wearable should track how your cardiovascular state changes, rather than merely recognize a stable recording signature. This paper studies photoplethysmography, or PPG: the optical pulse signal measured by many watches. During training, an electrical heart signal, ECG, acts as a teacher. Ordinary distillation tries to make the optical model match the teacher’s representation. But a large part of that representation is a stable recording average. The student can appear successful by matching this average while missing the changes that matter for monitoring one person over time.
+
+The mechanism is fixed-effects distillation. Within each recording, subtract the recording mean from both the teacher’s target and the student’s prediction. The training objective then matches their remaining changes with a cosine measure. A smaller pooled anchor keeps useful stable information. The optical backbone and ECG teacher stay frozen, while a small bridge learns their connection. The authors test two optical backbones, PaPaGei and AnyPPG. This is an operational separation into a recording average and a changing residual; it does not prove that identity and health state are perfectly disentangled.
+
+The main paired surgical data are divided into 282 training recordings, 174 selection recordings, and 75 final test recordings. Each window lasts ten seconds. The primary state-agreement score removes heart rate, squared heart rate, and eight signal-quality covariates after recording centering. For PaPaGei, the score rises from 0.136 with pooled regression to 0.307 with fixed-effects cosine training. Raw cosine barely changes, from 0.798 to 0.795. A constant mean predictor already scores 0.793, showing why an apparently strong raw alignment score can conceal poor state tracking.
+
+On the final surgical test recordings, PaPaGei’s systolic-pressure-change error improves from 8.93 to 8.77 millimeters of mercury. Heart-rate-change error improves from 2.50 to 2.29 beats per minute. With AnyPPG, those errors improve from 8.21 to 7.83 and from 2.67 to 2.38 respectively. These are matched within-paper comparisons, not a verified claim of current state of the art. The inspected source calls these readouts error; we do not relabel them as mean absolute error or root mean squared error without a verified definition.
+
+Transfer tests are encouraging but mixed. In sixty MIMIC recordings unseen by the bridge, PaPaGei state agreement rises from 0.049 to 0.129. Those data were present in backbone pretraining, so this is not entirely unseen data. In a separate wrist-PPG and chest-ECG collection absent from pretraining, the score rises from 0.010 to 0.072. Yet MIMIC pressure-change prediction remains worse than a no-information predictor: fixed-effects errors of 8.47 and 8.86 exceed its 8.26 millimeters of mercury. Better representation agreement therefore does not establish useful cuffless blood-pressure estimation.
+
+The main contribution is an objective that directs a teacher toward changes within a recording, with a diagnostic showing why pooled similarity can mislead. The study does not establish globally patient-disjoint sampling or prospective clinical benefit. A speculative connection to multisensor systems is to distinguish stable device or person effects from changes worth tracking, then test transfer to genuinely new people and devices. This is an October seventh preprint. The graphics here are independently drawn summaries of reported results because the paper’s arXiv distribution license did not establish a third-party figure-reuse grant.
+
+Credits and disclosure (not spoken narration)
+arXiv 2610.10662v1
+https://arxiv.org/abs/2610.10662v1
+Preprint v1 · 7 October 2026 · no acceptance verified
+
+First submitted: Date in primary source
+The monitoring problem · Independent editorial graphic from Wu et al. (2026), 2610.10662v1; no original paper pixels.
+Fixed-effects mechanism · Independent editorial graphic from Wu et al. (2026), 2610.10662v1; no original paper pixels.
+The metric trap · Independent editorial graphic from Wu et al. (2026), 2610.10662v1; no original paper pixels.
+Matched readout results · Independent editorial graphic from Wu et al. (2026), 2610.10662v1; no original paper pixels.
+Transfer and failure · Independent editorial graphic from Wu et al. (2026), 2610.10662v1; no original paper pixels.
+What this establishes · Independent editorial graphic from Wu et al. (2026), 2610.10662v1; no original paper pixels.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

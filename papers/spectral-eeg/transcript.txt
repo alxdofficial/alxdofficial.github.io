@@ -1,0 +1,44 @@
+Spectral Considerations on Unsupervised Time-domain EEG Representation Learning with Deep Networks
+
+A reconstruction model can produce a convincing brain-wave trace while losing the small signals that matter. EEG measures voltage changes at scalp electrodes. Its slow rhythms often carry much more power than its faster rhythms. When an autoencoder is rewarded for minimizing squared waveform error, fixing a large slow oscillation can reduce the loss more than preserving a small fast one. This paper asks whether that imbalance creates a blind spot in learned representations, and whether changing the network architecture or increasing its compressed representation solves it.
+
+The authors generate two artificial EEG collections with known answers. Each has four groups and nineteen channels. One changes the alpha rhythm, around eight to twelve cycles per second. The other changes a faster rhythm, around twenty-eight to thirty-two cycles per second, while keeping alpha fixed. These are simulated labels, not diagnosed patients. Each group has forty synthetic training subjects, ten validation subjects, and ten test subjects, with five hundred two-second windows each. A small classifier then tests whether the compressed representation retains the difference between groups.
+
+Three reconstruction networks are compared: a recurrent variational autoencoder, a convolutional variational autoencoder, and a convolution-plus-attention autoencoder. With equally strong frequencies, the convolutional and attention models learn fast and slow components together, while the recurrent model shows a slower-frequency-first pattern. The colors in these original plots show how much of each target frequency has been recovered over training. This distinguishes learning order from final representational quality. It also prevents a blanket claim that every neural architecture must learn low frequencies first.
+
+When the synthetic amplitudes decline with frequency, all three tested autoencoders recover the weaker high frequencies later. The reconstruction loss now rewards the stronger slow components more heavily. For the artificial faster-rhythm classification task, the recurrent and attention models need compressed spaces of at least one hundred dimensions to discriminate groups. The convolutional model struggles across the tested sizes. A separate frozen EEG foundation model, REVE, reaches 94.4 percent accuracy in its base configuration on this harder synthetic task. That number is not accuracy for detecting Alzheimer’s disease.
+
+The real-data check uses eyes-closed recordings from the Barcelona Brain Health Initiative. The original spectral plots show that increasing representation size improves preservation of faster activity, but residual attenuation remains. There is a reporting inconsistency: methods say 963 individuals, while results say 943, without a reconciliation in the inspected text. The empirical experiment uses one training seed, and its participant split is not sufficiently specified to verify subject independence. It also does not demonstrate disease prediction. Spectral-aware losses are proposed as future remedies rather than validated solutions in this study.
+
+REVE provides an important counterexample. In a separate synthetic retraining analysis, it shows no clear frequency-ordering effect, yet its frozen representation still separates the higher-frequency groups less cleanly. Learning a frequency early and preserving its useful distinctions are different properties. For heterogeneous sensing, a possible follow-up is to measure reconstruction fidelity band by band and test whether weak but task-relevant events survive compression. That connection to multisensor systems remains speculative. The source is an October twelfth preprint; the original figures shown here are cropped under Creative Commons attribution, with the crops disclosed.
+
+Credits and disclosure (not spoken narration)
+arXiv 2610.16264v1
+https://arxiv.org/abs/2610.16264v1
+Preprint v1 · 12 October 2026 · no acceptance verified
+
+First submitted: Date in primary source
+The blind spot · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original synthetic alpha spectrum · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original synthetic faster spectrum · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Synthetic controls · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original alpha-shift spectra · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original faster-shift spectra · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original Transformer classification panel · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Architecture matters · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original VAEEG equal-amplitude heatmap · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original Transformer equal-amplitude heatmap · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Weak signals learn later · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original VAEEG decaying-amplitude heatmap · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original Transformer decaying-amplitude heatmap · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original VAEEG classification panel; pixels cropped/resized and faithful labels enlarged · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Editorial summary of separately reported REVE result; not original figure · Independent editorial summary of reported result from Aquilué-Llorens et al., arXiv:2610.16264v1; no original figure pixels.
+Real EEG caveats · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+What transfers · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original REVE uniform-amplitude control · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original REVE decaying-amplitude control · David Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

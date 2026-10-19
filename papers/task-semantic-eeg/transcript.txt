@@ -1,0 +1,46 @@
+Predicting Cognitive Tasks from Single-Channel EEG through Task-Semantic Alignment
+
+Instead of giving each EEG study an unrelated label vocabulary, this paper describes tasks in ordinary language. A sentence encoder maps instructions, stimuli, and response requirements into a shared numerical space. An EEG encoder learns to place a recording near the matching description. At inference, it chooses the closest description from a supplied candidate list. That is calibration-free prediction for the target condition, not unrestricted mind reading. A single channel here means the measured voltage difference between two real electrodes, one toward the front and one toward the back of the scalp.
+
+The waveform-only model summarizes eight seconds of EEG using convolutions and temporal averages. The stronger reserved-test model adds three time-frequency views of that same channel, then combines their features. It has about 365 thousand inference parameters. Training combines within-study task classification with bidirectional alignment to fixed text descriptions. The training mixture called Bridge3 mostly preserves an earlier multi-task mixture and assigns five percent of sampling to three added datasets. A competing package also adapts the text space, but its gains during development do not hold on the reserved evaluation.
+
+The reserved evaluation contains ten task classes from seven dataset identifiers, with 87,058 nonoverlapping eight-second windows. Source-level participant counts sum to 290, but cross-source identities are not verified as unique. The best observed configuration reaches 30.13 percent balanced accuracy, against ten percent chance. Balanced accuracy gives equal weight to each class and each participant within that class. Its participant-bootstrap interval is 28.28 to 32.11 percent, conditional on these sources and trained models. This is the highest observed result among nine fixed configurations, not an independently confirmed universal winner.
+
+Three classes contribute almost seventy percent of that overall score. Go-or-no-go recognition alone contributes 9.72 percentage points, and its participants had supplied training recordings from other tasks. Removing the two known-participant classes from the averaging gives 21.75 percent recall while retaining all ten candidate labels. More importantly, the leading model gets only 50.34 percent when distinguishing thinking from meditation within one study, against fifty percent chance. Three driving conditions give 34.43 percent against 33.33 percent chance. These exploratory controls reveal how little the broad average establishes about cognitive specificity.
+
+A separate developmental experiment tests person-specific calibration. With sixteen labeled eight-second examples per available class, accuracy reaches 34.47 percent using another participant’s examples, and 74.99 percent using the test participant’s examples. But those queries last sixty-four seconds, use an earlier model and a different benchmark, and share the same task recording as the same-person support. Exact sample overlap is excluded; session dependence is not. Only one training seed was tested, and support size changes the eligible query pool. These numbers cannot be compared directly with the reserved-test headline.
+
+The strongest contribution is a useful interface plus an unusually explicit account of its confounds. Descriptions let heterogeneous studies share targets, but text similarity is not evidence of neural equivalence. Source recognition and participant context remain plausible shortcuts, and code is promised upon acceptance rather than already released. For multisensor systems, a speculative extension would combine semantic labels with strict unseen-person, unseen-device, and within-source tests, plus an unknown-class rejection option. This paper does not test that open-set setting. It is an October tenth preprint; its original figures are reused with attribution under Creative Commons.
+
+Credits and disclosure (not spoken narration)
+arXiv 2610.15104v1
+https://arxiv.org/abs/2610.15104v1
+Preprint v1 · 10 October 2026 · no acceptance verified
+
+First submitted: Date in primary source
+The interface · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Descriptions in text space; not neural similarity · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Lower text-space region; arbitrary axes · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Upper text-space region; arbitrary axes · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+The encoder · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original waveform-only row · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original Bridge3 LATE row · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original rank comparison · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Reserved evaluation · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Selected four model rows · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original winning row; blue CI, orange seed SD · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Specificity checks · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original class contributions · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original go/no-go contribution row · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original full-class context; exclusion average described in narration · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original thinking/meditation row · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original driving row · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Calibration caveats · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+What remains unproven · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original thinking/meditation result · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+Original driving result; proposed extension is untested · Ryota Kanai (2026), 2610.15104v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

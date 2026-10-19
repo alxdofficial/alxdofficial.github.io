@@ -1,0 +1,26 @@
+MJev-Spatial: System One Spatial Intelligence via Native Attention Matching
+
+M Jev Spatial studies a simple mismatch in visual language models. A question may only need a choice, a number, or a point, yet the model generates a sentence and another program parses it. That adds work to an already structured task. This paper replaces answer generation with direct candidate selection. A choice takes one decision. A number can take two decisions, while pointing takes three decisions with new image crops. So one forward pass means one classification step, not necessarily one complete prediction.
+
+The intended use is fast spatial judgment: selecting a relation, estimating a distance, or locating where an object belongs. The pointing example shows a coarse region becoming a smaller crop, then a final location. Possible applications include robot perception and visual assistance, but this is a benchmark study, not a deployed robot controller. Numerical answers also have explicit contracts. Distances use meters, angles use degrees, and counts have a fixed range. Ambiguous units or unsupported quantities are rejected rather than silently converted into an answer.
+
+Spatial language models from twenty twenty four and twenty twenty five already learned relations and coordinate answers from spatial supervision. More recent decision models, including Jev and Visual Jev, already scored candidates instead of writing unrestricted text. Discretizing a continuous number and zooming into an image are also established ideas. The contribution here is a shared spatial decision interface that reuses pretrained attention projections. It handles answer options, numerical intervals, and image regions with the same scorer, rather than introducing a separate prediction head for each output type.
+
+The backbone is Qwen three point five, four billion parameters. Each candidate is written alongside the question and images, followed by an end marker. A final decision marker sees the complete candidate set. The model turns that decision state into a query and each candidate state into a key, using pretrained attention weights. Similarities become candidate probabilities. Training updates the retained language parameters on twelve point three million converted spatial questions; the vision encoder stays frozen. For pointing, selected crops supply fresh local detail before the next decision.
+
+Across twelve spatial benchmarks, the final model averages sixty five point six four percent, versus fifty four point eight for its unmodified base. It leads seven benchmarks among eight tested models. On the same B two hundred graphics processor at batch size one, mean query latency is one hundred sixty point six milliseconds, versus eight hundred ninety four point one. Timing includes image input, preprocessing, inference, and decoding, but excludes loading. These final comparisons combine the new interface with extensive supervised training; they do not isolate architecture alone.
+
+The controlled readout pilot is more mixed. Native attention matching improves one localization benchmark but trails a linear head on another. Training data checks remove exact and near-duplicate images, without proving independence between related scenes. Confidence intervals are not reported for the headline results. Multiple-point prediction also requires extra tree exploration. Still, public code and model weights are available. The useful takeaway is that specialized decision interfaces can improve the measured speed and accuracy of structured spatial tasks. A fair next test would match training data against an equally adapted generative model.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.22276v1
+https://arxiv.org/abs/2610.22276v1
+Preprint; author-reported results; not independently reproduced
+Original paper panels are CC BY 4.0. Crops and panel rearrangements are disclosed. Tables use faithful enlarged selected labels with source and experimental conditions; these credits do not license the entire video.
+First submitted: 2026-10-15T17:37:50Z
+Original paper panel or faithfully enlarged table labels · Source and experimental conditions shown inside the panel
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

@@ -1,0 +1,32 @@
+T2-z: Test-Time Optimization of Environment Latents for Robotic World Models
+
+A robot can see an object without knowing how heavy it is or how much friction it will encounter. The same visible scene and the same action can therefore produce different outcomes. T two zee, released on October fifteenth, gives a video world model a small description of these hidden conditions. Rather than asking a separate network to guess that description immediately, it adjusts the description until the model better explains an observed interaction.
+
+The authors test seven simulated settings and four real-world robot tasks. These include pushing objects, collisions, balancing, hidden light-switch rules, closing a spring-latched door, and pulling a soft tube. In the real experiments, a Franka robot interacts with deliberately varied physical constructions. The intended use is choosing among candidate actions after observing how this particular environment behaves. It is not yet an unrestricted robot controller or a system that decides which exploratory interaction to perform.
+
+Rapid Motor Adaptation, from twenty twenty-one, used an adaptation network to infer environment-relevant information from interaction history. Other methods update low-rank weight adapters or fast-weight memory. T two zee takes a smaller optimization target: thirty-two numbers that condition a pretrained video predictor. The predictor is based on the Boundless World Model and Wan two point two. The contribution is an adaptation recipe on that backbone, rather than learning an entire simulator from scratch.
+
+During training, each environment gets its own vector of thirty-two numbers. Episodes from the same environment share that vector. Training alternates two jobs. First, hold the vectors fixed and improve the world model's predictions. Then freeze the model and adjust the vectors to explain environment-specific differences. The vectors influence both attention and modulation inside the video network. No numeric labels for friction or mass are supplied, although environment groupings are known. At test time, collect one or two interaction trajectories. Freeze all shared model parameters and optimize a fresh vector for forty steps against those observed outcomes. Reuse the resulting vector to predict what other actions would do. Crucially, the outcomes of those new query actions are withheld during adaptation. This is genuine test-time gradient optimization, but it changes the conditioning vector, not the world-model weights.
+
+Consider the friction experiment, where methods share the backbone, training data, candidate actions, and observed support trajectory. Mean object-position error falls from eleven point zero six pixels for the standard model to three point eight five for T two zee. Action success rises from thirty-two to seventy-two percent. The low-rank adaptation and learned-context baselines each reach forty-eight percent success. These are promising matched comparisons. They do not mean every prediction metric improves: another baseline has lower position error in the gravity task. The paper's overall error average mixes incompatible units, so per-task numbers are safer.
+
+Adaptation also costs time. On one H two hundred graphics processor, one support trajectory plus five generated query videos takes eighteen point zero nine seconds. The standard model takes six point one seven. The comparison excludes loading and file output. Small task-specific tests and reachable candidate sets limit generalization claims, and one support trajectory is not enough for every task. The useful idea is compact system identification without predefined physical-factor labels. Code and data are available, but broader continual adaptation and dependable long-horizon control remain open questions.
+
+Credits and disclosure (not spoken narration)
+Zhou et al. · arXiv:2610.22364v1
+https://arxiv.org/pdf/2610.22364v1
+Preprint; author-reported results; independent reproduction not performed.
+Original author figure and table excerpts used for research explanation with attribution. Cropping and enlarged readouts are disclosed; authors retain source rights. No whole-video license is asserted.
+First submitted: 2026-10-15T17:59:11Z
+Figure 1a · p. 1 · Zhou et al.; original panel crop, enlarged readouts
+Figure 8 · p. 21 · four real-world setups · Zhou et al.; original panel crop, enlarged readouts
+Figure 2 · p. 3 · Zhou et al.; original panel crop, enlarged readouts
+Figure 3 · p. 4 · training panels · Zhou et al.; original panel crop, enlarged readouts
+Figure 3 · test-time panel · Zhou et al.; original panel crop, enlarged readouts
+Table 1 · p. 7 · Friction rows; selected columns · Zhou et al.; original panel crop, enlarged readouts
+Figure 11a · p. 26 · compute-only timing · Zhou et al.; original panel crop, enlarged readouts
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

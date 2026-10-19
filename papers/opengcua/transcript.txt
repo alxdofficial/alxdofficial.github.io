@@ -1,0 +1,42 @@
+OpenGCUA: Toward a Fully Open Stack for Generalist Computer Use
+
+OpenGCUA changes how a computer agent acts. Instead of emitting a fixed sequence of clicks and shell commands, the model writes a program that can inspect an intermediate result and decide what to do next. A loop can retry, a branch can choose a different operation, and a check can verify a file before the next model call. The central idea is executable feedback-dependent control. This report releases and studies an agent system around existing models. It does not introduce newly trained model weights; a dedicated model is future work.
+
+A harness is the software wrapper that runs tools and manages the interaction. OpenGCUA moves selected decisions from fixed harness rules to the model. The model can request a screenshot only when it needs visual evidence, track unfinished work, and state the purpose of an operation. It can combine graphical-interface actions with command-line operations inside one program. Other features, including a rolling image buffer and compacted tool outputs, remain context-management policies. These distinctions matter: giving an agent more interfaces, giving it executable control, and changing its memory management are different interventions.
+
+The main experiment uses eighty-two offline tasks from OSWorld version two, an operating-system task benchmark. Internet-dependent tasks are excluded. Across eight models, the full system raises mean partial-completion score from 45.3 to 64.9. The average relative reduction in interaction steps is fifty-three percent. Partial score credits completed task components; it is different from full-task success. In the shown rows, GPT-6 Astra rises from 67.1 to 75.7 partial score while using 102.1 versus 33.5 steps. These are results under the paper's configurations, not a universal ranking of products.
+
+The more revealing control keeps graphical and command-line access available, then changes how operations are coordinated. For Qwen3.8-Max, fixed batched graphical-plus-shell actions score 57.2, while code execution scores 62.4. Average steps fall from 66.1 to 54.9. Similar improvements appear for the two other models in this figure. This supports the value of a program that reacts to intermediate results beyond simply adding shell access. But this chart isolates code execution; its values are not the full OpenGCUA system's headline scores. Additional workflow and context features are evaluated separately.
+
+On-demand screenshots also change how much context can be reused. For Qwen3.8-Max, the fraction of input tokens served from cache rises from 75.6 to 86.1 percent in that control. Yet not every added feature improves task score: intent annotations aim to explain actions to users, and scores fall slightly. More generally, fewer steps do not automatically mean fewer generated tokens or lower latency. GPT-6 Astra's output-token count rises slightly in the full comparison. Model response time, program execution time, token use, and task correctness should therefore be measured separately.
+
+The real-device study covers only four macOS tasks, including workbook reasoning and form filling. In the selected runs shown here, GPT-6 Astra completes four and Qwen3.8-Max completes three. Qwen uses about nineteen times as many reported reasoning tokens, but only about six times as many total output tokens; those are different quantities. Four tasks cannot establish a general deployment ranking. Code can accelerate both useful work and mistakes, so authorization, complete-task verification, and recovery still matter. The research takeaway is to test executable control while preserving independent checks of what was actually completed.
+
+Credits and disclosure (not spoken narration)
+Zhou et al. · arXiv:2610.22200v1 · October 2026
+https://arxiv.org/abs/2610.22200v1
+Preprint, v1, 15 October 2026; no peer-reviewed venue established. Original paper visuals: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); cropped/enlarged and selected panels reflowed.
+Author-created paper diagrams, tables and equations reproduced under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/), with attribution in figure credits. Panels cropped, enlarged or reflowed; faithful metric headings added. Third-party video footage and separately licensed demo media are excluded.
+First submitted: 2026-10-15
+Figure 2 · what to observe, how to act, how to organize · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · program coordinates GUI and shell · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · agent design features · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · agent-design mechanisms · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · selected decisions move to model · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 2 and accompanying text · eight-model means · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 2 · GPT-6 Astra partial score · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 2 · GPT-6 Astra steps/task · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 6 · Qwen3.8-Max · task score · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 6 · Qwen3.8-Max · steps/task · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 4 · Qwen3.8-Max · cache-hit percentage · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 4 · Qwen3.8-Max · intent control · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 2 · GPT-6 Astra · output thousands/task · offline · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 5 · selected four-task completion · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Section 4.3.3 · reported reasoning tokens/task · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 5 · total output thousands/task · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 5 · selected runs, four tasks only · Zhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

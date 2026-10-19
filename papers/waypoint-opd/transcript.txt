@@ -1,0 +1,41 @@
+Waypoint-OPD: Transferring RL-Induced Policy Shifts via Gated On-Policy Distillation
+
+Waypoint starts with a student generating its own answer. At each partial answer, three saved versions of a teacher score the student's likely next words. The teacher before learning, halfway through learning, and after learning reveal whether its preferences moved consistently. This matters because copying the final teacher can copy its weaknesses. Even copying only the difference between its first and final versions can hide reversals during training. Waypoint uses the middle snapshot to judge which final changes deserve weight, without making that middle model the imitation target.
+
+The student proposes its sixteen most probable next tokens, the small text units a language model predicts. Their probabilities become weights. Each frozen teacher scores exactly those candidates. The method subtracts the weighted average from each early and late change, so it compares relative preferences rather than a shift shared by every candidate. The experiments use the Qwen3 language-model family, with a four-billion-parameter teacher saved before reinforcement learning, at six hundred training steps, and at twelve hundred. Reinforcement learning here means improving answers through rewarded training.
+
+Next, the method measures the angle between those centered early and late changes. Changes pointing together retain the teaching signal; opposing directions switch it off. A special near-zero case keeps the signal rather than dividing by an unstable norm. A batch-level rescaling prevents the average gate from becoming too small. The weighted final-minus-initial change then trains the student, while a penalty keeps its distribution near its starting point. The extra ingredient costs one additional frozen-teacher scoring pass. Agreement remains a heuristic: a teacher can consistently learn the wrong preference.
+
+The paper tests three student sizes on seven competition-mathematics benchmarks. They include the American Invitational Mathematics Examination, the Harvard–MIT Mathematics Tournament, and American Mathematics Competitions. Its score averages correctness across thirty-two sampled answers per question, then gives each benchmark equal weight. This is not the chance that at least one answer succeeds. Against endpoint-only Direct On-Policy Distillation, the eight-billion-parameter student rises from 53.96 to 56.14 percent. The fourteen-billion student rises from 57.61 to 59.20, and the thirty-billion mixture-of-experts student from 55.96 to 57.85.
+
+Code evaluation combines short Python-programming problems, expanded correctness tests, and the LiveCodeBench coding benchmark. Here, the metric averages correctness over eight generated answers, then averages five evaluation scores. For the same three student sizes, endpoint-only scores of 50.59, 56.30, and 56.35 rise to 53.25, 57.82, and 57.54. Waypoint wins the domain average in all six mathematics-and-code settings. That does not mean it wins every individual benchmark against every alternative. The larger students can outperform the final teacher because they transfer its improvement rather than imitate its entire behavior.
+
+On the eight-billion-parameter mathematics student, removing the gate lowers the average from 56.14 to 53.50. Shuffling gates across prefixes lowers it further, to 51.20. These controls support assigning the right gate to the right context. But checkpoint selection uses the 2024 American Invitational Mathematics Examination, which also appears in the reported mathematics average, so that average is not fully held out. All students share one model family and tokenizer. The practical lesson is to retain intermediate teacher checkpoints, then test the transfer on disjoint validation data before claiming a general recipe.
+
+Credits and disclosure (not spoken narration)
+Hou et al. · arXiv:2610.21601v1 · October 2026
+https://arxiv.org/abs/2610.21601v1
+Preprint, v1, 15 October 2026; no peer-reviewed venue established. Original paper visuals: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); cropped/enlarged and selected panels reflowed.
+Author-created paper diagrams, tables and equations reproduced under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/), with attribution in figure credits. Panels cropped, enlarged or reflowed; faithful metric headings added. Third-party video footage and separately licensed demo media are excluded.
+First submitted: 2026-10-15
+Figure 2 · student-generated candidates · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · initial, middle, final teacher · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · gate and rescale · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · student candidates and weights · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · compare centered teacher changes · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Section 4.1 · Qwen3-4B teacher · 0 / 600 / 1200 steps · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · aligned versus reversing · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · agreement gate and batch scaling · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 2 · student update · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 1 · math mean@32 accuracy (%) · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 1 · all students · mean@32 accuracy (%) · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 1 · Qwen3-8B · mean@32 accuracy (%) · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 1 · Qwen3-14B · mean@32 accuracy (%) · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Figure 1 · Qwen3-30B-A3B · mean@32 accuracy (%) · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 2 · code mean@8 accuracy (%) · original definition · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+Table 3 · Qwen3-8B math ablations · mean@32 (%) · Hou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

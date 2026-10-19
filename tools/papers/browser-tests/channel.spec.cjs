@@ -48,7 +48,7 @@ test('static transcript without JavaScript and reduced motion', async ({browser,
   const context=await browser.newContext({javaScriptEnabled:false,baseURL:'http://127.0.0.1:8765'});
   const p=await context.newPage();await p.goto('/papers/cortex/');
   await expect(p.locator('#transcript')).toContainText('1. Problem');
-  await expect(p.locator('#credits')).toContainText('Synthetic narration');
+  await expect(p.locator('#credits')).toContainText(/synthetic (?:narration|Anna preset)/i);
   await context.close();
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/papers/');
@@ -104,7 +104,7 @@ test('desktop reference menu hover, delayed close, click, keyboard and shadow fl
   await page.setViewportSize({width:1440,height:900});await page.goto('/papers/');
   const root=page.locator('.reference-nav'), trigger=page.getByRole('button',{name:'Episodes',exact:true}), panel=page.locator('#main-nav');
   await trigger.hover();await expect(trigger).toHaveAttribute('aria-expanded','true');await page.waitForTimeout(360);
-  await expect(panel).toContainText(source.episodes[0].title);
+  await expect(panel).toContainText([...source.episodes].sort((a,b)=>b.published.localeCompare(a.published))[0].title);
   const style=await root.evaluate(el=>{const a=getComputedStyle(el.querySelector('.nav-aura')),f=getComputedStyle(el.querySelector('.nav-floor')),t=getComputedStyle(el.querySelector('.menu-trigger'),'::before');return {filter:a.filter,height:parseFloat(a.height),duration:a.transitionDuration,floor:f.backgroundColor,glow:t.display};});
   expect(style.filter).toBe('blur(10px)');expect(style.height).toBeGreaterThan(80);expect(style.duration).toContain('0.32s');expect(style.floor).toBe('rgb(30, 34, 36)');expect(style.glow).toBe('none');
   await panel.hover();await page.waitForTimeout(180);await expect(trigger).toHaveAttribute('aria-expanded','true');
@@ -152,8 +152,12 @@ test('all catalog episodes have complete read, source, media and download routes
  for(const episode of source.episodes){
   await page.goto('/papers/'+episode.id+'/');
   await expect(page.locator('h1')).toHaveText(episode.title);
-  await expect(page.locator('#credits')).toContainText('Synthetic narration');
+  await expect(page.locator('#credits')).toContainText(/synthetic (?:narration|Anna preset)/i);
   await expect(page.locator('.paper-meta')).toContainText(episode.paper_version);
+  if(episode.source_credit){
+   await expect(page.locator('.source-credit')).toContainText(episode.source_credit.split('\n')[0]);
+   await expect(page.locator('.source-credit a').first()).toHaveAttribute('href',episode.paper_url);
+  }
   const txt=await page.request.get('/papers/'+episode.transcript_path);expect(txt.ok()).toBeTruthy();expect(await txt.text()).toContain('Credits and disclosure (not spoken narration)');
   await expect(page.getByRole('link',{name:'Download video'})).toHaveAttribute('href',new RegExp(episode.video_id));
   await expect(page.getByRole('link',{name:/Read the paper/})).toHaveAttribute('href',episode.paper_url);

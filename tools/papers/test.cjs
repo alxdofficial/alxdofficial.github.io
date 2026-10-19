@@ -23,6 +23,10 @@ function runTests(generate,source,transcripts,templates) {
    assert(html.includes(e.thumbnail_credit)&&html.includes(e.thumbnail_license_url)&&html.includes(e.thumbnail_changes),'Visible thumbnail attribution and changes '+e.id);
    assert(html.includes('/papers/'+e.thumbnail_path)&&html.includes('Full figure'),'Full-size original figure link '+e.id);
   }
+  if(e.source_credit){
+   assert(cat.source_credit===e.source_credit,'Source credit preserved '+e.id);
+   assert(html.includes('Source visual credits')&&html.includes(e.paper_url),'Source credits beside player '+e.id);
+  }
   const schema=JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1]);
   assert(schema.name===e.title&&schema.duration==='PT'+e.duration_seconds+'S','Schema '+e.id);
   assert(!html.includes('{{'),'No unresolved template');

@@ -1,0 +1,36 @@
+Hy-Memory-30B-A3B: Attributed Reinforcement Learning for Long-Term Memory Writing
+
+Imagine a memory system with three jobs: writing records, retrieving them, and answering questions. A strong answer model cannot recover an exact date that the writer discarded. This paper trains the writer itself. Hy-Memory has thirty billion total parameters, with about three billion active for each token. It operates inside several existing memory frameworks. The central question is how to reward the particular writes that preserve useful evidence, rather than giving an entire long interaction one undifferentiated score.
+
+First, a teacher scores the student's own generated actions, instead of providing an ideal script to imitate. This training method is called on-policy distillation. The student makes real writes through each framework's normal interface, and later writes see the banks those earlier actions produced. The teacher supplies token-level guidance about the write protocol. This stage helps with valid operations and structured outputs. It does not yet determine which of many valid records will be most useful for future questions.
+
+Reinforcement learning adds that downstream objective. Interaction sessions become roughly ten-turn chunks, with up to five chunks per training window. Local questions test whether each chunk's facts remain recoverable, including exact names, changed values, and negation. Trap questions penalize storing irrelevant content. Questions spanning several chunks test whether the memory supports combinations of facts. A fixed answering model reads retrieved memory, and a separate fixed judge awards partial credit. Reference facts are visible to the judge, never leaked into the answering model's input.
+
+The resulting chunk score combines recall, twice the attributed outcome credit, and a penalty for excess bank growth. Eight candidate rollouts start from the same bank, then diverge as they write. The training update compares candidate scores at each chunk position, using Group Relative Policy Optimization. A rollout can therefore be good at one write and poor at another. At the end, the best total-scoring final bank starts the next window. This preserves consequences across windows, although earlier errors cannot receive gradients retroactively.
+
+The evaluation changes only the writer, holding retrieval, the reader, and the judge fixed. Across four frameworks and six metrics on fixed twenty-percent benchmark subsets, Hy-Memory averages fifty-five point four nine, versus fifty-four point six two for Claude Opus Five. More interesting is EverMemOS, a framework excluded from training: the scores are fifty-six point eight nine versus fifty-four point zero four. The chart uses a broken vertical axis, so compare the printed numbers rather than the apparent bar heights.
+
+The paper is unusually explicit about its gaps. Two framework margins over Opus are only one or two hundredths of a point, and do not establish a statistically resolved difference. There are no controlled ablations isolating attribution, traps, growth penalties, or chunk-level optimization. Human agreement with the reward judge and a near-duplicate leakage audit remain future work. Also, attributing an answer to source facts is not proof that one specific write caused it. The reusable contribution is a detailed reward interface for memory writing, which now needs tightly matched ablations.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.22196v1 · 15 Oct 2026
+https://arxiv.org/abs/2610.22196v1
+Preprint; CC BY 4.0
+
+First submitted: 2026-10-15 16:46:47 UTC
+Figure 1: fixed reader and reward judge · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 1: candidate memory trajectories · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 1: teacher guidance · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 1: student-generated memory writes · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 1: carry forward written memory · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 1: chunk-level reward components · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 1: select the next memory bank · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 3: overall macro-average score · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 3: held-out EverMemOS macro-average score · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 3: Hy-Memory framework · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+Figure 3: MemOS framework · Source: Fei et al. (2026), arXiv:2610.22196v1, CC BY 4.0. Panels cropped/reassembled; labels enlarged.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
