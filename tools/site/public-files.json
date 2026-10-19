@@ -1,0 +1,16 @@
+[
+  ".nojekyll",
+  "index.html",
+  "halo/index.html",
+  "spain-2026/index.html",
+  "papers/index.html",
+  "papers/catalog.json",
+  "papers/feed.xml",
+  "papers/sitemap.xml",
+  "papers/assets/app.js",
+  "papers/assets/style.css",
+  "papers/assets/fonts/JetBrainsMono-OFL.txt",
+  "papers/assets/fonts/JetBrainsMono-Regular.ttf",
+  "papers/assets/fonts/PlayfairDisplay-OFL.txt",
+  "papers/assets/fonts/PlayfairDisplay.ttf"
+]
