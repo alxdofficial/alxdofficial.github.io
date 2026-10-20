@@ -140,29 +140,48 @@ if (menuRoot) {
   updateScroll();
 }
 
-// Pointer-localized button light. It never moves the label or click target.
+// The reference eases the hotspot (0.22) and proximity (0.18) independently.
+// Retarget the current light on entry, movement and exit; never move the label.
 const reducedButtonMotion = matchMedia('(prefers-reduced-motion: reduce)');
-document.querySelectorAll('.button:not(.primary), .filters button, .text-link').forEach(control => control.classList.add('glow-control'));
-document.querySelectorAll('.glow-control, .thumb, .load-video, .button.primary').forEach(control => {
+const fineButtonPointer = matchMedia('(hover: hover) and (pointer: fine)');
+document.querySelectorAll('.button, .filters button, .text-link, .play, .watch-cta').forEach(control => {
+  control.classList.add('glow-control');
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.append(...control.childNodes);
+  control.append(label);
   let frame = 0;
-  let point = null;
+  let tx = 50, ty = 50, tp = 0;
+  let cx = 50, cy = 50, cp = 0;
+  const disabled = () => control.matches(':disabled,[aria-disabled="true"]');
+  const canTrack = event => fineButtonPointer.matches && !reducedButtonMotion.matches && event.pointerType !== 'touch' && !disabled();
   function resetLight() {
     if (frame) cancelAnimationFrame(frame);
-    frame = 0; point = null;
-    control.style.removeProperty('--glow-x');
-    control.style.removeProperty('--glow-y');
+    frame = 0; tx = cx = 50; ty = cy = 50; tp = cp = 0;
+    ['--mx','--my','--prox'].forEach(property => control.style.removeProperty(property));
   }
+  function tick() {
+    if (!control.isConnected || disabled()) { resetLight(); return; }
+    cx += (tx - cx) * .22;
+    cy += (ty - cy) * .22;
+    cp += (tp - cp) * .18;
+    control.style.setProperty('--mx',cx.toFixed(2)+'%');
+    control.style.setProperty('--my',cy.toFixed(2)+'%');
+    control.style.setProperty('--prox',cp.toFixed(3));
+    frame = Math.abs(tx-cx)>.1 || Math.abs(ty-cy)>.1 || Math.abs(tp-cp)>.005 ? requestAnimationFrame(tick) : 0;
+  }
+  function kick() { if (!frame) frame = requestAnimationFrame(tick); }
+  control.addEventListener('pointerenter',event => { if (canTrack(event)) { tp = 1; kick(); } });
   control.addEventListener('pointermove', event => {
-    if (reducedButtonMotion.matches || event.pointerType === 'touch' || control.matches(':disabled,[aria-disabled="true"]')) return;
+    if (!canTrack(event)) return;
     const bounds = control.getBoundingClientRect();
     if (!bounds.width || !bounds.height) return;
-    point = [Math.max(0, Math.min(100, (event.clientX - bounds.left) / bounds.width * 100)), Math.max(0, Math.min(100, (event.clientY - bounds.top) / bounds.height * 100))];
-    if (!frame) frame = requestAnimationFrame(() => {
-      control.style.setProperty('--glow-x', point[0].toFixed(2) + '%');
-      control.style.setProperty('--glow-y', point[1].toFixed(2) + '%');
-      frame = 0;
-    });
+    tx = Math.max(0,Math.min(100,(event.clientX-bounds.left)/bounds.width*100));
+    ty = Math.max(0,Math.min(100,(event.clientY-bounds.top)/bounds.height*100));
+    kick();
   });
-  control.addEventListener('pointerleave', resetLight);
+  control.addEventListener('pointerleave',() => { tp = 0; tx = ty = 50; if (frame || cp) kick(); });
+  control.addEventListener('pointercancel',resetLight);
   reducedButtonMotion.addEventListener('change', resetLight);
+  fineButtonPointer.addEventListener('change',resetLight);
 });

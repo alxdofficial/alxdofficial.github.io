@@ -64,36 +64,33 @@
 .player .load-video:hover .watch-cta,.player .load-video:focus-visible .watch-cta{background:var(--warm-strong);border-color:var(--warm-strong)}
 .top nav a::after{background:var(--warm-strong)}
 
-/* Reference button light: stationary labels; warm, role-specific controls.
-   Secondary: 60% × 32% blurred oval -> full sharp rectangle in 260ms.
-   Primary Watch actions deliberately start as solid rectangles for readability. */
+/* Match the supplied Buttons (Standalone) implementation, rather than its ledger:
+   a 60% × 32% radial oval grows to 110% × 110%, clipped to the hitbox.
+   Only the light moves. The white label stays fixed over the 7px -> 6px blur. */
 :root{--button-ease:cubic-bezier(.2,.6,.2,1);--button-time:260ms}
-.glow-control{position:relative;isolation:isolate;background:transparent!important;border-color:transparent;color:var(--ink);transition:color var(--button-time) var(--button-ease),border-color var(--button-time) var(--button-ease)}
-.glow-control::before{content:"";position:absolute;z-index:-1;left:50%;top:50%;width:60%;height:32%;transform:translate(-50%,-50%);border-radius:50%;background:var(--warm-strong);opacity:.38;filter:blur(7px);pointer-events:none;transition:width var(--button-time) var(--button-ease),height var(--button-time) var(--button-ease),border-radius var(--button-time) var(--button-ease),filter var(--button-time) var(--button-ease),opacity var(--button-time) var(--button-ease),background var(--button-time) var(--button-ease)}
-.top nav .glow-control{padding-left:12px;padding-right:12px}
-.top nav .glow-control::after{content:none}
-.glow-control:focus-visible{box-shadow:0 1px 0 currentColor;outline:2px solid currentColor;outline-offset:3px}
-@media(hover:hover){
- .glow-control:hover:not(:disabled):not([aria-disabled="true"]){color:var(--bg)}
- .glow-control:hover:not(:disabled):not([aria-disabled="true"])::before{width:100%;height:100%;border-radius:0;filter:blur(0);opacity:1;background:radial-gradient(circle at var(--glow-x,50%) var(--glow-y,50%),#fff2df 0%,var(--warm-strong) 38%,var(--warm) 100%)}
+.glow-control{--mx:50%;--my:50%;--prox:0;--button-glow:165,228,214;isolation:isolate;overflow:hidden;min-width:44px;min-height:44px;background:transparent!important;border:0;border-radius:0;color:var(--ink);box-shadow:none;transition:color 220ms var(--button-ease)}
+.button.glow-control,.filters button.glow-control,.text-link.glow-control,.watch-cta.glow-control{position:relative}
+.button.primary.glow-control,.thumb .play.glow-control,.watch-cta.glow-control{--button-glow:255,174,117;background:transparent!important;border:0;color:var(--ink);box-shadow:none}
+.glow-control>.label{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;gap:inherit}
+.glow-control::before{content:"";position:absolute;z-index:1;left:50%;top:50%;width:calc(60% + 50% * var(--prox));height:calc(32% + 78% * var(--prox));transform:translate(-50%,-50%);border-radius:calc(50% * (1 - var(--prox)));background:radial-gradient(ellipse at calc(50% + (var(--mx) - 50%) * var(--prox)) calc(50% + (var(--my) - 50%) * var(--prox)),rgba(var(--button-glow),calc(.38 + .55 * var(--prox))) 0%,rgba(var(--button-glow),calc(.18 + .40 * var(--prox))) 50%,rgba(var(--button-glow),calc(.05 + .25 * var(--prox))) 90%,rgba(var(--button-glow),calc(.18 * var(--prox))) 100%);opacity:1;filter:blur(calc(7px - 1px * var(--prox)));pointer-events:none;transition:width var(--button-time) var(--button-ease),height var(--button-time) var(--button-ease),border-radius var(--button-time) var(--button-ease),filter var(--button-time) var(--button-ease)}
+.glow-control:focus-visible{outline:none}
+.glow-control:focus-visible>.label,.thumb:focus-visible .play>.label,.load-video:focus-visible .watch-cta>.label{box-shadow:0 1px 0 currentColor}
+@media(hover:hover) and (pointer:fine){
+ .glow-control:hover:not(:disabled):not([aria-disabled="true"]),.thumb:hover .play.glow-control,.load-video:hover .watch-cta.glow-control{color:#fff}
 }
-.glow-control:active:not(:disabled):not([aria-disabled="true"]){color:var(--bg)}
-.glow-control:active:not(:disabled):not([aria-disabled="true"])::before{width:100%;height:100%;border-radius:0;filter:none;opacity:1;background:var(--warm-strong);transition-duration:0ms}
-.glow-control:disabled,.glow-control[aria-disabled="true"]{color:var(--muted);cursor:default}
-.glow-control:disabled::before,.glow-control[aria-disabled="true"]::before{opacity:0;filter:none}
-.thumb .play,.watch-cta,.button.primary{transition:background var(--button-time) var(--button-ease),border-color var(--button-time) var(--button-ease),color var(--button-time) var(--button-ease)}
+.glow-control:active:not(:disabled):not([aria-disabled="true"]),.thumb:active .play.glow-control,.load-video:active .watch-cta.glow-control{color:#fff}
+.glow-control:active:not(:disabled):not([aria-disabled="true"])::before,.thumb:active .play.glow-control::before,.load-video:active .watch-cta.glow-control::before{filter:blur(0);background:radial-gradient(ellipse at var(--mx) var(--my),rgba(var(--button-glow),1) 0%,rgba(var(--button-glow),.55) 45%,rgba(var(--button-glow),.3) 100%)}
+.glow-control:disabled,.glow-control[aria-disabled="true"],.button.primary.glow-control:disabled,.button.primary.glow-control[aria-disabled="true"]{color:var(--muted);cursor:not-allowed}
+.glow-control:disabled::before,.glow-control[aria-disabled="true"]::before{opacity:0}
 .thumb:hover .play,.thumb:focus-visible .play{transform:translate(-50%,-50%)}
 .player .load-video:hover .watch-cta,.player .load-video:focus-visible .watch-cta{transform:none}
-@media(hover:hover){
- .thumb:hover .play,.player .load-video:hover .watch-cta,.button.primary:hover{background:radial-gradient(circle at var(--glow-x,50%) var(--glow-y,50%),#fff2df 0%,var(--warm-strong) 38%,var(--warm) 100%)}
-}
-.thumb:active .play,.player .load-video:active .watch-cta,.button.primary:active{background:var(--warm-strong);filter:none;transition-duration:0ms}
 @media(hover:none){
- .glow-control::before{width:100%;height:100%;border-radius:0;filter:none;opacity:.16}
+ .glow-control:active{--prox:1}
 }
 @media(prefers-reduced-motion:reduce){
- .glow-control,.glow-control::before,.thumb .play,.watch-cta,.button.primary{transition:none!important}
+ .glow-control,.glow-control::before{transition:none!important}
 }
+@media(prefers-reduced-motion:reduce) and (hover:hover) and (pointer:fine){.glow-control:hover{--prox:1}}
 
 /* Source-informed menu system. The shared shadow/floor owns occlusion;
    triggers deliberately have no travelling button glow. */

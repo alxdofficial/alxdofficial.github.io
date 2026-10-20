@@ -57,13 +57,13 @@ test('static transcript without JavaScript and reduced motion', async ({browser,
   expect(await page.locator('.thumb').first().evaluate(e=>getComputedStyle(e,'::after').transitionDuration)).toBe('0s');
 });
 
-test('reference secondary glow, pointer light, fixed labels, primary clarity and disabled states', async ({page})=>{
+test('reference button glow eases under fixed labels and returns gently on pointer exit', async ({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await page.goto('/papers/cortex/');
   const secondary=page.getByRole('link',{name:'Download transcript'});
   const read = () => secondary.evaluate(el=>{
     const p=getComputedStyle(el,'::before'),s=getComputedStyle(el),r=el.getBoundingClientRect();
-    return {width:parseFloat(p.width),height:parseFloat(p.height),hostWidth:r.width,hostHeight:r.height,opacity:p.opacity,filter:p.filter,radius:p.borderRadius,duration:p.transitionDuration,easing:p.transitionTimingFunction,background:p.backgroundImage,color:s.color,shadow:s.boxShadow,x:el.style.getPropertyValue('--glow-x'),y:el.style.getPropertyValue('--glow-y')};
+    return {width:parseFloat(p.width),height:parseFloat(p.height),hostWidth:r.width,hostHeight:r.height,opacity:p.opacity,filter:p.filter,radius:p.borderRadius,duration:p.transitionDuration,easing:p.transitionTimingFunction,background:p.backgroundImage,color:s.color,fill:s.backgroundColor,border:s.borderTopWidth,shadow:getComputedStyle(el.querySelector('.label')).boxShadow,x:el.style.getPropertyValue('--mx'),prox:Number(el.style.getPropertyValue('--prox'))};
   });
   await secondary.scrollIntoViewIfNeeded();
   await page.evaluate(() => document.fonts.ready);
@@ -71,33 +71,58 @@ test('reference secondary glow, pointer light, fixed labels, primary clarity and
   let state=await read();
   expect(state.width/state.hostWidth).toBeCloseTo(.6,1);
   expect(state.height/state.hostHeight).toBeCloseTo(.32,1);
-  expect(state.opacity).toBe('0.38');expect(state.filter).toBe('blur(7px)');
+  expect(state.opacity).toBe('1');expect(state.filter).toBe('blur(7px)');
+  expect(state.background).toContain('rgba(165, 228, 214, 0.38)');
+  expect(state.fill).toBe('rgba(0, 0, 0, 0)');expect(state.border).toBe('0px');
   expect(state.duration.split(',').every(v=>v.trim()==='0.26s')).toBeTruthy();
   expect(state.easing).toContain('cubic-bezier(0.2, 0.6, 0.2, 1)');
   const before=await secondary.boundingBox();
-  await secondary.hover({position:{x:20,y:15}});await expect.poll(async()=>(await read()).radius).toBe('0px');
-  state=await read();expect(state.width/state.hostWidth).toBeCloseTo(1,1);expect(state.height/state.hostHeight).toBeCloseTo(1,1);
-  expect(state.radius).toBe('0px');expect(state.filter).toBe('blur(0px)');expect(state.opacity).toBe('1');
-  expect(state.x).not.toBe('');expect(state.background).toContain('radial-gradient');
+  const labelBefore=await secondary.locator('.label').boundingBox();
+  await secondary.hover({position:{x:20,y:15}});
+  await expect.poll(async()=>(await read()).prox).toBeGreaterThan(.99);
+  await expect.poll(async()=>parseFloat((await read()).filter.replace('blur(',''))).toBeLessThan(6.02);
+  state=await read();expect(state.width/state.hostWidth).toBeCloseTo(1.1,1);expect(state.height/state.hostHeight).toBeCloseTo(1.1,1);
+  expect(parseFloat(state.radius)).toBeLessThan(.5);expect(state.color).toBe('rgb(255, 255, 255)');
+  expect(state.background).toContain('radial-gradient');
+  const oldX=state.x;
+  const firstX=await secondary.evaluate(el=>{
+    const r=el.getBoundingClientRect();
+    el.dispatchEvent(new PointerEvent('pointermove',{clientX:r.left+r.width*.8,clientY:r.top+r.height*.35,pointerType:'mouse'}));
+    return el.style.getPropertyValue('--mx');
+  });
+  expect(firstX).toBe(oldX);
+  await expect.poll(async()=>parseFloat((await read()).x)).toBeGreaterThan(79);
   const after=await secondary.boundingBox();expect(after).toEqual(before);
-  await page.mouse.down();state=await read();expect(state.filter).toBe('none');expect(state.background).toBe('none');await page.mouse.move(0,0);await page.mouse.up();
+  expect(await secondary.locator('.label').boundingBox()).toEqual(labelBefore);
+  await page.mouse.down();
+  await expect.poll(async()=>(await read()).filter).toBe('blur(0px)');
+  state=await read();expect(state.background).toContain('rgba(165, 228, 214, 0.55)');
+  await page.mouse.move(0,0);await page.mouse.up();
+  await expect.poll(async()=>(await read()).prox).toBeLessThan(.01);
+  await expect.poll(async()=>parseFloat((await read()).filter.replace('blur(',''))).toBeGreaterThan(6.98);
+  expect(parseFloat((await read()).x)).toBeCloseTo(50,0);
   await page.keyboard.press('Tab');await secondary.focus();state=await read();expect(state.shadow).toContain('0px 1px 0px');
   await secondary.evaluate(el=>el.setAttribute('aria-disabled','true'));await page.waitForTimeout(300);
   state=await read();expect(state.opacity).toBe('0');
   const primary=page.getByRole('link',{name:'Read the paper'});
-  expect(await primary.evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(247, 223, 201)');
-  expect(await page.locator('.watch-cta').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(247, 223, 201)');
+  for(const control of [primary,page.locator('.watch-cta')]){
+    expect(await control.evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
+    expect(await control.evaluate(el=>getComputedStyle(el,'::before').backgroundImage)).toContain('rgba(255, 174, 117, 0.38)');
+  }
+  await primary.hover();
+  await expect.poll(async()=>Number(await primary.evaluate(el=>el.style.getPropertyValue('--prox')))).toBeGreaterThan(.99);
+  expect(await primary.evaluate(el=>getComputedStyle(el,'::before').filter)).not.toBe('blur(0px)');
   await page.emulateMedia({reducedMotion:'reduce'});
   await secondary.evaluate(el=>el.removeAttribute('aria-disabled'));await secondary.hover();
   state=await read();expect(state.duration).toBe('0s');expect(state.x).toBe('');
 });
-test('touch retains readable solid primary and stable secondary controls',async({browser})=>{
+test('touch uses the reference resting glow without cursor tracking',async({browser})=>{
   const context=await browser.newContext({baseURL:'http://127.0.0.1:8765',viewport:{width:390,height:844},isMobile:true,hasTouch:true});
   const page=await context.newPage();await page.goto('/papers/cortex/');
   const secondary=page.getByRole('link',{name:'Download transcript'});
-  const state=await secondary.evaluate(el=>{const p=getComputedStyle(el,'::before');return {filter:p.filter,radius:p.borderRadius,opacity:p.opacity};});
-  expect(state.filter).toBe('none');expect(state.radius).toBe('0px');expect(state.opacity).toBe('0.16');
-  expect(await page.locator('.watch-cta').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(247, 223, 201)');
+  const state=await secondary.evaluate(el=>{const p=getComputedStyle(el,'::before');return {filter:p.filter,radius:p.borderRadius,opacity:p.opacity,x:el.style.getPropertyValue('--mx')};});
+  expect(state.filter).toBe('blur(7px)');expect(state.radius).toBe('50%');expect(state.opacity).toBe('1');expect(state.x).toBe('');
+  expect(await page.locator('.watch-cta').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
   await page.screenshot({path:'test-results/touch-reference-controls.png',fullPage:true});
   await context.close();
 });
