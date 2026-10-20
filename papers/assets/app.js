@@ -28,7 +28,10 @@ if (form) {
       history.replaceState(null, '', location.pathname + (p.size ? '?' + p : '') + location.hash);
     }
   }
-  form.addEventListener('submit', e => { e.preventDefault(); filter(); });
+  form.addEventListener('submit', e => {
+    e.preventDefault(); filter();
+    document.querySelector('#episodes').scrollIntoView({behavior:'instant'});
+  });
   form.addEventListener('input', () => filter());
   form.addEventListener('change', () => filter());
   form.addEventListener('reset', () => { search.value=''; playlist.value='all'; date.value='all'; filter(); });
@@ -79,7 +82,7 @@ if (menuRoot) {
     cancelClose(); clearTimeout(retainTimer);
     lastTrigger = button || toggle;
     active = key;
-    sections.forEach(section => { section.hidden = key !== 'mobile' && section.dataset.menuKey !== key; });
+    sections.forEach(section => { section.hidden = section.dataset.menuKey !== key; });
     panel.hidden = false; panel.inert = false;
     menuRoot.dataset.retained = 'true';
     measureMenu();
@@ -111,7 +114,15 @@ if (menuRoot) {
   toggle.addEventListener('click',()=>{ if (active) closeMenu(); else openMenu('mobile',toggle); });
   document.addEventListener('keydown',event=>{ if(event.key==='Escape' && active) closeMenu(true); });
   document.addEventListener('click',event=>{ if(mobileMenu.matches && active && !event.target.closest('.reference-nav')) closeMenu(); });
-  panel.addEventListener('click',event=>{ if(event.target.closest('a')) closeMenu(); });
+  panel.addEventListener('click',event=>{
+    const link=event.target.closest('a');
+    if(!link) return;
+    closeMenu();
+    const destination=new URL(link.href);
+    if(destination.pathname===location.pathname && destination.hash==='#search') {
+      requestAnimationFrame(()=>document.querySelector('#search')?.focus({preventScroll:true}));
+    }
+  });
   menuRoot.addEventListener('focusout',()=>setTimeout(()=>{ if(active && !menuRoot.contains(document.activeElement)) closeMenu(); },0));
   function updateScroll() {
     const y=window.scrollY,dy=y-previousY;

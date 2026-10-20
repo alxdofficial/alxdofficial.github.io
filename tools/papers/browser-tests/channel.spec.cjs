@@ -10,11 +10,13 @@ for (const width of [320,390,768,1440]) {
     await expect(page.locator('#episodes .thumb').first()).toHaveAccessibleName(/Watch/);
     for (const episode of source.episodes) await expect(page.locator('#episodes')).toContainText(episode.title);
     if (width <= 680) {
+      expect((await page.locator('#search').boundingBox()).y).toBeLessThan(750);
       const menu=page.getByRole('button',{name:/Menu/});
       await expect(menu).toBeVisible();
       expect((await menu.boundingBox()).height).toBeGreaterThanOrEqual(44);
       await menu.click();
       await expect(menu).toHaveAttribute('aria-expanded','true');
+      await expect(page.locator('#main-nav a:visible')).toHaveText(['Search episodes','All episodes','Playlists','Archive',/Latest edition/]);
       await page.keyboard.press('Escape');
       await expect(menu).toHaveAttribute('aria-expanded','false');
       await expect(menu).toBeFocused();
@@ -149,8 +151,11 @@ test('mobile reference menu remains opaque during open and close, outside tap an
 });
 
 test('all catalog episodes have complete read, source, media and download routes',async({page})=>{
+ await page.setViewportSize({width:320,height:800});
  for(const episode of source.episodes){
   await page.goto('/papers/'+episode.id+'/');
+  await page.evaluate(()=>document.fonts.ready);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
   await expect(page.locator('h1')).toHaveText(episode.title);
   await expect(page.locator('#credits')).toContainText(/synthetic (?:narration|Anna preset)/i);
   await expect(page.locator('.paper-meta')).toContainText(episode.paper_version);
@@ -162,6 +167,32 @@ test('all catalog episodes have complete read, source, media and download routes
   await expect(page.getByRole('link',{name:'Download video'})).toHaveAttribute('href',new RegExp(episode.video_id));
   await expect(page.getByRole('link',{name:/Read the paper/})).toHaveAttribute('href',episode.paper_url);
  }
+});
+
+test('discovery shortcuts and mobile search lead directly to the catalog',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/papers/');
+ expect(await page.locator('#episodes').evaluate(el=>Boolean(el.compareDocumentPosition(document.querySelector('#playlists')) & Node.DOCUMENT_POSITION_FOLLOWING))).toBeTruthy();
+ await page.getByRole('button',{name:'Menu',exact:true}).click();
+ await page.waitForTimeout(380);
+ const panel=page.locator('#main-nav');
+ expect(await panel.evaluate(el=>el.scrollHeight<=el.clientHeight+1)).toBeTruthy();
+ await panel.getByRole('link',{name:'Search episodes',exact:true}).click();
+ await expect(page.locator('#search')).toBeFocused();
+ await expect(page.getByRole('button',{name:'Menu',exact:true})).toHaveAttribute('aria-expanded','false');
+ await page.locator('#search').fill('memory');
+ await page.locator('#search').press('Enter');
+ await expect(page.locator('#episodes .episode:visible')).toHaveCount(source.episodes.filter(e=>[e.title,e.headline,e.description,...e.tags].join(' ').toLowerCase().includes('memory')).length);
+ expect(await page.locator('#episodes').evaluate(el=>Math.abs(el.getBoundingClientRect().top)<100)).toBeTruthy();
+});
+
+test('episode summary precedes detailed source credits and mobile transcript precedes the sidebar',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/papers/t2-z/');
+ const summary=page.locator('.insights');
+ await expect(summary).toContainText(source.episodes.find(e=>e.id==='t2-z').takeaway);
+ expect(await summary.evaluate(el=>Boolean(el.compareDocumentPosition(document.querySelector('.source-credit')) & Node.DOCUMENT_POSITION_FOLLOWING))).toBeTruthy();
+ expect((await page.locator('#transcript').boundingBox()).y).toBeLessThan((await page.locator('.reading-layout aside').boundingBox()).y);
 });
 
 // Synthetic records stay in memory and are never added to the public catalog.
