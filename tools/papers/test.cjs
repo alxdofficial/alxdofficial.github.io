@@ -34,18 +34,21 @@ function runTests(generate,source,transcripts,templates) {
  assert(a['latent/index.html'].includes('2:45'),'Half-second duration rounding');
  const newest=source.episodes.map(e=>e.published).sort().at(-1), future=new Date(new Date(newest+'T00:00:00Z').getTime()+86400000).toISOString().slice(0,10);
  const cloned=JSON.parse(JSON.stringify(source)), e={...cloned.episodes[0],id:'test-future',published:future,transcript_path:'test-future/transcript.txt',playlists:['research','health']};
+ delete e.page_catalog_date;
  cloned.episodes.push(e);
  const c=generate(cloned,{...transcripts,'test-future':transcripts[e.id]||transcripts[source.episodes[0].id]},templates);
  assert(c['index.html'].indexOf('data-date="'+future+'"')<c['index.html'].indexOf('data-date="'+newest+'"'),'Newest first');
  assert(c['index.html'].includes('value="'+future+'"'),'Date filter added');
  assert(c['index.html'].includes('date='+future+'#episodes'),'Archive added');
  assert(JSON.parse(c['catalog.json']).episodes.length===source.episodes.length+1,'One record, no playlist duplicates');
+ for (const old of source.episodes.filter(x=>x.page_catalog_date)) assert(c[old.id+'/index.html']===a[old.id+'/index.html'],'Pinned page unchanged after ingestion '+old.id);
  assert(c['feed.xml'].includes('/test-future/'),'RSS new episode');
  assert(c['sitemap.xml'].includes('/test-future/'),'Sitemap new episode');
  assert(c['index.html'].includes('02 / '+(source.episodes.filter(e=>e.playlists.includes('health')).length+1)+' EPISODES'),'Playlist updated');
  // Creation order deliberately differs from paper publication and revision order.
  const chronology=JSON.parse(JSON.stringify(source));
  chronology.episodes=source.episodes.slice(0,3).map((e,i)=>({...e,
+   page_catalog_date: undefined,
    published:['2026-10-20','2026-10-21','2026-10-21'][i],
    paper_date:['2026-10-19','2026-09-01','2026-09-02'][i],
    paper_revised:['2026-10-19','2026-09-03','2026-09-04'][i],

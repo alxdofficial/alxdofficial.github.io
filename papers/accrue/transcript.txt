@@ -1,0 +1,33 @@
+ACCRUE: Continual Off-Policy Reinforcement Learning for Robot Foundation Models
+
+A robot learns to insert one component, then meets a new assembly. Starting reinforcement learning from scratch wastes useful knowledge. Carrying the learner forward can instead destroy its earlier behavior. ACCRUE separates two goals: transfer a useful starting point for the new task, and preserve previously learned actions. It studies contact-rich assembly with known task boundaries and identities. This is not an agent discovering arbitrary new tasks without supervision, and the retained memory is small per task rather than fixed across an unlimited lifetime.
+
+A robot foundation model already proposes actions from images, joint positions and a language instruction. Earlier off-policy methods attach a smaller learner to improve one task using reusable experience. Continual methods must also decide what survives between tasks. ACCRUE tests simulated assembly and a real robot performing peg, gear and shaped-part insertions. It is relevant to continual reinforcement learning, but it is not direct evidence for wearable adaptation. A useful conceptual connection is preserving behavior without assuming that a newly adapted value estimator remains trustworthy everywhere.
+
+At each stage, the base policy is fine-tuned on demonstrations accumulated so far, then frozen during reinforcement learning. A separate frozen visual encoder supplies consistent observation features. The actor receives those features, joint state and the base model’s proposed action chunk, then refines that chunk. The critic estimates its return. Both small networks carry their trained weights into the next stage. Freezing the observation encoder keeps old replay features compatible even when the base policy changes. The actor is also penalized for straying too far from the base proposal.
+
+Current-task transitions update the critic and train the actor to obtain higher predicted reward. Earlier tasks use a different target. Before new learning begins, the previous actor produces actions for retained historical transitions. Those outputs are cached. The new actor learns to match them, rather than asking its changing critic which old actions are valuable. This is actor distillation: output matching preserves prior behavior. The method keeps the last several episodes from every completed task. Total stored experience therefore grows with the number of tasks.
+
+On the FORGE simulation benchmark, a score averaging new-task learning success and later retained success is point eight six nine, versus point seven one eight for sequential learning and point six nine seven for ordinary replay. Final success is ninety-one point seven percent versus sixty-eight point five and sixty-two point six. These comparisons share the actor–critic setup and aggregate four task orders and four seeds. Real-robot subsequent-task interaction time falls by thirty-one to sixty-eight point five percent. That excludes demonstration collection and total training wall time. Earlier-task evaluations achieve eighteen to twenty successes in twenty trials.
+
+The hardware stopping rule is nineteen successes in a rolling window of twenty episodes. There is no full hardware baseline sweep, and related assemblies may transfer more readily than unrelated tasks. Resetting the critic modestly worsens performance; updating it on old replay also hurts retention. However, the visual-encoder ablation changes both encoder identity and stability, so it cannot isolate representation drift. The key reusable design is to separate current reward learning from prior behavior preservation. Code is marked coming soon. Official footage is linked, not reproduced here.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.18596v1
+https://arxiv.org/abs/2610.18596v1
+arXiv preprint · 13 Oct 2026
+All visuals are our own factual diagrams and numerical readouts adapted from Kim et al., arXiv:2610.18596v1. Original NVIDIA figures and official footage are not reproduced. Official demonstration link: https://accrue-rl.github.io/ . No demo duration.
+First submitted: 2026-10-13
+Paper version date: 2026-10-13
+Video date: 2026-10-21
+Our problem diagram · Our factual adaptation from Kim et al., arXiv:2610.18596v1
+Our input and action-flow diagram · Our factual adaptation from Kim et al., arXiv:2610.18596v1
+Our two-loss diagram · Our factual adaptation from Kim et al., arXiv:2610.18596v1
+Adapted Table 1, matched simulation comparison · Our factual adaptation from Kim et al., arXiv:2610.18596v1
+Adapted Figure 4: hardware protocol · Our factual adaptation from Kim et al., arXiv:2610.18596v1
+Our retention caveat summary · Our factual adaptation from Kim et al., arXiv:2610.18596v1
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

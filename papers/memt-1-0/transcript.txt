@@ -1,0 +1,34 @@
+MemT-1.0: Towards Memory-Native Evolution
+
+A long-running assistant needs history, but rereading every message is expensive. MemT asks whether a language model can instead carry a compact state that influences later answers. The important trade-off is not simply memory versus no memory. A growing text archive preserves explicit evidence. A fixed-size state compresses that evidence, so details can overwrite one another. This October twentieth revision presents a learned memory mechanism, not proof that an agent autonomously improves its general skills forever.
+
+The demonstrated uses include conversation recall, personalized questions and software agents using prior procedural experience. Ordinary retrieval searches stored records and places selected text in the prompt. Another approach fits small auxiliary weight matrices to each history, paying an optimization cost. MemT learns how to store and read information in advance, then changes a separate state during interaction. This distinction is relevant to continual-memory research. It has not been validated on wearable sensors, and it does not remove the need for an auditable source record.
+
+At selected model layers, current token representations query a persistent matrix. The resulting readout is gated and added to normal attention. After a turn finishes, the input and response produce keys, values and learned erase, write and forget controls. These update the matrix token by token. This is the operational role of the Gated DeltaNet-based update. A new independent conversation starts with zero state. Multiple storage experts expand capacity, but all participate: this is dense memory routing, not sparse computation. During inference, neither the backbone nor the learned read and write weights are retrained.
+
+Training first predicts later tokens from a short current segment plus memory of earlier segments. Then a frozen teacher reads the full history, while the student receives that history only through memory. The memory parameters learn to match the teacher’s next-token probabilities. That is context distillation in concrete terms. The report uses thirty-four billion training tokens. Across eleven memory benchmarks, the larger Flash model averages fifty point six and the smaller Nano model forty-seven, ahead of the strongest listed parametric baseline at thirty-eight point one. But stronger textual-memory systems remain substantially ahead. Different backbones also limit architecture-only conclusions.
+
+At one hundred twenty-eight thousand history tokens, the Nano model reports a one point eight six times end-to-end speedup over cached full context. The experiment uses batch one, two GPUs and a fixed one hundred twenty-eight-token response. Short histories are slower. The reported sixty-six times storage reduction counts per-conversation state, excluding shared model and memory weights. It is not total GPU memory. When experience is inserted during execution, on five hundred SWE-bench Verified software-repair tasks averaged over three runs per task, native memory improves mean success from sixty-six point zero seven to sixty-nine point seven three percent, but only slightly exceeds textual experience, and does not win every setting.
+
+The most useful ablation replaces token-level writes with one turn-level update: Nano’s average falls from forty-seven to forty-one. Removing response post-training falls further, to thirty-six point three. Changing the exact gated update formula has a much smaller effect. The reusable idea is therefore a learned write-and-read interface, not just a named update rule. For continual agents, test latent state alongside exact retrieval at matched evidence budgets. Measure forgotten details, not only bytes. Fixed state remains lossy, and autonomous experience acquisition and consolidation remain open problems.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.26825v2
+https://arxiv.org/abs/2610.26825v2
+arXiv preprint · v2 20 Oct 2026
+Original cropped figures: Li et al., MemT-1.0, arXiv:2610.26825v2, https://creativecommons.org/licenses/by-nc-sa/4.0/ . Cropping and explanatory overlays are adaptations; original material and adaptations retain CC BY-NC-SA 4.0, noncommercial use. Original code has a separate PolyForm Noncommercial license. No official experimental demo reproduced.
+First submitted: 2026-10-19
+Paper version date: 2026-10-20
+Video date: 2026-10-21
+Our problem schematic · Li et al., arXiv:2610.26825v2 · CC BY-NC-SA 4.0 · crop
+Our memory-interface comparison · Li et al., arXiv:2610.26825v2 · CC BY-NC-SA 4.0 · crop
+Original Fig 4: memory read · Li et al., arXiv:2610.26825v2 · CC BY-NC-SA 4.0 · crop
+Original Fig 4: token-level write · Li et al., arXiv:2610.26825v2 · CC BY-NC-SA 4.0 · crop
+Adapted Table 2 readout · Li et al., arXiv:2610.26825v2 · CC BY-NC-SA 4.0 · crop
+Adapted Figures 8–9 protocol readout · Li et al., arXiv:2610.26825v2 · CC BY-NC-SA 4.0 · crop
+Adapted Table 4 and limitations · Li et al., arXiv:2610.26825v2 · CC BY-NC-SA 4.0 · crop
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

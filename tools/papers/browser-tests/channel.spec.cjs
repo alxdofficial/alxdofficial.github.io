@@ -226,6 +226,7 @@ test('video creation dates control channel, every playlist and archive filters',
   const root=path.resolve(__dirname,'../../..');
   const fixture=JSON.parse(JSON.stringify(source));
   fixture.episodes=source.episodes.slice(0,3).map((e,i)=>({...e,
+    page_catalog_date: undefined,
     published:['2026-10-20','2026-10-21','2026-10-21'][i],
     paper_date:['2026-10-19','2026-09-01','2026-09-02'][i],
     playlists:source.playlists.map(p=>p.id)

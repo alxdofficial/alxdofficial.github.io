@@ -73,6 +73,24 @@ function generate(source, transcripts, templates) {
   const rssDate=d=>new Date(d+'T00:00:00Z').toUTCString();
   outputs['feed.xml']='<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>'+E(source.title)+'</title><link>'+base+'</link><description>Short, source-linked AI research explainers.</description><language>en</language><lastBuildDate>'+rssDate(latest)+'</lastBuildDate><atom:link href="'+base+'feed.xml" rel="self" type="application/rss+xml"/>'+episodes.map(e=>'<item><title>'+E(e.title)+'</title><link>'+e.url+'</link><guid isPermaLink="true">'+e.url+'</guid><pubDate>'+rssDate(e.published)+'</pubDate><description>'+E(e.title+'. '+e.venue+' '+e.publication_status+', '+e.paper_date+', '+e.paper_version+(e.paper_revised?', revised '+e.paper_revised:'')+(e.backfill?' (archive pick)':'')+'. '+e.description+' Takeaway: '+e.takeaway+' Caveat: '+e.caveat)+'</description>'+e.playlists.map(p=>'<category>'+E(playlists.find(x=>x.id===p).name)+'</category>').join('')+'</item>').join('')+'</channel></rss>';
   outputs['sitemap.xml']='<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+[{url:base,published:latest},...episodes].map(e=>'<url><loc>'+e.url+'</loc><lastmod>'+e.published+'</lastmod></url>').join('')+'</urlset>';
+  // Preserve earlier episode pages against unrelated navigation/recommendation churn.
+  // Rebuild each pinned page against its original catalog snapshot; content still
+  // comes from the canonical current record and transcript, so corrections apply.
+  const snapshots = new Map();
+  for (const e of episodes) {
+    if (e.page_catalog_date === undefined) continue;
+    if (!dateOK(e.page_catalog_date) || e.page_catalog_date < e.published || e.page_catalog_date > latest)
+      throw Error(e.id + ': invalid page catalog snapshot');
+    if (e.page_catalog_date === latest) continue;
+    if (!snapshots.has(e.page_catalog_date)) {
+      const subset = source.episodes.filter(o => o.published <= e.page_catalog_date).map(o => {
+        const {page_catalog_date, ...record} = o;
+        return record;
+      });
+      snapshots.set(e.page_catalog_date, generate({...source, episodes: subset}, transcripts, templates));
+    }
+    outputs[e.id + '/index.html'] = snapshots.get(e.page_catalog_date)[e.id + '/index.html'];
+  }
   return outputs;
 }
 module.exports = generate;
