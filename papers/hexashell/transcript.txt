@@ -1,0 +1,52 @@
+HexaShell: A Thin Harness for Exploring the Limits of VLM Agents as Robot Coding Agents
+
+1 / Actors and persistent updates
+Give a robot a coding agent, three cameras, and a small command interface. When an attempt fails, let another copy of the agent repair the code that caused the failure. Freeze those repairs, and test them on new scenes. That is the experiment in HexaShell, a robotics preprint from Hongcheng Gao and colleagues.
+
+The important detail is where learning happens. The language model's weights stay fixed. What changes is a library of small programs for measuring objects and executing motions. One agent acts. Another reads its logs, diagnoses a failure, edits a tool and runs checks. The repaired tool survives into the next episode.
+
+2 / Pixels to metric motion
+The harness translates commands into robot motion. It does not supply a task strategy. The agent sees a head camera, two wrist cameras, camera calibration and the robot's own state. It cannot look up the simulator's hidden object positions.
+
+So how does it turn a pixel into a grasp? A calibrated pixel defines a ray through space. If the target lies on a measured plane, intersect that ray with the plane. If two cameras see the same point, triangulate their rays. When the head view is insufficient, move a wrist camera and measure again. Those viewing motions count against the robot's action budget.
+
+3 / One concrete repair
+This sounds classical because the geometry is classical. The contribution is getting an agent to build, debug and reuse it. In one example, a xylophone tool mislocated a held mallet by about twenty-three millimeters. The repair matched a second view and triangulated its center. On the next attempt, the error was 2.7 millimeters and the task succeeded.
+
+4 / Results and sample mismatch
+Now the results. Across forty-two simulated RoboDojo tasks, the frozen tools achieve 39.7 percent success using the leaderboard's aggregation formula. The paper compares that with 32.3 percent for the strongest learned-policy entry in its October fourteenth snapshot. That competitor, VPP2, learns a visual planner and an action model from manipulation data.
+
+But these are different evaluation samples. HexaShell tests ten new layouts on one seed per task; leaderboard entries use fifty episodes on each of three seeds. The agent also receives task recipes and tool notes. So this is an encouraging reported comparison, with clear limits on the ranking claim.
+
+5 / Controlled evidence and failures
+The cleaner ablation is the geometry choice. On the same development layouts, triangulation scores 38.3 percent versus 29.6 percent for a monocular depth network. It uniquely solves fifty-seven layouts and loses twenty-three. Extra views help, even though moving the cameras consumes steps.
+
+The failures are revealing. Pushing reaches 92.5 percent, while tight insertion reaches only 8.3 percent. Nineteen task variants never succeed. Better scene measurement does not automatically produce the continuous corrections needed when a part contacts a tight opening.
+
+6 / Costs and useful scope
+There is a substantial time bill. A typical test episode takes about twelve minutes of wall time for twenty-six seconds of simulated robot motion. The simulator pauses while the model thinks. Development requires hundreds of repair rounds, and some tools descend from earlier depth-based and human-assisted work. The public release includes the tools but omits the full harness.
+
+The demonstrated application is therefore simulated robot-tool development. Real-time physical deployment remains untested. What makes this paper worth watching is the inspectable learning loop: failures become concrete software fixes, and the evaluation shows both where those fixes help and where contact control still defeats them.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.23479v1
+https://arxiv.org/abs/2610.23479v1
+Preprint; author-reported experiments; no peer-reviewed venue listed.
+Gao et al., HexaShell: A Thin Harness for Exploring the Limits of VLM Agents as Robot Coding Agents, arXiv:2610.23479v1. Paper figures licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); selected source crops and table cells enlarged/rearranged with faithful explanatory readouts. See visual_manifest.json for transformations. Code and linked demo assets have separate licenses.
+First submitted: 2026-10-16
+Fig. 3 · loop · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0 Figure 3; Original crop, enlarged.
+Fig. 3 · repair · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0 Figure 3, optimizer panel; Original crop, enlarged.
+Fig. 1 · inputs · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0 Figure 1, task-input panel; Original crop, enlarged.
+Fig. 1 · geometry · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0 Figure 1, geometry inset; Original crop, enlarged.
+Fig. 6(a,c) · repair · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0 Figure 6(a,c); Original panels selected and juxtaposed; faithful enlarged numeric readout.
+Fig. 2(a) · overall · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0, Figure 2(a). Original overall group retains axes and values; full shared legend retained and original HexaShell/VPP2 keys separately enlarged. Faithful numerical readout; unmatched evaluation samples.
+Fig. 1; §4.1 · protocol · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0, Figure 1; Section 4.1. Original freeze/retest heading and protocol checks selected and vertically joined; intervening baseline-score inset omitted to avoid mixing comparisons. Enlarged protocol readout from Section 4.1.
+Table 1 · selected cells · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0 Table 1; Original selected columns/rows joined; header Succ. applies to both numeric columns; enlarged named readout.
+Table 3 · selected cells · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0 Table 3; Original Class and Ours columns; selected rows joined; enlarged readout.
+Fig. 3; §4.1 · timing · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0, Figure 3; Section 4.1. Original complete top execution row, enlarged; timing readout from Section 4.1.
+Fig. 1 · failure · Gao et al. 2026, arXiv:2610.23479v1, CC BY 4.0 Figure 1, failure panel; Original crop, enlarged.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

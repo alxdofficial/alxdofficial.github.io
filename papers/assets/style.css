@@ -240,3 +240,6 @@ footer>div:last-child{font-size:11px}
  .js .reference-nav .menu-toggle{bottom:calc(16px + env(safe-area-inset-bottom))}
  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
 }
+
+/* Preserve full scientific titles on narrow screens. */
+.watch>h1{overflow-wrap:anywhere}

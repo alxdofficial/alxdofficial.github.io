@@ -1,0 +1,38 @@
+PulseBound: Future-Beat State Forecasting Under an Explicit Information Boundary
+
+1. Problem and assumptions
+PulseBound addresses a subtle forecasting trap: an attention mask that blocks future tokens cannot help if whole-window normalization or a frequency transform already exposes the future. It normalizes only the visible pulse-wave prefix, replaces the hidden suffix before constructing derived views, and aligns their masks. The model then predicts physiological descriptors of up to four future valid beats. The assumption is that these extractor-defined targets teach transferable physiology. First posted October eighth and revised October twelfth, this remains an under-review preprint.
+
+2. Demonstrated applications
+The backbone trains on hospital pulse waves from MIMIC and VitalDB, with respectively three hundred fourteen and two hundred ninety-four held-out patient groups. Both sources also contribute training patients, so this is not unseen-source forecasting. Thirteen downstream benchmarks cover vital signs, stress, activity, identity and signal quality. Inference needs only a complete thirty-second pulse-wave window; ECG and other auxiliary signals are training scaffolds. Those demonstrations support representation research, not wrist-device accuracy or clinical diagnosis.
+
+3. Current research context
+Recent comparators include AnyPPG, introduced in November 2025 and revised in June 2026, and January 2026's SIGMA-PPG. PulseBound tests seven complete systems using matched downstream examples, outer splits and metrics. It reports the best mean on nine of thirteen frozen-probe tasks and seven after full fine-tuning. For example, stress AUC, measuring ranking discrimination, rises from AnyPPG's point nine one eight to point nine five three. That is a protocol-specific comparison. It does not establish universal leadership or isolate which pretraining component caused the gain.
+
+4. Concrete method
+Thirty one-second patches generate raw and paired derived-view tokens, plus twenty learned summary tokens, called registers. A twelve-layer, seven-hundred-sixty-eight-wide Transformer processes them with restricted information flow. A shared head receives prefix context, cutoff information and a horizon embedding. It predicts nine rhythm and morphology descriptors; optional pulse-arrival time comes from ECG during training. The loss combines validity-masked Smooth-L1 state prediction with token classification, waveform reconstruction and auxiliary objectives. A curriculum extends the forecast horizon. No teacher network is needed, but an exponential moving average tracks weights. Downstream inference averages register and temporal features from the full window.
+
+5. Matched results and ablations
+Against last-visible-beat persistence, transformed-state error falls twenty-eight point zero six percent on MIMIC and twenty-two point twenty-two percent on VitalDB. These average matched patient-level results across states, cutoffs and horizons; they are not blood-pressure error reductions. The ablation matters: full-model future-state Skill, measuring error improvement over a training-median predictor, is point three nine two six, versus point three five two seven without state supervision, and point zero zero three two with shuffled targets. This supports meaningful target alignment, while the no-state control retains substantial predictive information. Removing individual components does not consistently worsen every transfer task.
+
+6. Novelty, limitations and sensing relevance
+Changing stored suffixes produced zero recorded prediction changes in the audit. But the guarantee begins after upstream preprocessing. More importantly, the frozen tokenizer was trained on the full processed MIMIC corpus before the patient split; the whole pipeline is not patient-disjoint. Some downstream datasets also have overlap or split limitations. Ninety-eight million parameters and A100 timing do not demonstrate wearable feasibility. The useful novelty is an auditable information-access contract, with explicit limits. Independent raw-signal audits, genuinely external cohorts and device measurements are the next tests.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.12010
+https://arxiv.org/abs/2610.12010
+Preprint, under review; v2 revised 2026-10-12
+PulseBound v2 is CC BY 4.0, verified from the arXiv license link. Table 2 is reproduced as an actual PDF crop and enlarged, with attribution to Chenyang Xu et al., arXiv:2610.12010v2 and license https://creativecommons.org/licenses/by/4.0/. Other episode graphics are new explanations and faithful numeric readouts derived from the paper. Extra original source crops are retained for verification; not all are used in the episode. No author endorsement implied. No official code repository or playable official demo was verified.
+First submitted: 2026-10-08
+Original boundary explanation · Original explanatory graphic from Xu et al., PulseBound, arXiv:2610.12010v2 (CC BY 4.0).
+Original sample and task accounting · Original explanatory graphic from Xu et al., PulseBound, arXiv:2610.12010v2 (CC BY 4.0).
+Original matched Table 1 readout · Original explanatory graphic from Xu et al., PulseBound, arXiv:2610.12010v2 (CC BY 4.0).
+Original architecture and objective summary · Original explanatory graphic from Xu et al., PulseBound, arXiv:2610.12010v2 (CC BY 4.0).
+Original aggregate forecasting readout · Original explanatory graphic from Xu et al., PulseBound, arXiv:2610.12010v2 (CC BY 4.0).
+Original Table 2: seed-0 ablation · Chenyang Xu et al., PulseBound, arXiv:2610.12010v2, Table 2; CC BY 4.0, cropped/enlarged. https://creativecommons.org/licenses/by/4.0/
+Original limitation audit · Original explanatory graphic from Xu et al., PulseBound, arXiv:2610.12010v2 (CC BY 4.0).
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

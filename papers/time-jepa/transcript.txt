@@ -1,0 +1,49 @@
+Time-JEPA: Grounding Video World Models with Physical Time Series
+
+1 / Problem and central idea
+Time-JEPA gives a video model an extra job during training: recover physical measurements at the moment they happened. Those measurements supervise training; evaluation uses video alone. That is the whole mechanism in one sentence. A video can show someone bending a knee, but a useful representation should also preserve how the angle and motion change.
+
+2 / Demonstrated applications
+The study covers driving, robot manipulation, and human motion. It tests current physical-state decoding, prediction up to one second ahead, and reconstruction of trajectories or limb distances. Separate tests examine physical anomalies and future object contact. Wearable sensing is a possible extension. The human-motion targets here are pose-derived quantities, not an evaluated wearable inertial-sensor pipeline.
+
+3 / Position among existing methods
+The starting point is the released V-JEPA 2.1 video encoder. Physical supervision itself is not new: earlier methods already ground visual representations with physical state. Time-JEPA's distinction is a simple, temporally aligned regression interface across three domains. The strongest comparison is against the same backbone fine-tuned on the same videos without that extra supervision. It is not a universal planning leaderboard result.
+
+4 / Architecture, loss and inference
+One branch sees masked video and predicts missing latent features. A slowly updated target encoder supplies the answers. The added branch uses the same online encoder on the full clip. At each temporal position, it averages spatial features and predicts physical quantities through a small head. Measurements are aligned, pooled over adjacent frame pairs, and normalized. Training combines latent prediction with a robust regression loss. After training, discard the auxiliary head, freeze the encoder, and train new task-specific probes, meaning small supervised readout models. Evaluation uses video alone. Variables called out-of-distribution were excluded from encoder supervision, but their probes still receive training labels. This is not zero-shot discovery.
+
+5 / Results and mechanism checks
+Against matched video-only fine-tuning, human-motion current-state R-squared, where higher means more variation is explained, rises from 0.231 to 0.345 on seen conditions. For robot manipulation, it rises from 0.424 to 0.725. These are representation-probing results, not task-success rates. With multi-domain training, future-state normalized error under both variable and condition shifts falls from 0.911 to 0.844. Reconstructing human limb distances under held-out conditions reduces mean absolute error from 7.12 to 4.56 centimeters. The crucial ablation changes timing. Correct human-motion alignment gives a correlation of 0.589. A 0.8-second offset gives 0.575. Measurements from another take reduce it to 0.510, barely above the video-only control's 0.503. Local correspondence matters more than simply supplying plausible numbers.
+
+6 / Limits and relevance
+There are limits. Physical-anomaly accuracy on GRASP reaches only 57.8 percent, and Physion's all-scenario accuracy is essentially unchanged. Training adds an extra encoder pass, and wearable-device latency is not reported. No continual learning or closed-loop control is demonstrated. For wearable research, the next experiment is synchronized motion supervision, followed by cross-person and device-shift tests and a real downstream decision. That is a proposal, not a demonstrated application. Time-JEPA offers a simple way to make video features more physically informative, with unusually useful synchronization checks.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.23982v1
+https://arxiv.org/abs/2610.23982v1
+Preprint v1; author-reported results, not independently reproduced.
+Original paper and author-created figures are CC BY 4.0, verified via arXiv license link on 2026-10-20. Attribution: Shenyi Li, Ziyang Zhang, Wen Wu, Ming Liu, Chao Zhang, Time-JEPA, 2026, https://arxiv.org/abs/2610.23982v1. License https://creativecommons.org/licenses/by/4.0/ . Figures are cropped; selected original table cells are rearranged for phone readability without changing numbers. Added context labels are editorial. Figure 2 contains source-dataset imagery; use author-created diagram/table crops as primary evidence and do not separately republish dataset photographs without confirming underlying rights. The paper license does not purport to license the entire new narration/video. The selected Figure 2 views show author-created labels only; dataset photographs are excluded.
+First submitted: 2026-10-14
+Fig. 1 · physical supervision · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 2 · driving data · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 2 · robot data · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 2 · human-motion data · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 1 · inherited JEPA path · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 1 · masked latent prediction · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 1 · physical-state branch · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 1 · align, pool, normalize · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 1 · video-only encoder · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Table 1 · human ID · cells rearranged · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Table 1 · robot ID · cells rearranged · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Table 3 · joint OOD · rows rearranged · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Table 4 · human OOD · rows rearranged · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Table J1 · ID correlation · cells rearranged · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Table H1 · GRASP pair accuracy · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Table H3 · Physion · cells rearranged · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 1 · extra training branch · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+Fig. 2 · human-motion domain · Li et al., Time-JEPA, arXiv:2610.23982v1, 2026. CC BY 4.0. Cropped for readability; table cells rearranged only where specified. https://creativecommons.org/licenses/by/4.0/
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

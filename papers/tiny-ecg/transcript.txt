@@ -1,0 +1,39 @@
+Few-Shot Prototype Head Adaptation for On-Device ECG Personalization on PSoC 6
+
+1. Problem and assumptions
+This October fifth preprint proposes a simple way to personalize an electrical heart-signal, or ECG, classifier on a microcontroller. Freeze the feature extractor, average a few labeled normal and abnormal beats into two prototypes, then classify new beats by their nearest prototype. It avoids updating convolutional weights or maintaining an optimizer. The key assumption is that a tiny frozen embedding already separates patient-specific morphology. This is useful engineering, but its claim of patient-independent evaluation has a concrete split defect we will examine.
+
+2. Demonstrated applications
+The authors run replayed ECG beats on a PSoC six Cortex M4F at one hundred megahertz. Measured computation is eleven point three nine milliseconds per pre-segmented beat, with five point two kilobytes of model flash and twenty-two point two kilobytes of model-and-adaptation RAM at ten shots. These exclude the complete firmware. The system receives annotated R-peak windows; it does not validate an upstream beat detector or a live wearable. The window includes roughly three hundred milliseconds after the peak, beyond the quoted compute time.
+
+3. Current research context
+Microcontroller learning already includes sparse gradient methods, such as 2022's On-Device Training Under 256 Kilobytes, and 2024 activity-recognition personalization. Here, the contribution is a smaller ECG adaptation primitive with measured hardware behavior. It is not the first prototype classifier or a matched victory over those different tasks. The relevant comparison is the paper's own frozen linear head, adapted with fifty gradient steps. Even within this study, larger backbones can favor gradient adaptation at low shot counts.
+
+4. Concrete method
+Each beat contains two hundred samples at three hundred sixty hertz, normalized separately. Two one-dimensional convolution layers, pooling and a projection produce thirty-two numbers using one thousand three hundred fourteen parameters. Offline supervised training learns the backbone, which stays frozen on the device. For each class, adaptation computes the mean support embedding. Inference chooses the smaller squared Euclidean distance. A restricted mode updates only the normal prototype while keeping the training-set abnormal prototype. It reduces abnormal-label demand, but still assumes the supposedly normal support beats are correctly identified.
+
+5. Matched results and costs
+Macro F1 averages class precision-and-recall scores. At one shot, it rises from point six three five to point seven three one. At ten shots, it rises from point six four six to point seven nine seven. Those baselines use their matching eligible subsets; increasing shots also excludes difficult records. On-device replay covers eighteen episodes and five hundred seventy-six queries, matching host prototype F1 exactly at point seven nine eight. The timing distinction matters: one-shot calibration takes twenty-two point eight three milliseconds for prototypes versus twenty-four point four nine for gradient adaptation. The advertised seventeen-fold difference applies to Python-host timing, not the microcontroller.
+
+6. Independent split audit and verdict
+Here is the central caveat. The official code places record two hundred one in development and two hundred two in testing. PhysioNet documents that these recordings belong to the same person. That contradicts the repository's patient-disjoint description. We cannot quantify any score inflation without rerunning a corrected split. The study also lacks external validation and uses a small historical arrhythmia dataset. This does not erase the hardware demonstration. It makes the paper a useful personalization prototype whose population-generalization claim needs repair, not a clinically ready monitor.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.06241
+https://arxiv.org/abs/2610.06241
+Preprint, v1; repository says submitted to IEEE Embedded Systems Letters, acceptance not verified
+The article is CC BY 4.0, verified through arXiv. Figure 2a is an actual PDF crop with a separately drawn faithful enlarged numerical readout. Attribution: Guilherme Silva, Pedro Silva, Gladston Moreira and Eduardo Luz, arXiv:2610.06241v1; license https://creativecommons.org/licenses/by/4.0/. Other graphics are original explanatory diagrams/readouts. Official repository is MIT-licensed; its LICENSE is saved. No code incorporated into video. Repo-hosted video link exists but playable content was not inspected and is not used. No author endorsement implied.
+First submitted: 2026-10-05
+Original prototype mechanism diagram · Original explanatory graphic from Silva et al., arXiv:2610.06241v1, CC BY 4.0.
+Original Table 1 and timing readout · Original explanatory graphic from Silva et al., arXiv:2610.06241v1, CC BY 4.0.
+Original dated research context · Original explanatory graphic from Silva et al., arXiv:2610.06241v1, CC BY 4.0.
+Original architecture and update summary · Original explanatory graphic from Silva et al., arXiv:2610.06241v1, CC BY 4.0.
+Original Figure 2a with added numeric readout · Guilherme Silva et al., arXiv:2610.06241v1, Figure 2a; CC BY 4.0, cropped/enlarged; separate faithful readout added.
+Original Table 2; subset and host-time notes added · Silva et al., arXiv:2610.06241v1, Table 2; CC BY 4.0; cropped/enlarged; footer clarifies printed footnotes.
+Original readout of actual MCU timings · Original explanatory graphic from Silva et al., arXiv:2610.06241v1, CC BY 4.0.
+Independent original split audit diagram · Original audit of official splits.py plus PhysioNet MIT-BIH documentation; inference explicitly distinguished from author claim.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

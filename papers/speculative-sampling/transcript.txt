@@ -1,0 +1,53 @@
+Speculative Sampling in Interactive Video Generation
+
+1 / Generation versus commitment
+Generate several seconds of video ahead, but keep that future editable until the viewer needs it. That is the central idea in Speculative Sampling for interactive video generation. The paper separates prediction size from the amount of video committed to showing.
+
+Why does that matter? Suppose a model creates five-second chunks. Even if generation is fast, a new camera command may wait for the next chunk boundary before appearing. Making chunks smaller gives more opportunities to react, but can weaken temporal modeling and waste parallel hardware capacity.
+
+2 / Cache and replacement mechanism
+The authors keep joint generation large. One sampling call predicts several video latents with bidirectional attention, allowing those predictions to inform each other. The resulting future goes into a cache. The player receives small groups incrementally, instead of committing the entire chunk at once.
+
+The original diagram distinguishes a protected prefix from a replaceable future. If the instruction stays the same, reuse the cached predictions. If it changes, preserve what has already been committed and regenerate only a future suffix that can still be replaced in time.
+
+3 / Scheduling and prior methods
+There is a practical scheduling constraint. The old video must last until the new output is ready, and the model needs a valid continuation point. The controller therefore alternates between producing predictions and consuming cached ones. Playback continues in both states. An instruction arriving during generation waits as a pending update; it does not magically alter computation already underway.
+
+This is a serving controller, with no new training loss. Existing approaches such as Self Forcing train autoregressive video models on their own generated histories. Causal Forcing Plus Plus uses consistency distillation to make few-step generation efficient. Speculative Sampling can complement those approaches. For a bidirectional model, it can continue from a retained boundary image through the model's native conditioning interface.
+
+4 / Quality evidence
+The quality experiments explain why larger windows are worth considering. In a matched four-step, four-eighty-p Wan setting, the reported VBench combined quality score rises from 79.00 for one latent to 82.13 for twenty-one. Those configurations were trained separately. Larger chunks do not improve every metric, and the best size changes with the setting.
+
+5 / Matched responsiveness and hardware
+Now look at the serving table. Each configuration receives thirty matched one-minute traces with changing instructions. For the large-chunk Sol-H3 deployment, the low-update median response falls from 4.49 seconds to 1.42 seconds. The ninety-fifth percentile falls from 6.44 to 2.47 seconds, with no measured playback stalls. The matched large configuration uses eight B300 GPUs.
+
+That hardware detail matters. Lower per-GPU activity does not establish lower total cost, especially when small and large configurations use different numbers of GPUs. Forward-pass timing also excludes important parts of the actual generation pipeline.
+
+6 / Counterexamples and limits
+The method can fail to help. In the small-chunk LTX setup with CUDA Graph execution, low-update median latency increases from 1.81 to 2.01 seconds. Playback stalls also increase. Fine-grained commitment cannot compensate for every compute or scheduling bottleneck.
+
+Frequent instruction changes can discard much of the predicted future, increasing wasted computation. And a retained bidirectional state may still contain information from a future that was later discarded.
+
+The demonstrated application is responsive, research-scale video serving, including an official interactive demo. Reliable general world simulation remains unproven. The takeaway is a useful engineering principle: generate enough context for quality, commit only when needed, and measure actual response, stalls and total resource cost together.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.20556v1
+https://arxiv.org/abs/2610.20556v1
+Preprint; author-reported experiments; no peer-reviewed venue listed.
+Huang et al., Speculative Sampling in Interactive Video Generation, arXiv:2610.20556v1. Paper figures licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); selected source crops and table cells enlarged/rearranged with faithful explanatory readouts. See visual_manifest.json for transformations. Code and linked demo assets have separate licenses.
+First submitted: 2026-10-14
+Fig. 1 · commitment · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0 Figure 1; Original crop, enlarged.
+Fig. 3(a) · cache · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0 Figure 3(a); Original crop, enlarged.
+Fig. 1 · replacement · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0, Figure 1. Original speculative-sampling row selected with complete old/new-condition legend and protected/replaceable labels; enlarged.
+Fig. 3(b) · scheduler · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0 Figure 3(b); Original crop, enlarged.
+Fig. 5(a); Table 1 · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0 Figure 5(a); Table 1; Original quality plot with both resolutions and axes; readout explicitly selects 480p.
+Table 3 · Sol-H3 long · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0 Table 3; Original configuration and low-update L50/L95 cells; selected long rows; configuration and update-load supplied in enlarged title.
+Fig. 5(b); §4.1 · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0 Figure 5(b); Section 4.1; Original Wan H200 forward plot preserved; separate from Sol-H3 B300 serving setup.
+Table 3 · LTX short · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0 Table 3; Original Configuration/L50/Stall columns; matched CUDA Graph rows joined; low-update context explicit.
+Fig. 3(a) · cache · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0 Figure 3(a), cache inset; Original crop, enlarged.
+Fig. 1 · speculation · Huang et al. 2026, arXiv:2610.20556v1, CC BY 4.0 Figure 1, speculative row; Original crop, enlarged.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

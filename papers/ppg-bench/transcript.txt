@@ -34,7 +34,7 @@ Source: https://arxiv.org/abs/2610.13435v1
 
 Visual diagrams and charts independently drawn from reported methods and data. Original paper artwork is not reproduced.
 
-All findings are preprint claims, not independent replications. No prospective clinical effectiveness is established by the health studies. Synthetic narration has automated waveform, timing and model-assisted speech-content checks; this is not a human listening certification.
+All findings are preprint claims, not independent replications. No prospective clinical effectiveness is established by the health studies. Synthetic narration. Waveform and timing checks were performed during the original production. No speech-content verification was performed for this catalog update.
 
 Synthetic narration: Kyutai Labs Pocket TTS 3.3.0, public preset-only English model (CC BY 4.0). Model: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning . Software (MIT): https://github.com/kyutai-labs/pocket-tts .
 

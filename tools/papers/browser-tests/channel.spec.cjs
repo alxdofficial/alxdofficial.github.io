@@ -82,7 +82,7 @@ test('reference button glow eases under fixed labels and returns gently on point
   await expect.poll(async()=>(await read()).prox).toBeGreaterThan(.99);
   await expect.poll(async()=>parseFloat((await read()).filter.replace('blur(',''))).toBeLessThan(6.02);
   state=await read();expect(state.width/state.hostWidth).toBeCloseTo(1.1,1);expect(state.height/state.hostHeight).toBeCloseTo(1.1,1);
-  expect(parseFloat(state.radius)).toBeLessThan(.5);expect(state.color).toBe('rgb(255, 255, 255)');
+  await expect.poll(async()=>parseFloat((await read()).radius)).toBeLessThan(.5);state=await read();expect(state.color).toBe('rgb(255, 255, 255)');
   expect(state.background).toContain('radial-gradient');
   const oldX=state.x;
   const firstX=await secondary.evaluate(el=>{

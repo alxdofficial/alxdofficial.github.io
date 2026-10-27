@@ -1,0 +1,54 @@
+BizAgentBench: Unveiling Hidden Challenges in Deploying Long-Horizon Agents for Real-World Business
+
+1 / Why the ending is insufficient
+An agent can finish a payment workflow with the right final balance and still have broken an important rule halfway through. BizAgentBench makes that distinction testable. Its central mechanism checks the entire execution history, not just the ending.
+
+Imagine an account containing sixty dollars that must always keep twenty dollars in reserve. The agent pays a sixty-dollar retainer, then later receives money and restores the balance. The ending looks acceptable. The earlier zero balance still violates the requirement. This is an actual failure pattern reported in the paper's simulated environment.
+
+2 / Environment and scoring
+The benchmark scores three things. Did the agent achieve the customer's goal? Did it follow the required process? And did it protect specified records and avoid prohibited side effects? Strict success requires all three. These checks run as deterministic code over states, receipts and ordered events. A language model does not decide the final score.
+
+The environment reconstructs payment workflows from Ant International's business procedures. Sensitive details are rewritten into synthetic records. There are fifty tasks, seven hundred eighty-nine knowledge documents, and six hundred one discoverable business capabilities. The agent reaches these through nine always-available tools, rather than receiving hundreds of tool definitions at once.
+
+A separate model plays the customer. It reveals facts, supplies documents and approves specific proposals. The tested agent must ask useful questions, identify which policy version applies, discover the necessary operations, and coordinate actions that share money or deadlines. A permitted action now can consume resources needed later.
+
+3 / Building a valid benchmark
+The construction diagram matters here. Acceptance rules are defined before reference runs. Passing reference traces show that each task can be solved. Alternative valid paths and deliberate violations test the evaluator, and researchers and business experts review the cases. The agent does not have to imitate one prescribed sequence.
+
+This extends an existing research direction. Tau-squared Bench studies agents and users acting in a shared environment. Tau-Knowledge combines banking workflows with a large document collection. BizAgentBench emphasizes whether consequential requirements remain satisfied at the moment each action happens. It introduces an evaluation framework, not a new model-training loss.
+
+4 / Measured success and repeatability
+Look at the results table. Claude Opus 5 achieves sixty-four percent strict success, and GPT-6 Sol achieves 61.3 percent. Those are observed results, not a statistically established ranking: Opus has one run per task, while Sol has three. Sol succeeds in all three repetitions on only forty percent of tasks.
+
+5 / Process and information gaps
+For Qwen3.8-27B, goal attainment is forty-two percent, but strict success falls to 32.7 percent. That gap illustrates why the process checks matter. A rejected premature payment attempt also counts as a process violation, even when no unauthorized transfer actually occurs.
+
+The information ablation offers a useful clue. DeepSeek-V4.1-Flash starts at 43.3 percent strict success. Giving it the applicable documents raises that to fifty percent. Giving it all customer-known facts upfront raises it to seventy percent. Gathering the right facts and retaining their terms appear especially difficult.
+
+6 / Resource use and limits
+Long traces also cost effort. That model averages 191 tool calls against about 112 in the reference traces, largely from additional searches and queries. The reference paths are not proven optimal, and tool counts are not dollar costs.
+
+This remains a small, synthetic preprint benchmark. It does not certify real-world financial safety. Its practical value is a sharper test: did the agent achieve the requested result through actions that stayed valid throughout?
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.20424v2
+https://arxiv.org/abs/2610.20424v2
+Preprint; author-reported experiments; no peer-reviewed venue listed.
+Zhao, Tong et al., BizAgentBench: Unveiling Hidden Challenges in Deploying Long-Horizon Agents for Real-World Business, arXiv:2610.20424v2. Paper figures licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/); selected source crops and table cells enlarged/rearranged with faithful explanatory readouts. See visual_manifest.json for transformations. Code and linked demo assets have separate licenses.
+First submitted: 2026-10-14
+Fig. 1 · criteria · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Figure 1, acceptance criteria; Original crop, enlarged.
+Fig. 1; App. D.3 · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Figure 1; Appendix D.3; Original criteria panel; illustrative state sequence from paper Appendix D.3.
+Fig. 1; §3.1 · setup · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Figure 1; Section 3.1; Original environment panel; faithful inventory readout.
+Fig. 1 · information · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Figure 1, information panel; Original crop, enlarged.
+Fig. 1 · validation · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Figure 1, validation panel; Original crop, enlarged.
+Table 1 · strict success · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Table 1; Original Model and Strict columns; top two rows joined; unequal repetitions (1 vs 3).
+Fig. 2(a) · reliability · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0, Figure 2(a). Original full plot and shared legend selected and rearranged; original GPT-6 Sol blue-circle legend entry separately enlarged. Faithful numerical readout.
+Table 1 · Qwen row · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Table 1; Original selected columns and Qwen3.8-27B row; no values changed.
+Table 2 · information · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Table 2; Original table crop; faithful enlarged readout.
+Fig. 2(b); Tables 7–8 · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Figure 2(b); Tables 7–8; Original selected resource rows; exact call readout from Tables 7–8.
+Fig. 1 · benchmark · Zhao, Tong et al. 2026, arXiv:2610.20424v2, CC BY 4.0 Figure 1, benchmark assets; Original crop, enlarged.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
