@@ -269,3 +269,63 @@ test('original figure thumbnails preserve labels and place controls outside artw
     }
   }
 });
+
+
+for (const width of [320, 390, 768, 1440]) {
+  test('uniform thumbnail canvases and controls at ' + width, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    // Listing, featured and related cards use the same thumbnail component.
+    for (const route of ['/papers/', '/papers/time-jepa/', '/papers/memt-1-0/']) {
+      await page.goto(route);
+      // Measure loaded artwork without racing native lazy-loading during rapid scrolls.
+      await page.locator('.thumb img').evaluateAll(imgs => imgs.forEach(img => { img.loading = 'eager'; }));
+      await expect.poll(() => page.locator('.thumb img').evaluateAll(
+        imgs => imgs.every(img => img.complete && img.naturalWidth > 0)
+      ), { timeout: 10000 }).toBeTruthy();
+      for (const thumb of await page.locator('.thumb').all()) {
+        await thumb.scrollIntoViewIfNeeded();
+        const img = thumb.locator('img');
+        const canvas = await img.boundingBox();
+        const frame = await thumb.boundingBox();
+        const play = await thumb.locator('.play').boundingBox();
+        const duration = await thumb.locator('.duration').boundingBox();
+        expect(canvas.height).toBeCloseTo(canvas.width * 9 / 16, 1);
+        expect(frame.height - canvas.height).toBeCloseTo(60, 1);
+        expect(await img.evaluate(el => getComputedStyle(el).objectFit)).toBe('contain');
+        expect(await thumb.evaluate(el => getComputedStyle(el, '::after').display)).toBe('none');
+        expect(play.y).toBeGreaterThanOrEqual(canvas.y + canvas.height);
+        expect(duration.y).toBeGreaterThanOrEqual(canvas.y + canvas.height);
+        expect(play.x + play.width).toBeLessThanOrEqual(duration.x);
+        expect(play.y + play.height).toBeLessThanOrEqual(frame.y + frame.height);
+        expect(duration.y + duration.height).toBeLessThanOrEqual(frame.y + frame.height);
+        const cardMeta = thumb.locator('..').locator('.card-meta');
+        if (await cardMeta.count()) {
+          // Attribution follows the card copy so every title starts consistently.
+          expect((await cardMeta.boundingBox()).y - frame.y - frame.height).toBeCloseTo(18, 1);
+          const credit = thumb.locator('..').locator('.thumbnail-credit');
+          if (await credit.count()) {
+            expect(await credit.evaluate(el => Boolean(
+              el.compareDocumentPosition(el.parentElement.querySelector('h3')) & Node.DOCUMENT_POSITION_PRECEDING
+            ))).toBeTruthy();
+          }
+        }
+      }
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+    }
+  });
+}
+
+test('every watch poster keeps the full artwork in a 16:9 player', async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const episode of source.episodes) {
+      await page.goto('/papers/' + episode.id + '/');
+      const poster = page.locator('.player > img');
+      await expect.poll(() => poster.evaluate(el => el.complete && el.naturalWidth > 0)).toBeTruthy();
+      expect(await poster.evaluate(el => getComputedStyle(el).objectFit)).toBe('contain');
+      const player = await page.locator('.player').boundingBox();
+      expect(player.height).toBeCloseTo(player.width * 9 / 16, 1);
+    }
+  }
+});
