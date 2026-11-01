@@ -12,6 +12,7 @@ for (const e of source.episodes) {
   files.add('papers/' + e.id + '/index.html');
   files.add('papers/' + e.transcript_path);
   files.add('papers/' + e.thumbnail_path);
+  if (e.thumbnail_original_path) files.add('papers/' + e.thumbnail_original_path);
 }
 // Only the reviewed public paths and catalog assets enter the Pages artifact.
 for (const file of files) {

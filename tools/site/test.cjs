@@ -6,13 +6,18 @@ const root = path.resolve(__dirname, '../..');
 const output = path.join(root, '.site');
 const source = require('../../papers/episodes.json');
 const expected = new Set(require('./public-files.json'));
-for (const e of source.episodes) for (const file of [e.id + '/index.html', e.transcript_path, e.thumbnail_path]) expected.add('papers/' + file);
+for (const e of source.episodes) for (const file of [e.id + '/index.html', e.transcript_path, e.thumbnail_path, e.thumbnail_original_path].filter(Boolean)) expected.add('papers/' + file);
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(dir,e.name)) : [path.relative(output,path.join(dir,e.name))]);
 }
 assert.deepEqual(walk(output).sort(), [...expected].sort(), 'Only approved files are deployed');
 for (const file of expected) assert.deepEqual(fs.readFileSync(path.join(output,file)),fs.readFileSync(path.join(root,file)), 'Public asset parity: ' + file);
 for (const excluded of ['tools', '.git', '.github', 'README.md', 'papers/episodes.json', 'node_modules', 'spain-2026']) assert(!fs.existsSync(path.join(output,excluded)), 'Internal source excluded: ' + excluded);
+for (const e of source.episodes.filter(e=>e.thumbnail_original_path)) {
+  const page = fs.readFileSync(path.join(output,'papers',e.id,'index.html'),'utf8');
+  if (e.thumbnail_source_url) assert(page.includes('/papers/'+e.thumbnail_original_path), 'Original figure link retained: '+e.id);
+  assert(fs.existsSync(path.join(output,'papers',e.thumbnail_original_path)), 'Original figure link resolves: '+e.id);
+}
 const halo = fs.readFileSync(path.join(output,'halo/index.html'),'utf8');
 assert(!/\/(?:home|Users)\//.test(halo), 'No local user paths in HALO');
 assert(!/"(?:training_args|source_provenance|oof_cache)"/.test(halo), 'No internal training bookkeeping in HALO');
