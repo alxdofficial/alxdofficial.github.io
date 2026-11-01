@@ -3,6 +3,10 @@
 - `/papers/`: research films, source links, transcripts, playlists and archive.
 - `/halo/`: interactive research explainer.
 
+## Agent start here
+
+Before research, video production, or coding, read [AGENTS.md](AGENTS.md), the [production checklist](tools/papers/PRODUCTION.md), and [thumbnail style contract with examples](tools/papers/THUMBNAILS.md). The [catalog workflow](tools/papers/README.md) gives exact build and publication commands. These are the durable cross-day instructions; do not invent a new visual style for each batch.
+
 ## Source and publication boundaries
 
 `papers/episodes.json` and `tools/papers/` are the catalog source and generator. Follow [the catalog workflow](tools/papers/README.md) for approved episode updates. Generated public pages and their assets stay under `papers/`; do not edit generated HTML directly.

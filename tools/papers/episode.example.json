@@ -22,5 +22,6 @@
   "duration_seconds": 180,
   "video_id": "REPLACE_WITH_PUBLIC_DRIVE_FILE_ID",
   "transcript_path": "paper-slug/transcript.txt",
-  "thumbnail_path": "assets/paper-slug.jpg"
+  "thumbnail_path": "assets/paper-slug.jpg",
+  "thumbnail_style": "editorial-frame-v1"
 }

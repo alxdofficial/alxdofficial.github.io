@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const generate = require('./generate.cjs');
+const dimensions = require('./thumbnail-dimensions.cjs');
 const root = path.resolve(__dirname, '../..');
 const papers = path.join(root, 'papers');
 const sourceFile = path.join(papers, 'episodes.json');
@@ -17,6 +18,8 @@ for (const episode of source.episodes) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(episode.id) || episode.transcript_path !== episode.id + '/transcript.txt' || !/^assets\/[a-z0-9-]+\.(jpg|png|webp)$/.test(episode.thumbnail_path)) throw Error('Unsafe asset path');
   transcripts[episode.id] = fs.readFileSync(path.join(papers, episode.transcript_path), 'utf8');
   if (!fs.statSync(path.join(papers, episode.thumbnail_path)).isFile()) throw Error('Thumbnail missing: ' + episode.id);
+  const [w,h]=dimensions(fs.readFileSync(path.join(papers,episode.thumbnail_path)));
+  if(Math.abs(w/h-16/9)>.005)throw Error(episode.id+': thumbnail must be 16:9; see THUMBNAILS.md');
 }
 const templates = {
   shell: fs.readFileSync(path.join(__dirname, 'templates/shell.html'), 'utf8'),

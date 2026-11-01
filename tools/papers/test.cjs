@@ -31,6 +31,8 @@ function runTests(generate,source,transcripts,templates) {
   assert(schema.name===e.title&&schema.duration==='PT'+e.duration_seconds+'S','Schema '+e.id);
   assert(!html.includes('{{'),'No unresolved template');
  }
+ assert(!a['index.html'].includes('figure-thumb'),'No alternate thumbnail layout');
+ assert(!a['index.html'].match(/<article[^]*?thumbnail-credit/),'No variable-length thumbnail credits in cards');
  assert(a['latent/index.html'].includes('2:45'),'Half-second duration rounding');
  const newest=source.episodes.map(e=>e.published).sort().at(-1), future=new Date(new Date(newest+'T00:00:00Z').getTime()+86400000).toISOString().slice(0,10);
  const cloned=JSON.parse(JSON.stringify(source)), e={...cloned.episodes[0],id:'test-future',published:future,transcript_path:'test-future/transcript.txt',playlists:['research','health']};
@@ -73,6 +75,7 @@ function runTests(generate,source,transcripts,templates) {
  assert(ordered['feed.xml'].indexOf('/'+expected[0]+'/')<ordered['feed.xml'].indexOf('/'+expected[2]+'/'),'Feed follows video creation order');
  for(const mutate of [
   s=>s.episodes.push({...s.episodes[0]}),
+  s=>delete s.episodes[0].thumbnail_style,
   s=>delete s.episodes[0].publication_status,
   s=>s.episodes[0].playlists=['invalid'],
   s=>s.episodes[0].transcript_path='../private.txt',

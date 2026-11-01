@@ -253,19 +253,15 @@ test('video creation dates control channel, every playlist and archive filters',
   await expect(page.locator('#episodes .episode:visible .citation-meta').first()).toContainText('1 SEPT 2026');
 });
 
-test('original figure thumbnails preserve labels and place controls outside artwork',async({page})=>{
-  for(const width of [390,1440]){
-    await page.setViewportSize({width,height:1000});await page.goto('/papers/');
-    for(const e of source.episodes.filter(e=>e.thumbnail_source_url)){
-      const thumb=page.locator('#episodes .figure-thumb[href="/papers/'+e.id+'/"]');
-      await thumb.scrollIntoViewIfNeeded();
-      const img=thumb.locator('img');await expect(img).toHaveAttribute('alt',e.thumbnail_figure);
-      expect(await img.evaluate(el=>getComputedStyle(el).objectFit)).toBe('contain');
-      expect(await thumb.evaluate(el=>getComputedStyle(el,'::after').display)).toBe('none');
-      const imageBox=await img.boundingBox(),controlBox=await thumb.locator('.play').boundingBox();
-      expect(controlBox.y).toBeGreaterThanOrEqual(imageBox.y+imageBox.height);
-      await expect(thumb.locator('..').locator('.thumbnail-credit')).toContainText(e.thumbnail_credit);
-      await thumb.locator('..').screenshot({path:'test-results/figure-'+e.id+'-'+width+'.png'});
-    }
-  }
+for(const width of [390,1440])test('consistent cross-day editorial thumbnails '+width,async({page})=>{
+ await page.setViewportSize({width,height:1000});await page.goto('/papers/');
+ const thumbs=page.locator('#episodes .thumb');
+ for(let i=0;i<await thumbs.count();i++){
+  const t=thumbs.nth(i),r=await t.boundingBox(),im=await t.locator('img').boundingBox(),play=await t.locator('.play').boundingBox();
+  expect(r.width/r.height).toBeCloseTo(16/9,2);expect(im.width/im.height).toBeCloseTo(16/9,2);
+  expect(Math.abs(play.y+play.height/2-r.y-r.height/2)).toBeLessThan(2);
+ }
+ await expect(page.locator('#episodes .thumbnail-credit')).toHaveCount(0);
+ await page.goto('/papers/latent/');await expect(page.locator('.thumbnail-credit')).toContainText('CC BY-SA');
+ await expect(page.getByRole('link',{name:'Full figure'})).toHaveAttribute('href','/papers/assets/latent-figure.png');
 });

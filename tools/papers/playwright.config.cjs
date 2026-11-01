@@ -3,7 +3,7 @@ module.exports = defineConfig({
   testDir: './browser-tests',
   timeout: 30000,
   retries: 0,
-  use: { baseURL: 'http://127.0.0.1:8765', headless: true },
+  use: { baseURL: 'http://127.0.0.1:8765', headless: true, ...(process.env.CHROMIUM_PATH?{launchOptions:{executablePath:process.env.CHROMIUM_PATH}}:{}) },
   webServer: { command: 'python3 -m http.server 8765 --bind 127.0.0.1 --directory ../..', url: 'http://127.0.0.1:8765/papers/', reuseExistingServer: false },
   reporter: [['list'], ['html', { outputFolder: 'playwright-report', open: 'never' }]]
 });
