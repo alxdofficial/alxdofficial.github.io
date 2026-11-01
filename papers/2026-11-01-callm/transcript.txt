@@ -1,0 +1,36 @@
+CaLLM: Continual Adaptation of LLMs via Non-Parametric Adapter Routing
+First publication: 2026-10-27 | Version: v1 (2026-10-27)
+Video produced: 2026-11-01 | Selection digest: 2026-10-30
+Publication status: arXiv preprint; peer review not independently verified.
+Primary source: https://arxiv.org/abs/2610.36994v1
+
+A language model that learns code today should not forget yesterday's science questions. Sequentially updating one small trainable module can still overwrite earlier skills. This paper asks whether a frozen base model can route incoming data into separate lightweight modules, preserving incompatible skills while letting similar tasks share capacity. The challenge is deciding which module to use without being handed a task identifier.
+
+Replay stores old examples and mixes them into later training. Weight penalties discourage changes deemed important to previous tasks. Parameter isolation instead protects old modules, but requires a reliable selection mechanism. Here the system compares distributions of prompts, not just task names. If its fixed representation fails to distinguish two domains, their updates can still collide. Bounded capacity also means an old expert may eventually be overwritten.
+
+The demonstrated setting is supervised continual fine-tuning, not autonomous online learning from unlabeled experience. TRACE-eight is a benchmark of eight diverse language, code and reasoning tasks. A second benchmark contains nineteen dialogue tasks, augmented here with three thousand synthetic examples per task. All methods use the same four-bit Gemma three twelve-billion-parameter backbone. Scores mix task-specific metrics, so a normalized average is not ordinary accuracy.
+
+For each incoming batch, the frozen language model averages token features into a single vector. The router compares that vector with stored prototype vectors using cosine distance. A close match reuses an adapter, meaning a small low-rank weight update added to the frozen model. A novel batch creates one if space remains; otherwise the least-used slot is repurposed. Training changes only the selected adapter using target-token prediction loss. The reused prototype becomes the average of its old value and the new batch vector. At evaluation, routing selects the nearest prototype without modifying memory.
+
+In Table one, after the eight-task sequence, the normalized average is zero point four one for CaLLM, versus zero point three nine for TreeLoRA and zero point two nine for the untouched backbone. Science question accuracy is eighty-one percent versus seventy-two for TreeLoRA. But arithmetic accuracy favors TreeLoRA, and fine-tuning the dialogue benchmark never beats the untouched backbone. These are author-reported comparisons, not an independent state-of-the-art ranking. The paper's prose reports a different aggregate from its table, so these numbers follow the table.
+
+The reusable idea is to keep the routing representation fixed while learning modular expertise. It offers a clean experiment for continual memory: measure routing errors separately from forgetting within experts. However, total adapter storage grows with the pool, and nearest-prototype search still depends on pool size. The very small reported routing cost is amortized over batches, not proven for arbitrary single-event streaming. Online results omit multiple-seed uncertainty. Treat this as a promising modular design, with capacity and distribution-shift failure modes still needing stress tests.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.36994v1 · 27 Oct 2026
+https://arxiv.org/abs/2610.36994v1
+arXiv v1; primary PDF/comments report CoLLAs 2026 acceptance; independent proceedings not located
+Original CaLLM Figure 1 and Table 1 excerpts: Celik, Vettoruzzo and Vanschoren, CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ . Cropping/rearrangement disclosed. Other panels are explanatory adaptations.
+First submitted: 2026-10-27
+Adapted Problem · Adaptation of CaLLM: Continual Adaptation of LLMs via Non-Parametric Adapter Routing; not an original experimental output.
+Adapted Why difficult · Adaptation of CaLLM: Continual Adaptation of LLMs via Non-Parametric Adapter Routing; not an original experimental output.
+Adapted Applications · Adaptation of CaLLM: Continual Adaptation of LLMs via Non-Parametric Adapter Routing; not an original experimental output.
+Fig. 1 · routing detail · Celik et al. Figure 1, CC BY 4.0. Detail crop of embedding/prototype routing; original labels preserved.
+Adapted update loop · Our explanatory adaptation of the training and read-only inference loop.
+Table 1 · selected rows · Celik et al., CC BY 4.0. Original rows and columns excerpted and rearranged; omission disclosed, metric labels and values preserved.
+Adapted Relevance · Adaptation of CaLLM: Continual Adaptation of LLMs via Non-Parametric Adapter Routing; not an original experimental output.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

@@ -1,0 +1,38 @@
+OmniShowcase: Omnidirectional Subject-Consistent Video Generation from Multi-View Images
+First publication: 2026-10-26 | Version: v1 (2026-10-26)
+Video produced: 2026-11-01 | Selection digest: 2026-10-30
+Publication status: arXiv preprint; peer review not independently verified.
+Primary source: https://arxiv.org/abs/2610.35684v1
+
+Given four photographs of an object, generate a video that moves around it without changing its identity or shape. A convincing first frame is not enough: the back of a teapot should remain the back of that same teapot. OmniShowcase tackles this subject-to-video problem by supplying explicit geometry and training on camera motion around real three-dimensional assets. The pictures shown here are the authors' generated examples, not physical reconstructions verified by us.
+
+Multiple reference images reveal more surfaces, but do not explicitly tell a video generator how those views connect in three dimensions. Training videos generated from one image can themselves contain changing geometry. Potential applications include product visualization and controlled synthetic data, although downstream perception benefits are not tested. The paper focuses on objects that remain rigid across the reference views, rather than arbitrary moving people or deforming objects.
+
+Single-view video methods rely heavily on learned appearance priors. Multi-view methods provide additional images, while subject-specific tuning spends optimization on each new object. OmniShowcase instead constructs Showcase-4K, four thousand training videos. A renderer moves a camera around one fixed mesh. Video inpainting generates the background while preserving rendered subject pixels. Four reference views then feed a reconstruction model. This deliberate reconstruction step, rather than using the perfect source mesh as the condition, matches the imperfect geometry available at deployment.
+
+From the reconstructed object, the system renders twenty-five surface-normal maps: images whose colors encode the directions surfaces face. The video model receives four reference images, that fixed turntable, and text describing the desired camera motion. The normal sequence need not align frame by frame with the output. Reference and normal latents remain clean; only target-video latents are mixed with noise. The transformer learns to predict the target's flow from noise toward video. Small low-rank weight updates are trained in the Wan2.1 image-to-video model while its base weights stay frozen. At inference the same reconstruction-and-conditioning pipeline generates a new object video without per-subject optimization.
+
+The held-out benchmark contains fifty subjects with no shared training assets; the real-object NAVI evaluation contains thirty-five subjects. All compared methods receive the same four views. On the held-out set, normalized aligned point-cloud distance falls from the best baseline's 0.1717 to 0.0824. On NAVI it falls from 0.1816 to 0.0975. Lower means the reconstructed generated orbit is closer to reference geometry, after normalization and alignment; it is not a metric-scale reconstruction error. Identity metrics also improve, but the aesthetic score is lower than every listed baseline on both sets.
+
+The interesting reusable principle is to condition generation on a structured physical cue without forcing that cue to follow the output's timeline. This might inform world-model representation design, but planning and action prediction are not demonstrated. Training still took about fifty hours on four B200 processors. Synthetic-looking backgrounds and non-rigid reference subjects remain limitations. When inspected on October thirtieth, the repository advertised a pending release rather than a complete reproducible implementation. The results are author reported, and stronger benchmark scores do not by themselves establish geometrically faithful video in unrestricted real scenes.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.35684v1
+https://arxiv.org/abs/2610.35684v1
+arXiv version 2026-10-26
+Ahn et al., original paper figures and table excerpts CC BY 4.0 https://creativecommons.org/licenses/by/4.0/. Cropped; selected table header relabeled; author-generated examples identified. Historical repository inspection date October 30, 2026. Figure 5 selected rows rearranged with original reference and legend. Table 2 geometry views select original method/GT-CD columns and dataset rows; dataset titles added.
+First submitted: 2026-10-26
+Fig 1: author-generated example · Ahn et al., CC BY 4.0; cropped original
+Fig 5: selected 3DB / ours comparison · Ahn et al., CC BY 4.0; cropped original
+Fig 2: data synthesis · Ahn et al., CC BY 4.0; cropped original
+Fig 4: geometry inputs · Ahn et al., CC BY 4.0; cropped original
+Fig 4: trainable updates, frozen backbone · Ahn et al., CC BY 4.0; cropped original
+Table 2: held-out geometry · Ahn et al., CC BY 4.0; cropped original
+Table 2: NAVI geometry · Ahn et al., CC BY 4.0; cropped original
+Table 2: aesthetic score tradeoff · Ahn et al., CC BY 4.0; cropped original
+Fig 4: geometry-conditioned video · Ahn et al., CC BY 4.0; cropped original
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

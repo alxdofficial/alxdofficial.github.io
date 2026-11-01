@@ -1,0 +1,37 @@
+TransECG-SSL: Hybrid Self-Supervised Representation Learning for ECG Arrhythmia Classification
+First publication: 2026-10-26 | Version: v1 (2026-10-26)
+Video produced: 2026-11-01 | Selection digest: 2026-10-30
+Publication status: arXiv preprint; peer review not independently verified.
+Primary source: https://arxiv.org/abs/2610.35378v1
+
+An electrocardiogram records the heart's electrical activity. A classifier can recognize familiar patients rather than transferable rhythm patterns if their heartbeats appear in both training and testing. TransECG-SSL asks a stricter question: can a representation learned without labels in one database support classification in another, while keeping test patients separate? It is a controlled representation experiment, not a clinically validated diagnostic system.
+
+Normal beats dominate these databases. Always predicting normal already gives roughly eighty-five to eighty-nine percent accuracy on the test sets. Balanced accuracy instead averages recall across heartbeat classes, giving rare classes equal weight. The paper separates patients before training: forty-seven in MIT-BIH, thirty-two in INCART, and seventy-eight in the supraventricular database. Hundreds of thousands of beats do not constitute hundreds of thousands of independent patients.
+
+The plausible use is label-efficient adaptation to a new recording population. Here a lightweight classifier still needs labeled target patients; this is not zero-shot transfer. The authors compare reconstruction, contrastive learning, supervised source training, and an untrained encoder using the same Transformer architecture. That makes objective comparisons more interpretable than comparing unrelated published headline scores. It does not independently establish the current state of the art.
+
+Each input is a one-second, single-lead heartbeat centered on an annotated R peak, the prominent electrical spike. A convolutional front end and four Transformer layers produce a 128-number representation. One training branch hides contiguous signal blocks and reconstructs the missing samples. Another brings representations of the same beat closer after weak noise and amplitude changes, relative to other beats. Both update the encoder. After pretraining, auxiliary heads are discarded and the encoder is frozen. Only a linear target classifier is trained.
+
+The hybrid beats the matched source-supervised encoder in balanced accuracy on all seven routes, but not consistently in macro F1, which balances precision and recall for each class. Reconstruction alone beats the hybrid on three of seven balanced-accuracy comparisons. For INCART to MIT-BIH transfer, the hybrid reaches fifty-five point one percent balanced accuracy, versus fifty-one point eight for reconstruction and forty-two point eight for supervised source training. The contrastive component is useful in some routes, not universally.
+
+The reusable contribution is the evaluation discipline: frozen transfer, architecture-matched baselines, patient-disjoint partitions, and explicit minority-class metrics. For sensing representations, these controls are as important as a new loss. Limitations include one fixed patient partition across five random seeds, annotated beat centers, and three retrospective datasets. INCART has only two test beats in its rarest class. No prospective clinical deployment is demonstrated, and improvements under this training budget do not establish universal superiority of hybrid self-supervision.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.35378v1
+https://arxiv.org/abs/2610.35378v1
+arXiv preprint; submitted to IEEE JBHI, not accepted
+arXiv non-exclusive license does not grant general open reuse. Limited attributed original figure/table excerpts for technical criticism and commentary. Rearranged selections clearly labeled.
+First submitted: 2026-10-26
+Fig. 1 • frozen representation transfer · Original paper arXiv:2610.35378v1. Attributed excerpt.
+Table II • patient-disjoint partitions · Original paper arXiv:2610.35378v1. Attributed excerpt.
+Table VII • matched encoder size · Original paper arXiv:2610.35378v1. Attributed excerpt.
+Fig. 1 • source learning, target probe · Original paper arXiv:2610.35378v1. Attributed excerpt.
+Fig. 1 • frozen encoder, trained target probe · Original paper arXiv:2610.35378v1. Attributed excerpt.
+Table V • balanced accuracy, five seeds · Original paper arXiv:2610.35378v1. Attributed excerpt.
+Table V • focused original cells · Ayyub et al., arXiv:2610.35378v1. Original cells rearranged.
+Table II • rare classes and fixed split · Original paper arXiv:2610.35378v1. Attributed excerpt.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

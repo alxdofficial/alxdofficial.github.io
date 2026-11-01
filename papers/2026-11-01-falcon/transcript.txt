@@ -1,0 +1,37 @@
+Efficient Streaming Audio-Visual Target Speaker Extraction for Real-World Acoustic Scenes
+First publication: 2026-10-23 | Version: v1 (2026-10-23)
+Video produced: 2026-11-01 | Selection digest: 2026-10-30
+Publication status: arXiv preprint; peer review not independently verified.
+Primary source: https://arxiv.org/abs/2610.32749v1
+
+Falcon extracts one person's voice from overlapping speech using a microphone mixture and a video of that person's mouth. The visual stream identifies whom to listen to. The output is an estimated speech waveform, not a transcript. This matters for conferencing and potentially hearing assistance, but the paper evaluates speech extraction, not clinical hearing outcomes. Its central question is whether realistic acoustic training and a compact separator can improve quality without excessive computation.
+
+Standard mixtures often contain exactly two speakers. Real scenes contain variable numbers of nearby talkers, distant voices, echoes, ambient noise, and abrupt sounds. RealSSA-Sim combines these factors in about 153 hours of simulated audio-visual mixtures. RealSSA-Real is a separate recorded evaluation set: approximately eighty-four minutes, ten participants, and eight environments. It is never used for training or validation. That is useful distribution-shift evidence, but still a small population and environment sample.
+
+Large time-frequency separators can be expensive. Compact methods such as Swift-Net repeatedly apply a small separation block, trading fewer parameters for repeated computation. Falcon uses an encoder-decoder that reduces resolution, collects coarse scene context, then restores detail at several scales in one pass per block. The audio representation is refined before fusion and again after adding mouth-video features. So single-pass does not mean the whole system contains only one block or has zero buffering.
+
+A frozen visual backbone extracts mouth features. An audio encoder represents the mixture across time and frequency. Recurrent layers and masked attention process those features, while the fused visual cue guides a complex-valued mask that reconstructs target speech. During training, the estimated target's embedding is pulled toward the clean target and pushed away from nearby interfering speakers. Reference embeddings use stopped gradients; the estimated-output path still updates the shared encoder and separator. This extra contrastive objective is combined with waveform reconstruction and removed at inference. It needs separate source waveforms, which simulation supplies but ordinary real recordings do not.
+
+On RealSSA-Sim, scale-invariant signal-to-noise improvement is 7.7 decibels, versus 7.6 for the evaluated causal AV-TF-GridNet baseline. Higher means better separation relative to the mixture. Falcon uses 0.5 million trainable parameters versus 6.2 million, and 10.6 billion multiply-accumulate operations versus 213.8 billion. For a two-second input on an RTX 3090, median forward-pass time is 51.3 milliseconds versus 567.8. Crucially, this is not end-to-end streaming delay: the visual branch buffers 120 milliseconds of future frames, and real streaming scheduling overhead still needs measurement.
+
+The added training loss raises Falcon's separation score from 7.3 to 7.7 decibels without an inference branch. Yet real-recording word error rate remains 32.74 percent and is second-best among the compared extractors. The method is single-channel and depends on visible, aligned mouth information. For always-on multimodal systems, the reusable idea is targeted acoustic supervision and careful separation of model compute from sensor latency. Integration into wearables is plausible, not demonstrated. Paper and project page label NeurIPS 2026; this briefing uses the verified October twenty-third arXiv version, without independently confirming proceedings acceptance.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.32749v1
+https://arxiv.org/abs/2610.32749v1
+arXiv version 2026-10-23
+Short selected paper figures/tables from Sang et al., https://arxiv.org/abs/2610.32749v1, attributed excerpts for scientific criticism; cropped without changing experimental values. arXiv nonexclusive distribution is not a general reuse license. Repository Apache-2.0 does not automatically license the paper.
+First submitted: 2026-10-23
+Fig 2: target extraction pipeline · Sang et al., attributed scientific-criticism excerpt
+Fig 2: mixture and visual cue · Sang et al., attributed scientific-criticism excerpt
+Fig 3: multiscale separator · Sang et al., attributed scientific-criticism excerpt
+Fig 2: target-mask reconstruction · Sang et al., attributed scientific-criticism excerpt
+Table 3: RealSSA; SI-SNRi in dB · Sang et al., attributed scientific-criticism excerpt
+Table 5: two-second forward-pass cost · Sang et al., attributed scientific-criticism excerpt
+Table 8: training-loss ablation · Sang et al., attributed scientific-criticism excerpt
+Table 4: word error and speaker similarity · Sang et al., attributed scientific-criticism excerpt
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

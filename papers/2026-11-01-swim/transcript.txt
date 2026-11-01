@@ -1,0 +1,35 @@
+SWIM: Learning What Matters from Behaviors for JEPA World Models
+First publication: 2026-10-27 | Version: v1 (2026-10-27)
+Video produced: 2026-11-01 | Selection digest: 2026-10-30
+Publication status: arXiv preprint; peer review not independently verified.
+Primary source: https://arxiv.org/abs/2610.36662v1
+
+A robot planner searches for actions that move its imagined future toward a goal. If distance in the model's representation emphasizes irrelevant visual differences, that search can fail even when prediction looks plausible. A joint-embedding predictive architecture learns to predict future feature vectors rather than reconstruct pixels. This paper asks how to make distances between those vectors reflect the physical changes that actually matter for behavior.
+
+Simulator states can supervise the representation, but equal weighting is not automatically neutral. Repeated encodings of the same variable can count one physical change several times. Irrelevant coordinates can dominate useful ones. Hand-selecting state features is brittle. The proposed alternative learns one importance weight per state coordinate from recorded behavior, without reward labels. Its assumption is that variables useful for explaining actions are also useful for planning; that is plausible, not guaranteed.
+
+The experiments use five visual manipulation tasks from OGBench, a benchmark of offline goal-reaching environments. These include moving one to four cubes and interacting with a scene. The main comparison adds learned weights to the same state-supervised latent world model used by a uniform-weight baseline called SCALE-All. Both receive the same offline trajectories and planning protocol. This isolates weighting more cleanly than comparing unrelated pretrained models. Physical robot deployment is not demonstrated.
+
+First, a small neural network receives the current simulator state and a weighted difference between current and later states. It predicts the action chunk recorded in that trajectory. Trainable sigmoid gates control each displacement coordinate. The loss rewards accurate action prediction, favors the true future over mismatched futures, and penalizes large gate weights. Then the gates are frozen. A second training stage makes distances between image features correlate with distances between weighted states, while retaining future-feature prediction and a non-collapse regularizer. At deployment only images, latent dynamics and action search remain. The state-weighting network is discarded.
+
+The headline table tunes the sparsity weight separately for each task. Under that condition, scene success reaches thirty-nine point four percent, versus thirty-three point four for uniform weights, across five training seeds. That is a six-point gain, not the fixed-setting average gain. With default settings averaged across tasks and both planners, the reported improvements are about one percentage point. A pretrained visual-feature baseline remains better on the three-cube task. These are simulation results from the authors, not a general ranking of world models.
+
+The reusable idea is to shape a representation's distance using what predicts behavior, rather than reconstructing everything equally. For sensing representations, that suggests a hypothesis, not evidence of transfer: weigh changes by their relevance to a downstream decision. The method needs privileged state and logged actions during training. Learned gates can reflect behavior-policy correlations, not causal importance. Mismatched futures are not guaranteed to be impossible alternatives. There is no proof that a global gate vector will remain appropriate when tasks or the policy change.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.36662v1 · 27 Oct 2026
+https://arxiv.org/abs/2610.36662v1
+arXiv preprint v1; venue status documented in companion
+Original explanatory diagrams and factual readouts adapted from Hu et al., arXiv:2610.36662v1. Original arXiv nonexclusive distribution license does not establish broad figure reuse; adaptations are labeled and not experimental outputs.
+First submitted: 2026-10-27
+Adapted Problem · Adaptation of SWIM: Learning What Matters from Behaviors for JEPA World Models; not an original experimental output.
+Adapted Why difficult · Adaptation of SWIM: Learning What Matters from Behaviors for JEPA World Models; not an original experimental output.
+Adapted Applications · Adaptation of SWIM: Learning What Matters from Behaviors for JEPA World Models; not an original experimental output.
+Adapted mechanism · Our faithful mechanism diagram adaptation of paper method, not original experiment output.
+Adapted Results · Adaptation of SWIM: Learning What Matters from Behaviors for JEPA World Models; not an original experimental output.
+Adapted Relevance · Adaptation of SWIM: Learning What Matters from Behaviors for JEPA World Models; not an original experimental output.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

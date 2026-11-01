@@ -4,7 +4,7 @@ Read [AGENTS.md](../../AGENTS.md), [THUMBNAILS.md](THUMBNAILS.md) and the [catal
 
 ## 1. Select and archive evidence
 
-- Balance research interests (continual/lifelong learning, memory, reinforcement learning, bio-inspired computing, streaming/multimodal sensing, world models and representations), health/neurodevelopmental AI, and broadly influential AI. Do not force a disease quota or pad weak selections.
+- Future nine-paper mix: **2 own-research/memory papers**, **2–3 health/medical-AI papers**, and **4–5 free-choice papers** chosen for verified trending/popular attention, broad influence, or novel reusable techniques worth learning. Own-research topics include continual/lifelong learning, memory, reinforcement learning, bio-inspired computing, streaming/multimodal sensing, world models and representations. Do not force a disease quota or pad weak selections; disclose fewer verified papers when necessary. This change is prospective and does not reclassify already-produced batches.
 - Prefer genuinely recent reusable papers. Verify paper/version dates and preprint versus peer-reviewed status from primary sources; timestamp actual attention signals and distinguish popularity from scientific quality. Use available research services and primary-source fallback honestly; disclose coverage gaps.
 - Read accessible full text, methods, results, repository and supplements. Mark abstract-only limitations. Verify reuse rights and source provenance. Do not bypass paywalls.
 - Deduplicate arXiv ID/DOI/version against the canonical archive ledger and previous episodes. First file the legally accessible PDF and bibliographic record, or record the exact save/access blocker. Preserve existing archive edits.

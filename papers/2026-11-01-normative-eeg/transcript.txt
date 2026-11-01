@@ -1,0 +1,37 @@
+Normative Deviation Modeling for EEG-based Depression Detection
+First publication: 2026-10-27 | Version: v1 (2026-10-27)
+Video produced: 2026-11-01 | Selection digest: 2026-10-30
+Publication status: arXiv preprint; peer review not independently verified.
+Primary source: https://arxiv.org/abs/2610.37338v1
+
+Can deviations from a learned healthy brain-signal reference help a classifier transfer between datasets? Jiang and colleagues investigate this for major depressive disorder using electroencephalography, or EEG, which records scalp electrical activity. Their models distinguish labeled depression and healthy-control recordings. The important distinction is that this is retrospective classification, not evidence that EEG alone can diagnose depression in routine care.
+
+Brain signals vary across people, electrodes, and recording conditions. A classifier may learn those differences instead of depression-related structure. The study uses two public datasets: Mumtaz2016 has sixty-four people, and MODMA has fifty-three. Signals are mapped to nineteen electrode locations and split into overlapping five-second windows. All windows from a person remain together in within-source cross-validation, preventing simple subject leakage. Thousands of windows still represent only these small cohorts.
+
+The proposed use is a representation aid for future screening research. Conventional models learn directly from diagnostic labels; augmentation methods generate extra training examples. Here, generative models instead define what healthy training data look like. This is a useful change of role, but a reconstruction error can reflect an unfamiliar device or artifact as well as pathology. Healthy-reference modeling is not automatically disease-specific or clinically interpretable.
+
+One reference compresses healthy inputs into a learned dictionary and reconstructs them. A second learns to remove added noise from healthy inputs. Reconstruction and denoising errors then measure deviation from those references. The scalar version combines errors into a score and fuses it with a frozen EEG encoder's features. The feature version retains individual residuals from handcrafted signal features and learns attention-based aggregation across windows. Reference models remain frozen while the downstream fusion and classifier learn depression labels. These are the scalar and feature-level normative-deviation methods.
+
+For Mumtaz-to-MODMA transfer, the scalar method reports seventy-eight point five percent accuracy without target calibration. In reverse transfer, the feature method reports eighty-nine point one five percent, but uses seven known healthy target record groups for score calibration. Those groups are excluded from diagnostic testing. The two numbers are not a controlled head-to-head comparison: direction, aggregation, and target access differ. The feature method's reverse-transfer accuracy exceeds the strongest reported baseline by five point four three percentage points.
+
+The reusable idea for sensing is to supplement an embedding with explicit residuals against a reference distribution. Before adopting it, test whether those residuals detect acquisition shift rather than the phenomenon of interest. Reverse-transfer runs reuse overlapping test groups, so repeated runs are not independent cohorts. Only two small datasets are studied, with no prospective clinical utility or broader population validation. The conference template is not acceptance evidence; treat this as an October twenty-seventh preprint, not a validated diagnostic tool.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.37338v1
+https://arxiv.org/abs/2610.37338v1
+arXiv preprint; WWW 2027 template does not establish acceptance
+arXiv non-exclusive license does not grant general open reuse. Limited attributed original figure/table excerpts for technical criticism and commentary. Rearranged selections clearly labeled.
+First submitted: 2026-10-27
+Fig. 2 • two normative-reference approaches · Original paper arXiv:2610.37338v1. Attributed excerpt.
+Fig. 2 • healthy reference construction · Original paper arXiv:2610.37338v1. Attributed excerpt.
+Fig. 2 • reference construction · Original paper arXiv:2610.37338v1. Attributed excerpt.
+Fig. 2 • scalar deviations and frozen models · Original paper arXiv:2610.37338v1. Attributed excerpt.
+Fig. 2 • feature-level residuals · Jiang et al., arXiv:2610.37338v1. Attributed excerpt.
+Table 2 • forward transfer, selected row · Original paper arXiv:2610.37338v1. Attributed excerpt.
+Table 3 • target calibration · Jiang et al., arXiv:2610.37338v1. Original row and enlarged readout.
+Table 3 • reverse transfer, selected row · Original paper arXiv:2610.37338v1. Attributed excerpt.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

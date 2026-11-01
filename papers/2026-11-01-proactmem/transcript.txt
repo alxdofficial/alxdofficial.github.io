@@ -1,0 +1,35 @@
+Proactive Memory for Event-Driven LLM Agents
+First publication: 2026-10-27 | Version: v1 (2026-10-27)
+Video produced: 2026-11-01 | Selection digest: 2026-10-30
+Publication status: arXiv preprint; peer review not independently verified.
+Primary source: https://arxiv.org/abs/2610.36967v1
+
+An always-on assistant needs to decide whether a new event warrants help or silence. The useful clue may be a recurring pattern, an unresolved earlier need, or a change that makes an old opportunity actionable again. Simply retrieving similar text does not establish that a pattern is reliable or still relevant. Proactive Memory separates remembering an event from validating a regularity and deciding whether to interrupt.
+
+A summary can invent a detail; repeated summaries can turn it into a false habit. Conversely, a genuine routine can stop being true. Repeated alerts can also be intrusive even when their underlying facts are correct. The method therefore checks summary facts against their original observations, tests proposed patterns against historical records, and tracks what assistance has already been proposed. These controls reduce some errors but do not establish user benefit or permission to act.
+
+The authors introduce ProactiveStream with four thousand five hundred thirty-nine events across seventeen isolated streams. Nine participants provide activity contexts, four homes provide ambient sensor records, and four repositories provide software events. Three annotators adjudicate opportunities for low-risk assistance. Each system starts empty and processes events chronologically. A decision is finalized before its event enters memory; labels are joined only afterward. These are annotated opportunity-detection tests, not clinical outcomes or a prospective user trial.
+
+The recent buffer holds at most ninety-nine prior events within seventy-two hours, plus the current event. At each local day's end, a language model constructs summaries with typed facts and source links; a validator rejects unsupported facts. After seven daily records, it proposes a trigger, expected behavior and time window. Replay requires three supporting days, successful matches on at least half of observable triggered days, and behavior at least as frequent after the trigger as its comparable baseline. These are confidence and lift tests. Current conditions retrieve applicable patterns. Violations weaken or suspend them. Duplicate control suppresses unchanged interventions. Memory and service state change, not model weights.
+
+With the shared Luna language model, overall opportunity-detection F one is fifty-two point six percent, a reported twenty-one point four percent relative improvement over the strongest external baseline. F one balances precision and recall; it is not task success. For home events, precision is forty-eight point six percent and recall seventy-three point seven percent. Thus more than half of interventions still miss the reference opportunity label. Removing replay validation reduces home F one from fifty-eight point six to fifty-four point four. Reference relabeling also changes absolute scores materially.
+
+The reusable contribution is an auditable memory lifecycle: retain evidence, validate a proposed regularity, match it to the present, and retire it when observations contradict it. It is relevant to always-on sensing agents, but the benchmark is small, jointly developed with the method, and label-sensitive. Home coverage spans only fourteen days per home. There is no external prospective validation, patient-level diagnostic task, or proof of improved wellbeing. Deployment would additionally need consent, privacy controls and an explicit boundary between suggesting assistance and performing it.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.36967v1 · 27 Oct 2026
+https://arxiv.org/abs/2610.36967v1
+arXiv preprint v1; venue status documented in companion
+Original explanatory diagrams and factual readouts adapted from Li et al., arXiv:2610.36967v1. No original figure copied; adaptations are labeled, not experimental outputs.
+First submitted: 2026-10-27
+Adapted Problem · Adaptation of Proactive Memory for Event-Driven LLM Agents; not an original experimental output.
+Adapted Why difficult · Adaptation of Proactive Memory for Event-Driven LLM Agents; not an original experimental output.
+Adapted Applications · Adaptation of Proactive Memory for Event-Driven LLM Agents; not an original experimental output.
+Adapted mechanism · Our faithful mechanism diagram adaptation of paper method, not original experiment output.
+Adapted Results · Adaptation of Proactive Memory for Event-Driven LLM Agents; not an original experimental output.
+Adapted Relevance · Adaptation of Proactive Memory for Event-Driven LLM Agents; not an original experimental output.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

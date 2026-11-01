@@ -12,6 +12,8 @@ Use the existing charcoal/cream/teal editorial design, Playfair Display titles a
 
 ## Research and video
 
+For future nine-paper batches: **2 own-research/memory papers, 2–3 health/medical-AI papers, and 4–5 free-choice papers** selected for verified attention, influence, or novel reusable techniques worth learning. Do not reinterpret already-produced batches. Keep evidence quality above quotas; disclose a verified shortfall rather than padding.
+
 Verify primary full text, methods/results and metadata; deduplicate by paper ID/DOI/version against the canonical archive and prior catalog. Separate author claims, independent verification, speculation and clinical readiness. Write the evidence-checked script before storyboard, synthesize the approved Pocket TTS Anna voice, measure each section, and time visuals/subtitles to that actual audio. Explain actors, inputs, targets and changed parameters before jargon. Use original technical figures when permitted and readable; label adaptations and preserve source credits.
 
 Each paper gets a separate horizontal 16:9 explainer, at most five minutes of explanation; official demos are additional and separately timed. Never silently switch voice. Verify full decode, audio presence/playback, timing/subtitles, scientific fidelity, and actual phone/desktop figure legibility. Generated-speech transcription/listening-versus-script checks are intentionally not required; do not install a speech checker or claim that check was performed.

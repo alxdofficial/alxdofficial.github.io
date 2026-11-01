@@ -262,6 +262,12 @@ for(const width of [390,1440])test('consistent cross-day editorial thumbnails '+
   expect(Math.abs(play.y+play.height/2-r.y-r.height/2)).toBeLessThan(2);
  }
  await expect(page.locator('#episodes .thumbnail-credit')).toHaveCount(0);
+ for(const id of ['spectral-eeg','latent','time-jepa']){
+  const card=page.locator('#episodes .episode').filter({has:page.locator('a.thumb[href="/papers/'+id+'/"]')});
+  await card.scrollIntoViewIfNeeded();
+  await expect.poll(()=>card.locator('img').evaluate(im=>im.complete&&im.naturalWidth>0)).toBeTruthy();
+  await page.screenshot({path:'test-results/editorial-'+id+'-'+width+'.png',fullPage:false});
+ }
  await page.goto('/papers/latent/');await expect(page.locator('.thumbnail-credit')).toContainText('CC BY-SA');
  await expect(page.getByRole('link',{name:'Full figure'})).toHaveAttribute('href','/papers/assets/latent-figure.png');
 });

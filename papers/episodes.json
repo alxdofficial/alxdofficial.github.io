@@ -54,9 +54,9 @@
       "short_title": "Latent Compaction",
       "title": "Latent Compaction with Test-Time Training",
       "headline": "A smaller cache. What survives?",
-      "description": "Compress a document\u2019s attention cache for questions that have not been asked yet.",
+      "description": "Compress a document’s attention cache for questions that have not been asked yet.",
       "takeaway": "Preserve both what a memory returns and how strongly it competes for attention.",
-      "caveat": "16\u00d7 describes logical key-value compression, not measured physical memory savings or faster inference. Preparation is expensive.",
+      "caveat": "16× describes logical key-value compression, not measured physical memory savings or faster inference. Preparation is expensive.",
       "tags": [
         "memory",
         "attention",
@@ -458,7 +458,7 @@
         "signal processing",
         "representation learning"
       ],
-      "source_credit": "Original-paper visual credits\nSpectral Considerations on Unsupervised Time-domain EEG Representation Learning with Deep Networks\nSource and creator attribution: https://arxiv.org/abs/2610.16264v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nDavid Aquilu\u00e9-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.\nIndependent editorial summary of reported result from Aquilu\u00e9-Llorens et al., arXiv:2610.16264v1; no original figure pixels.",
+      "source_credit": "Original-paper visual credits\nSpectral Considerations on Unsupervised Time-domain EEG Representation Learning with Deep Networks\nSource and creator attribution: https://arxiv.org/abs/2610.16264v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nDavid Aquilué-Llorens et al. (2026), 2610.16264v1. CC BY 4.0; original figure pixels cropped/reassembled; labels enlarged.\nIndependent editorial summary of reported result from Aquilué-Llorens et al., arXiv:2610.16264v1; no original figure pixels.",
       "page_catalog_date": "2026-10-20",
       "thumbnail_style": "editorial-frame-v1"
     },
@@ -517,14 +517,14 @@
       "backfill": false,
       "headline": "Teach the useful change, not just the final teacher",
       "description": "Three saved teacher versions weight stable preference changes during student training.",
-      "takeaway": "A teacher\u2019s learning path can identify which changes deserve transfer.",
+      "takeaway": "A teacher’s learning path can identify which changes deserve transfer.",
       "caveat": "Same-family model assumptions and checkpoint selection limit generalization of reported gains.",
       "tags": [
         "distillation",
         "reinforcement learning",
         "training"
       ],
-      "source_credit": "Original-paper visual credits\nWaypoint-OPD: Transferring RL-Induced Policy Shifts via Gated On-Policy Distillation\nSource and creator attribution: https://arxiv.org/abs/2610.21601v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nHou et al., arXiv:2610.21601v1 \u00b7 CC BY 4.0 \u00b7 cropped/enlarged; selected source rows/panels reflowed",
+      "source_credit": "Original-paper visual credits\nWaypoint-OPD: Transferring RL-Induced Policy Shifts via Gated On-Policy Distillation\nSource and creator attribution: https://arxiv.org/abs/2610.21601v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nHou et al., arXiv:2610.21601v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed",
       "page_catalog_date": "2026-10-20",
       "thumbnail_style": "editorial-frame-v1"
     },
@@ -557,7 +557,7 @@
         "computer use",
         "tool execution"
       ],
-      "source_credit": "Original-paper visual credits\nOpenGCUA: Toward a Fully Open Stack for Generalist Computer Use\nSource and creator attribution: https://arxiv.org/abs/2610.22200v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nZhou et al., arXiv:2610.22200v1 \u00b7 CC BY 4.0 \u00b7 cropped/enlarged; selected source rows/panels reflowed",
+      "source_credit": "Original-paper visual credits\nOpenGCUA: Toward a Fully Open Stack for Generalist Computer Use\nSource and creator attribution: https://arxiv.org/abs/2610.22200v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nZhou et al., arXiv:2610.22200v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed",
       "page_catalog_date": "2026-10-20",
       "thumbnail_style": "editorial-frame-v1"
     },
@@ -590,7 +590,7 @@
         "video understanding",
         "evaluation"
       ],
-      "source_credit": "Original-paper visual credits\nOmniCompass: A Holistic Benchmark for Omni-Modal Video Grounding and Understanding\nSource and creator attribution: https://arxiv.org/abs/2610.18829v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nLiu et al., arXiv:2610.18829v1 \u00b7 CC BY 4.0 \u00b7 cropped/enlarged; selected source rows/panels reflowed",
+      "source_credit": "Original-paper visual credits\nOmniCompass: A Holistic Benchmark for Omni-Modal Video Grounding and Understanding\nSource and creator attribution: https://arxiv.org/abs/2610.18829v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nLiu et al., arXiv:2610.18829v1 · CC BY 4.0 · cropped/enlarged; selected source rows/panels reflowed",
       "page_catalog_date": "2026-10-20",
       "thumbnail_style": "editorial-frame-v1"
     },
@@ -755,7 +755,7 @@
       "transcript_path": "fde-gym/transcript.txt",
       "thumbnail_path": "assets/fde-gym.jpg",
       "backfill": false,
-      "source_credit": "Original-paper visual credits\nFDE-Gym: The Last Mile of AI Delivery\nSource and creator attribution: https://arxiv.org/abs/2610.22350v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nFaithful availability summary\nFaithful enlarged excerpt \u00b7 CC BY 4.0\nFaithful enlarged labels \u00b7 CC BY 4.0\nFaithful enlarged table subset \u00b7 CC BY 4.0\nFaithful enlarged values \u00b7 CC BY 4.0\nFaithful shortened labels \u00b7 CC BY 4.0\nOriginal crop \u00b7 CC BY 4.0\nOriginal rows/axis rearranged; enlarged labels \u00b7 CC BY 4.0",
+      "source_credit": "Original-paper visual credits\nFDE-Gym: The Last Mile of AI Delivery\nSource and creator attribution: https://arxiv.org/abs/2610.22350v1 (the authors listed on that version, also credited in the figure panels).\nSource material licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nOriginal figure panels are cropped, resized or reassembled; faithful labels/readouts are enlarged. Independent editorial explanations and re-typeset table summaries are identified separately. No author endorsement is implied. This source-component notice does not assert a license for the entire video.\n\nRecorded figure credits:\nFaithful availability summary\nFaithful enlarged excerpt · CC BY 4.0\nFaithful enlarged labels · CC BY 4.0\nFaithful enlarged table subset · CC BY 4.0\nFaithful enlarged values · CC BY 4.0\nFaithful shortened labels · CC BY 4.0\nOriginal crop · CC BY 4.0\nOriginal rows/axis rearranged; enlarged labels · CC BY 4.0",
       "page_catalog_date": "2026-10-20",
       "thumbnail_style": "editorial-frame-v1"
     },
@@ -963,7 +963,7 @@
       "headline": "Tiny ECG personalization works on an MCU, but its patient split needs repair",
       "description": "Frozen embeddings and class means provide lightweight ECG personalization on PSoC 6. An independent code-and-dataset audit finds one participant crossing the development/test boundary.",
       "takeaway": "The hardware measurements are useful; population-generalization claims need a corrected split and external validation.",
-      "caveat": "Records 201 and 202 belong to the same person but are assigned to DS1 and DS2; no corrected rerun quantifies the impact. The 17\u00d7 timing claim is host-only.",
+      "caveat": "Records 201 and 202 belong to the same person but are assigned to DS1 and DS2; no corrected rerun quantifies the impact. The 17× timing claim is host-only.",
       "tags": [
         "health sensing",
         "ECG",
@@ -1131,7 +1131,7 @@
       "headline": "Must-read: trained read/write memory changes per-conversation state without retraining the backbone",
       "description": "Must-read: trained read/write memory changes per-conversation state without retraining the backbone; compare compression against recall fidelity.",
       "takeaway": "Token-level updates and response training matter more than branding.",
-      "caveat": "The most useful ablation replaces token-level writes with one turn-level update: Nano\u2019s average falls from forty-seven to forty-one. Removing response post-training falls further, to thirty-six point three. Changing the exact gated update formula has a much smaller effect. The reusable idea is therefore a learned write-and-read interface, not just a named update rule. For continual agents, test latent state alongside exact retrieval at matched evidence budgets. Measure forgotten details, not only bytes. Fixed state remains lossy, and autonomous experience acquisition and consolidation remain open problems.",
+      "caveat": "The most useful ablation replaces token-level writes with one turn-level update: Nano’s average falls from forty-seven to forty-one. Removing response post-training falls further, to thirty-six point three. Changing the exact gated update formula has a much smaller effect. The reusable idea is therefore a learned write-and-read interface, not just a named update rule. For continual agents, test latent state alongside exact retrieval at matched evidence budgets. Measure forgotten details, not only bytes. Fixed state remains lossy, and autonomous experience acquisition and consolidation remain open problems.",
       "tags": [
         "memory",
         "continual learning"
@@ -1152,7 +1152,7 @@
       "transcript_path": "memt-1-0/transcript.txt",
       "thumbnail_path": "assets/memt-1-0.jpg",
       "thumbnail_figure": "Our problem schematic",
-      "source_credit": "Primary paper: https://arxiv.org/abs/2610.26825v2\nOriginal cropped figures: Li et al., MemT-1.0, arXiv:2610.26825v2, https://creativecommons.org/licenses/by-nc-sa/4.0/ . Cropping and explanatory overlays are adaptations; original material and adaptations retain CC BY-NC-SA 4.0, noncommercial use. Original code has a separate PolyForm Noncommercial license. No official experimental demo reproduced. Li et al., arXiv:2610.26825v2 \u00b7 CC BY-NC-SA 4.0 \u00b7 crop\nThumbnail: our explanatory frame, not an original paper figure.",
+      "source_credit": "Primary paper: https://arxiv.org/abs/2610.26825v2\nOriginal cropped figures: Li et al., MemT-1.0, arXiv:2610.26825v2, https://creativecommons.org/licenses/by-nc-sa/4.0/ . Cropping and explanatory overlays are adaptations; original material and adaptations retain CC BY-NC-SA 4.0, noncommercial use. Original code has a separate PolyForm Noncommercial license. No official experimental demo reproduced. Li et al., arXiv:2610.26825v2 · CC BY-NC-SA 4.0 · crop\nThumbnail: our explanatory frame, not an original paper figure.",
       "thumbnail_style": "editorial-frame-v1"
     },
     {
@@ -1185,6 +1185,294 @@
       "thumbnail_figure": "Our problem diagram",
       "source_credit": "Primary paper: https://arxiv.org/abs/2610.18596v1\nAll visuals are our own factual diagrams and numerical readouts adapted from Kim et al., arXiv:2610.18596v1. Original NVIDIA figures and official footage are not reproduced. Official demonstration link: https://accrue-rl.github.io/ . No demo duration. Our factual adaptation from Kim et al., arXiv:2610.18596v1\nThumbnail: our explanatory frame, not an original paper figure.",
       "thumbnail_style": "editorial-frame-v1"
+    },
+    {
+      "id": "2026-11-01-callm",
+      "short_title": "CaLLM",
+      "title": "CaLLM: Continual Adaptation of LLMs via Non-Parametric Adapter Routing",
+      "headline": "Route incoming tasks without retraining the router",
+      "description": "A frozen prompt representation selects lightweight adapters for supervised continual fine-tuning.",
+      "takeaway": "Separate routing errors from forgetting within individual experts.",
+      "caveat": "Capacity limits can overwrite old experts; dialogue fine-tuning does not outperform the untouched backbone, and online results lack multi-seed uncertainty.",
+      "tags": [
+        "continual learning",
+        "adapter routing",
+        "language models"
+      ],
+      "playlists": [
+        "research"
+      ],
+      "published": "2026-11-01",
+      "paper_date": "2026-10-27",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.36994v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.36994v1",
+      "duration_seconds": 212.25,
+      "video_id": "11kDPTGw-TzK29DBcHqvDhyJsFrZczdq4",
+      "public_txt_id": "15HQMNbTogufohLWpRhno82jvbvsYuCHs",
+      "transcript_path": "2026-11-01-callm/transcript.txt",
+      "thumbnail_path": "assets/2026-11-01-callm.jpg",
+      "thumbnail_style": "editorial-frame-v1",
+      "source_credit": "arXiv:2610.36994v1 · 27 Oct 2026\nhttps://arxiv.org/abs/2610.36994v1\narXiv v1; primary PDF/comments report CoLLAs 2026 acceptance; independent proceedings not located\nOriginal CaLLM Figure 1 and Table 1 excerpts: Celik, Vettoruzzo and Vanschoren, CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ . Cropping/rearrangement disclosed. Other panels are explanatory adaptations.",
+      "selection_date": "2026-10-30"
+    },
+    {
+      "id": "2026-11-01-wearable-audio",
+      "short_title": "Wearable Audio and Hybrid Work",
+      "title": "Understanding Everyday Communication Patterns, Stress, and Productivity in Hybrid Work through Egocentric Wearable Audio Sensing",
+      "headline": "Rich training signals, restricted sensing",
+      "description": "A wearable audio study distills speaker detection into restricted acoustic features and studies workplace associations.",
+      "takeaway": "Separate training-time information from what a deployed sensor retains.",
+      "caveat": "Only sixteen employees were analyzed; stress associations are not causal or diagnostic, and feature retention is not a formal privacy guarantee.",
+      "tags": [
+        "wearable sensing",
+        "audio",
+        "workplace health"
+      ],
+      "playlists": [
+        "health"
+      ],
+      "published": "2026-11-01",
+      "paper_date": "2026-10-27",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.37270v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.37270v1",
+      "duration_seconds": 205.791667,
+      "video_id": "1Hl10meglMY_F8TlAPZmrI1UVEYrppAQJ",
+      "public_txt_id": "1wGzW3ZOmlbCXz8gGkR-OaE2PmS5A96SG",
+      "transcript_path": "2026-11-01-wearable-audio/transcript.txt",
+      "thumbnail_path": "assets/2026-11-01-wearable-audio.jpg",
+      "thumbnail_style": "editorial-frame-v1",
+      "source_credit": "arXiv:2610.37270v1\nhttps://arxiv.org/abs/2610.37270v1\narXiv preprint; authors report SLT 2026 acceptance, proceedings not independently verified\narXiv non-exclusive license does not grant general open reuse. Limited attributed original figure/table excerpts for technical criticism and commentary. Rearranged selections clearly labeled.",
+      "selection_date": "2026-10-30"
+    },
+    {
+      "id": "2026-11-01-tao",
+      "short_title": "TAO",
+      "title": "TAO: Tool-Aware Joint Scheduling for LLM-Based Agentic Serving",
+      "headline": "Schedule the next useful model turn",
+      "description": "Tool readiness and decayed inference-cache credit guide joint admission and placement for agent-serving requests.",
+      "takeaway": "Separate scheduling value from placement optimization and evaluate complete workload tradeoffs.",
+      "caveat": "Gains vary by workload; TAO is worse than ThunderAgent on the reported AutomationBench 128-worker setting. Inference caching is not learned long-term memory.",
+      "tags": [
+        "agent serving",
+        "scheduling",
+        "KV cache"
+      ],
+      "playlists": [
+        "across-ai"
+      ],
+      "published": "2026-11-01",
+      "paper_date": "2026-10-27",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.37230v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.37230v1",
+      "duration_seconds": 227.875,
+      "video_id": "1sc4ieJl7QcnB7_2ErT8lHKr6tvUO-Y0d",
+      "public_txt_id": "1NQrT-qFQAuYGsYLe5oI0dr9RcR-KvNqg",
+      "transcript_path": "2026-11-01-tao/transcript.txt",
+      "thumbnail_path": "assets/2026-11-01-tao.jpg",
+      "thumbnail_style": "editorial-frame-v1",
+      "source_credit": "arXiv:2610.37230v1\nhttps://arxiv.org/abs/2610.37230v1\narXiv version 2026-10-27\nLi et al., original figures and selected table columns, CC BY 4.0 https://creativecommons.org/licenses/by/4.0/. Cropped and rearranged for readability, experimental values unchanged.",
+      "selection_date": "2026-10-30"
+    },
+    {
+      "id": "2026-11-01-swim",
+      "short_title": "SWIM",
+      "title": "SWIM: Learning What Matters from Behaviors for JEPA World Models",
+      "headline": "Learn which state changes matter for planning",
+      "description": "Behavior-prediction gates shape the distance learned by a visual latent world model.",
+      "takeaway": "Use behavior to weight representation distances, while testing policy-dependent shortcuts.",
+      "caveat": "Training requires simulator states and logged actions. Default-setting average gains are about one percentage point; no physical-robot transfer is demonstrated.",
+      "tags": [
+        "world models",
+        "JEPA",
+        "representation learning"
+      ],
+      "playlists": [
+        "research"
+      ],
+      "published": "2026-11-01",
+      "paper_date": "2026-10-27",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.36662v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.36662v1",
+      "duration_seconds": 224.583333,
+      "video_id": "1F-YCnXz_5h2siMWKmEjlBCRRv6OH8OoX",
+      "public_txt_id": "1HOaErZ1_NsO80HEMdC2BYkVP99FE2r53",
+      "transcript_path": "2026-11-01-swim/transcript.txt",
+      "thumbnail_path": "assets/2026-11-01-swim.jpg",
+      "thumbnail_style": "editorial-frame-v1",
+      "source_credit": "arXiv:2610.36662v1 · 27 Oct 2026\nhttps://arxiv.org/abs/2610.36662v1\narXiv preprint v1; venue status documented in companion\nOriginal explanatory diagrams and factual readouts adapted from Hu et al., arXiv:2610.36662v1. Original arXiv nonexclusive distribution license does not establish broad figure reuse; adaptations are labeled and not experimental outputs.",
+      "selection_date": "2026-10-30"
+    },
+    {
+      "id": "2026-11-01-proactmem",
+      "short_title": "Proactive Memory",
+      "title": "Proactive Memory for Event-Driven LLM Agents",
+      "headline": "Validate a routine before interrupting",
+      "description": "An event-driven memory system links summaries to evidence, validates recurring patterns and suppresses duplicate interventions.",
+      "takeaway": "Make memory auditable: validate, retrieve, weaken and retire proposed regularities.",
+      "caveat": "The small jointly developed benchmark is label-sensitive; home precision is below fifty percent, with no prospective user-benefit trial.",
+      "tags": [
+        "agent memory",
+        "proactive agents",
+        "streaming events"
+      ],
+      "playlists": [
+        "research"
+      ],
+      "published": "2026-11-01",
+      "paper_date": "2026-10-27",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.36967v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.36967v1",
+      "duration_seconds": 237.541667,
+      "video_id": "1rigSMAA_hNzLyrj5W4RKOY8rX_LvbikZ",
+      "public_txt_id": "1d5rGgCtGWti9Dd4RupWBJ2mweeGPQIGR",
+      "transcript_path": "2026-11-01-proactmem/transcript.txt",
+      "thumbnail_path": "assets/2026-11-01-proactmem.jpg",
+      "thumbnail_style": "editorial-frame-v1",
+      "source_credit": "arXiv:2610.36967v1 · 27 Oct 2026\nhttps://arxiv.org/abs/2610.36967v1\narXiv preprint v1; venue status documented in companion\nOriginal explanatory diagrams and factual readouts adapted from Li et al., arXiv:2610.36967v1. No original figure copied; adaptations are labeled, not experimental outputs.",
+      "selection_date": "2026-10-30"
+    },
+    {
+      "id": "2026-11-01-transecg",
+      "short_title": "TransECG-SSL",
+      "title": "TransECG-SSL: Hybrid Self-Supervised Representation Learning for ECG Arrhythmia Classification",
+      "headline": "Test transfer on unseen patients",
+      "description": "Patient-disjoint ECG experiments compare masked reconstruction and contrastive learning with matched encoder baselines.",
+      "takeaway": "Frozen cross-database transfer and minority-class metrics make representation claims more interpretable.",
+      "caveat": "The hybrid objective does not win every route. Three retrospective datasets, one patient partition and annotated beat centers do not establish clinical readiness.",
+      "tags": [
+        "ECG",
+        "self-supervised learning",
+        "patient-disjoint evaluation"
+      ],
+      "playlists": [
+        "health"
+      ],
+      "published": "2026-11-01",
+      "paper_date": "2026-10-26",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.35378v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.35378v1",
+      "duration_seconds": 212.875,
+      "video_id": "1YJuXH6rXMbIRH25q7Tj2yMnk_cPh-CdR",
+      "public_txt_id": "1xh_bbsl5lfkkQqcRgifi8OyioCi8Svb1",
+      "transcript_path": "2026-11-01-transecg/transcript.txt",
+      "thumbnail_path": "assets/2026-11-01-transecg.jpg",
+      "thumbnail_style": "editorial-frame-v1",
+      "source_credit": "arXiv:2610.35378v1\nhttps://arxiv.org/abs/2610.35378v1\narXiv preprint; submitted to IEEE JBHI, not accepted\narXiv non-exclusive license does not grant general open reuse. Limited attributed original figure/table excerpts for technical criticism and commentary. Rearranged selections clearly labeled.",
+      "selection_date": "2026-10-30"
+    },
+    {
+      "id": "2026-11-01-normative-eeg",
+      "short_title": "Normative EEG",
+      "title": "Normative Deviation Modeling for EEG-based Depression Detection",
+      "headline": "Measure deviation without calling it diagnosis",
+      "description": "Healthy-reference reconstruction and denoising residuals supplement EEG representations for retrospective depression classification.",
+      "takeaway": "Test whether reference residuals identify the condition or merely acquisition shift.",
+      "caveat": "Only two small cohorts are studied. Reverse-transfer calibration uses known healthy target groups, so directional results are not a matched head-to-head comparison.",
+      "tags": [
+        "EEG",
+        "normative modeling",
+        "mental health research"
+      ],
+      "playlists": [
+        "health"
+      ],
+      "published": "2026-11-01",
+      "paper_date": "2026-10-27",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.37338v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.37338v1",
+      "duration_seconds": 219.583333,
+      "video_id": "1KNr7qSO_zxnEAdJfkmiHpvZOo_Hptq66",
+      "public_txt_id": "1yYezNf7wTxgqBMva3xrGTSWfvswM6xO8",
+      "transcript_path": "2026-11-01-normative-eeg/transcript.txt",
+      "thumbnail_path": "assets/2026-11-01-normative-eeg.jpg",
+      "thumbnail_style": "editorial-frame-v1",
+      "source_credit": "arXiv:2610.37338v1\nhttps://arxiv.org/abs/2610.37338v1\narXiv preprint; WWW 2027 template does not establish acceptance\narXiv non-exclusive license does not grant general open reuse. Limited attributed original figure/table excerpts for technical criticism and commentary. Rearranged selections clearly labeled.",
+      "selection_date": "2026-10-30"
+    },
+    {
+      "id": "2026-11-01-omni",
+      "short_title": "OmniShowcase",
+      "title": "OmniShowcase: Omnidirectional Subject-Consistent Video Generation from Multi-View Images",
+      "headline": "Separate object geometry from appearance",
+      "description": "A geometry turntable conditions multi-view subject-to-video generation without forced alignment to the output trajectory.",
+      "takeaway": "Train with deployment-like reconstruction errors and structured geometry context.",
+      "caveat": "Aligned point-cloud metrics are not metric-scale reconstruction accuracy. Aesthetic scores trail all listed baselines; rigid objects and small evaluations limit generality.",
+      "tags": [
+        "video generation",
+        "3D geometry",
+        "multi-view conditioning"
+      ],
+      "playlists": [
+        "across-ai"
+      ],
+      "published": "2026-11-01",
+      "paper_date": "2026-10-26",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.35684v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.35684v1",
+      "duration_seconds": 245.791667,
+      "video_id": "1jHhwd6nroz__yH5n9YMAouL5K5KKaAlt",
+      "public_txt_id": "1NFX4bwI-zOX5BkvcCekIn89H9XzmHPda",
+      "transcript_path": "2026-11-01-omni/transcript.txt",
+      "thumbnail_path": "assets/2026-11-01-omni.jpg",
+      "thumbnail_style": "editorial-frame-v1",
+      "source_credit": "arXiv:2610.35684v1\nhttps://arxiv.org/abs/2610.35684v1\narXiv version 2026-10-26\nAhn et al., original paper figures and table excerpts CC BY 4.0 https://creativecommons.org/licenses/by/4.0/. Cropped; selected table header relabeled; author-generated examples identified. Historical repository inspection date October 30, 2026. Figure 5 selected rows rearranged with original reference and legend. Table 2 geometry views select original method/GT-CD columns and dataset rows; dataset titles added.",
+      "selection_date": "2026-10-30"
+    },
+    {
+      "id": "2026-11-01-falcon",
+      "short_title": "Falcon",
+      "title": "Efficient Streaming Audio-Visual Target Speaker Extraction for Real-World Acoustic Scenes",
+      "headline": "Extract a voice, then measure the right latency",
+      "description": "Visual mouth cues and multiscale audio processing extract a target speaker, with a training-only interference penalty.",
+      "takeaway": "Distinguish clip forward-pass cost from streaming buffers and end-to-end delay.",
+      "caveat": "The reported 51.3 milliseconds is for a two-second clip, not streaming latency. Real-world evaluation includes ten participants and is not a clinical hearing-assistance trial.",
+      "tags": [
+        "audio-visual learning",
+        "speech extraction",
+        "streaming perception"
+      ],
+      "playlists": [
+        "across-ai"
+      ],
+      "published": "2026-11-01",
+      "paper_date": "2026-10-23",
+      "publication_status": "preprint",
+      "venue": "arXiv",
+      "paper_version": "v1",
+      "paper_url": "https://arxiv.org/abs/2610.32749v1",
+      "verified_source_url": "https://arxiv.org/abs/2610.32749v1",
+      "duration_seconds": 249.5,
+      "video_id": "16oJcSOTIOooS_0NtZSJNHpRq5_ZaICdZ",
+      "public_txt_id": "1ywws8CgbkaQrWonuOf8SMOa9EE_S7LGM",
+      "transcript_path": "2026-11-01-falcon/transcript.txt",
+      "thumbnail_path": "assets/2026-11-01-falcon.jpg",
+      "thumbnail_style": "editorial-frame-v1",
+      "source_credit": "arXiv:2610.32749v1\nhttps://arxiv.org/abs/2610.32749v1\narXiv version 2026-10-23\nShort selected paper figures/tables from Sang et al., https://arxiv.org/abs/2610.32749v1, attributed excerpts for scientific criticism; cropped without changing experimental values. arXiv nonexclusive distribution is not a general reuse license. Repository Apache-2.0 does not automatically license the paper.",
+      "selection_date": "2026-10-30"
     }
   ]
 }

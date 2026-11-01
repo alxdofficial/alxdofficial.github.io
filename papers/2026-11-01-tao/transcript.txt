@@ -1,0 +1,37 @@
+TAO: Tool-Aware Joint Scheduling for LLM-Based Agentic Serving
+First publication: 2026-10-27 | Version: v1 (2026-10-27)
+Video produced: 2026-11-01 | Selection digest: 2026-10-30
+Publication status: arXiv preprint; peer review not independently verified.
+Primary source: https://arxiv.org/abs/2610.37230v1
+
+An agent alternates between generating tokens and waiting for tools. A graphics processor cannot accelerate a shell command that is still running elsewhere. Meanwhile, the model's cached attention keys and values may occupy scarce memory. TAO asks which waiting sessions should return to which inference node, and when. This is a serving-system paper, not a new language model, and it does not train the model to reason better.
+
+A session that returns to the same node may reuse its conversation prefix and avoid recomputing it. But cached state can disappear while the tool runs. Admitting one large session also changes which combinations of other sessions fit. Independently choosing the apparently best node for each request can therefore waste capacity. The authors target clustered inference processors with tools executing on separate CPUs, a useful setting for coding and other tool-using agents.
+
+The comparison includes round-robin and cache-aware routing in vLLM, NVIDIA's Dynamo, and ThunderAgent, which interrupts sessions at tool boundaries and uses a packing heuristic. TAO retains that interruption-and-waiting-pool idea. Its addition is to value cached context and imminent tool returns together, then choose a joint placement. These are the authors' evaluated baselines; the paper does not establish an independently verified universal state of the art.
+
+For every session and candidate node, the scheduler builds three ordered quantities. First is reusable cache credit, discounted with a ten-second half-life. Second is whether the tool has finished or is expected within a one-second horizon, using runtime hints and historical durations. Third is token count. The planner maximizes the summed quantities lexicographically: cache credit takes precedence, then readiness breaks ties, then token count. A capacity-state dynamic program considers admitting or skipping each session and assigning admitted sessions to nodes. It is exact only for the frozen, discretized scheduling problem. An asynchronous worker computes the plan, and the executor rechecks live capacity before applying it. Model weights do not change.
+
+On SWE-Lite software tasks with DeepSeek-V4 Flash, two nodes of four H100 processors each, and sixty-four workers, mean end-to-end task latency falls from the best baseline's 253.228 seconds to 185.410. That is 26.8 percent lower. Decode throughput rises from 1561.307 to 2021.523 tokens per second. But gains are workload dependent. On AutomationBench at 128 workers, TAO is worse than ThunderAgent on latency, first-token delay, and throughput. This counterexample matters more than treating the abstract's best-case percentages as a general guarantee.
+
+The reusable idea is to separate session valuation from a joint placement solver, while making external-tool readiness observable. For an always-on agent service this could reduce waste without changing its learned policy, but that transfer is speculative. Cache-age tuning, prediction errors, and the state space of the placement solver remain practical constraints. The authors report planner work below 0.12 percent of runtime in their four-replica sweep. These are author-reported measurements, not an independent reproduction, and lower serving latency should not be confused with improved task accuracy.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.37230v1
+https://arxiv.org/abs/2610.37230v1
+arXiv version 2026-10-27
+Li et al., original figures and selected table columns, CC BY 4.0 https://creativecommons.org/licenses/by/4.0/. Cropped and rearranged for readability, experimental values unchanged.
+First submitted: 2026-10-27
+Fig 1: agent serving · Li et al., CC BY 4.0; cropped original
+Fig 3: cache retention vs age · Li et al., CC BY 4.0; cropped original
+Fig 1: routing dilemma · Li et al., CC BY 4.0; cropped original
+Fig 2: session valuation · Li et al., CC BY 4.0; cropped original
+Fig 2: joint placement and validation · Li et al., CC BY 4.0; cropped original
+Table 1: 64 workers; seconds, tokens/s · Li et al., CC BY 4.0; cropped original
+Table 3: 128 workers; seconds, tokens/s · Li et al., CC BY 4.0; cropped original
+Fig 2: joint placement · Li et al., CC BY 4.0; cropped original
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

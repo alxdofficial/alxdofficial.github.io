@@ -1,0 +1,36 @@
+Understanding Everyday Communication Patterns, Stress, and Productivity in Hybrid Work through Egocentric Wearable Audio Sensing
+First publication: 2026-10-27 | Version: v1 (2026-10-27)
+Video produced: 2026-11-01 | Selection digest: 2026-10-30
+Publication status: arXiv preprint; peer review not independently verified.
+Primary source: https://arxiv.org/abs/2610.37270v1
+
+Can an always-on sensor reveal how office and home communication relate to stress without retaining raw speech? Feng and colleagues study this with a wearable audio badge. Their target is the wearer's speaking time and vocal activeness, not transcription or clinical diagnosis. The difficult part is separating the wearer from nearby voices using deliberately impoverished acoustic features.
+
+The badge samples twenty seconds each minute and immediately extracts pitch, loudness, and twelve coefficients describing the sound spectrum. Keeping these features instead of recordings reduces the information retained, but does not establish formal privacy. The system combines on-device feature extraction with offline speaker analysis; it is not an entirely on-device intelligent agent. Sparse sampling also means communication is estimated rather than continuously observed.
+
+The practical application is longitudinal workplace research. The authors recruited nineteen employees and analyzed sixteen who wore the badge for more than ten days. Each person participated for four months, averaging about forty recorded workdays. Because private workplace speech could not supply labeled training recordings, the speaker detector was trained on three public conversation datasets. This creates a transfer problem: those datasets use smart glasses or meeting microphones, not the deployed badge.
+
+A large speech model first learns to classify each frame as wearer speech, other speech, or silence. Its predictions then supervise a smaller residual convolutional network that receives only the retained spectral coefficients. The large teacher is frozen; the student is updated to match both the labels and the teacher's probability distribution. This is knowledge distillation. At deployment only the student is used offline. Detected wearer frames yield speaking minutes per hour; pitch and loudness relative to each person's distribution yield activeness.
+
+Diarization error measures incorrect speech timing or speaker assignment. On the three public datasets, distillation reduces that error from sixteen to fourteen point one percent, twenty-four point six to twenty-three point five, and thirty-one point eight to twenty-nine. These are modest, consistent improvements, not near-perfect sensing. In the deployment, higher office speaking load is associated with higher self-reported stress and lower productivity after modeled covariates. Those associations do not show that speaking causes either outcome.
+
+For wearable sensing, the reusable idea is separating a rich training-time teacher from a restricted sensing pipeline. But the deployment is a small cohort from one institution, with no external replication. Public training splits include session-level separation, which does not by itself guarantee unseen speakers. Personalized activeness uses a participant's empirical distribution rather than a proven prospective calibration rule. Mixed-effects models account for repeated observations, but neither many surveys nor months of data turn sixteen people into a large independent sample.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.37270v1
+https://arxiv.org/abs/2610.37270v1
+arXiv preprint; authors report SLT 2026 acceptance, proceedings not independently verified
+arXiv non-exclusive license does not grant general open reuse. Limited attributed original figure/table excerpts for technical criticism and commentary. Rearranged selections clearly labeled.
+First submitted: 2026-10-27
+Fig. 1 • sensing protocol · Original paper arXiv:2610.37270v1. Attributed excerpt.
+Fig. 1 • 20 seconds per minute · Original paper arXiv:2610.37270v1. Attributed excerpt.
+Fig. 2 • rich teacher, restricted student · Original paper arXiv:2610.37270v1. Attributed excerpt.
+Fig. 2 • teacher-student learning · Original paper arXiv:2610.37270v1. Attributed excerpt.
+Table II • selected original cells · Original paper arXiv:2610.37270v1. Attributed excerpt.
+Table IV • disclosed adaptation · Adapted from Feng et al., arXiv:2610.37270v1, Table IV.
+Table IV • disclosed adaptation · Original paper arXiv:2610.37270v1. Attributed excerpt.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
