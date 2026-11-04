@@ -1,0 +1,42 @@
+Follow the Gradient: Tracing Safety Degradation Back to Training Data
+
+First publication: 2026-10-27 | Version: v1 (2026-10-27)
+Status: arXiv preprint · 27 Oct 2026 · peer review not verified
+Video produced: 2026-11-03 | Intended digest: 2026-11-03
+Primary source: https://arxiv.org/abs/2610.37481v1
+
+1 / Problem
+A training example can look harmless and still push a language model toward unsafe behavior. This paper asks whether we should inspect that parameter update, rather than only the words. The authors compare each candidate document with reference examples of unsafe responses, using the gradients each would induce in a fixed model. Similar update directions become a warning signal. This is a data-filtering study, not a proof that any individual document causes harm.
+
+2 / Why difficult
+A full gradient has roughly as many coordinates as the model has parameters, making a million-example audit expensive. Earlier influence methods compress gradients but can still require costly backward passes and curvature corrections. Here the authors keep only the final four transformer blocks for backpropagation. Their selected setting retains useful detection performance on a math attribution test: the plotted score measures ranking quality, not the frequency of harmful responses. The resulting method embeds about nine hundred thirty-nine thousand instruction examples in sixty-one minutes on eight H100 graphics processors. That is offline preprocessing cost, not end-to-end training cost.
+
+3 / Applications and prior work
+The demonstrated application is cleaning Tulu 3, an instruction-training mixture, before fine-tuning several model families. Random removal and a language-model content judge are controls; another baseline compares gradients against both harmful responses and safe refusals. This new filter instead uses the complete document signal and a compact representation. Its practical attraction is screening data whose risk is not obvious from toxicity. Auditing an always-updating agent’s future training stream is a plausible extension, but neither continual deployment nor protection against every harmful behavior is tested here.
+
+4 / Operational solution
+A fixed Qwen model computes forward activations and backward gradients for candidate documents and unsafe reference responses. Random projections compress each selected linear layer to a thirty-two by thirty-two matrix. A rank-one approximation stores two vectors, sixty-four numbers per layer. Their bilinear similarity estimates how closely the compressed updates align. This is SimpleLoRIF, the paper’s gradient-ranking method. The authors discard the highest-scoring twenty percent, then fine-tune separate target models on the remainder. Only those later target models change weights. Deployment uses the resulting model normally; it does not run a gradient filter for each user request.
+
+5 / Results
+The original table shows Qwen 3, the one-point-seven-billion-parameter target model. Under Greedy Coordinate Gradient, a white-box jailbreak evaluation, attack success falls from forty-seven point six seven percent with all data to thirty-seven percent after filtering. That is ten point six seven percentage points, or about twenty-two percent relative, not twenty-two percentage points. Values are means over three training seeds, with standard errors. Random removal and the content judge do not match this reduction. Other model families also improve, while capability is mostly retained, not uniformly improved. These are author-reported evaluations, not an independent safety certification.
+
+6 / Novelty and caveats
+The reusable idea is making update-direction auditing cheap enough to influence dataset construction. The paper does not establish universal current best performance or prove that traceback-containing examples cause harm. Residual attack success remains substantial, and results depend on the chosen unsafe reference set. There is also a reproducibility warning: the released dataset card lists a different total and roughly eighteen percent removed, rather than the paper’s twenty percent. Reconcile that version before reproducing the experiment. For adaptive systems, this is a useful candidate safeguard to test alongside behavioral evaluation, not a substitute for it.
+
+Credits and disclosure (not spoken narration)
+Reddy et al. · arXiv:2610.37481v1
+https://arxiv.org/abs/2610.37481v1
+arXiv preprint · 27 Oct 2026 · peer review not verified
+Paper arXiv nonexclusive distribution license does not grant broad reuse. Limited original Fig.1 and Table1 excerpts used for direct scholarly criticism/commentary; other diagrams are our disclosed adaptations of factual methods/results. No experimental demo footage. Original authors retain rights. Figure1 full-axis source inspected privately; video uses a labeled factual cost readout for phone legibility.
+First submitted: 2026-10-27
+Operational question · adaptation · Reddy et al. 2026 · arXiv:2610.37481v1
+§3/5 · embedding-cost adaptation · Reddy et al. 2026 · arXiv:2610.37481v1
+SafeTulu construction · adaptation · Reddy et al. 2026 · arXiv:2610.37481v1
+SimpleLoRIF mechanics · adaptation · Reddy et al. 2026 · arXiv:2610.37481v1
+Original Table1 · Qwen3 1.7B · GCG ASR↓ · Reddy et al. 2026 · arXiv:2610.37481v1
+Limits and release mismatch · adaptation · Reddy et al. 2026 · arXiv:2610.37481v1
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

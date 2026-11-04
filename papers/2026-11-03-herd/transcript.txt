@@ -1,0 +1,44 @@
+HERD: Harness-Evolving Recursive Distillation for Continual Learning
+
+Paper first publication: 2026-10-22 | Version: v1 (2026-10-22)
+Status: arXiv preprint; results are author-reported.
+Video produced: 2026-11-03
+Primary source: https://arxiv.org/abs/2610.31401v1
+
+1. Keep learning without a growing prompt
+A language model can learn new tasks by changing its weights, but those changes can erase earlier skills. Alternatively, it can carry instructions and examples in its prompt, but that context has limited space. This preprint combines the two: improve a compact external set of instructions during training, then teach those improvements into the model’s weights. At deployment, only the updated weights are needed. The paper calls this system HERD. Its evidence comes from one four-billion-parameter Qwen model learning twenty-five supervised tasks in sequence.
+
+2. Why two kinds of retention matter
+Keeping the latest checkpoint close is not enough. Many small updates can gradually move the model far from its original general abilities. HERD therefore compares the student with two frozen reference models: the previous checkpoint on retained task probes, and the original base model on general probes. It measures differences between their next-token probability distributions. These are finite sampled checks, not a guarantee that every earlier behavior survives. The distinction is useful: retaining yesterday’s tasks and retaining the original model’s broad abilities are separate objectives.
+
+3. Build a bounded training aid
+The external training aid stores reusable instruction snippets and examples the current system still finds difficult. On a bounded window of verified training examples, the base model proposes a revised instruction after seeing selected mistakes. The revision is accepted only if it improves the previous checkpoint’s probability of the correct answers and fits the token budget. The hardest remaining examples become probes for later retention checks. Importantly, this memory is not used as a conventional replay batch of supervised targets. It chooses where later drift should be measured.
+
+4. Move the guidance into weights
+A frozen teacher receives the selected instruction, the prompt, and the verified answer repeated in its context. A student receives the bare prompt. At each position of the verified answer, training makes the student’s full vocabulary probabilities match the teacher’s. Only newly attached low-rank weight updates are trained; the checkpoint itself stays frozen during that stage. This is low-rank adaptation. Penalties increase when either reference-model drift exceeds its budget. After thirty-two updates, the adapter is merged into the weights. The next stage starts from those merged weights with a fresh adapter.
+
+5. Matched results, with limits
+On the twenty-five-task stream, the final average normalized task score is point seven zero six, versus point six nine nine for uniform replay. That difference’s confidence interval includes zero, so it is not a clear win over replay on final score. Average forgetting is point zero one zero, versus point zero two zero for replay. On separate general tests, HERD loses six point three percentage points from its starting score; sequential low-rank adaptation loses twenty-four points. These are author-reported three-seed results. Task scores combine several metrics, not one uniform accuracy measure.
+
+6. Reusable idea, not solved lifelong learning
+The strongest reusable idea is to distill helpful training-time context while guarding both recent and original behavior. Removing the base-model guard increases the general-test drop from six point three to fifteen point eight points, but that ablation uses only one seed. The system still needs verified answers, known task boundaries, and a finite probe set. It was tested on one base model and one task stream. Its context-based comparisons also have strict memory ceilings. This is promising controlled evidence for a training recipe, not proof of unrestricted online learning or zero forgetting.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.31401v1
+https://arxiv.org/abs/2610.31401v1
+PREPRINT · AUTHOR-REPORTED
+Sun, Nguyen & Vu (2026), arXiv:2610.31401v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled. Source license https://creativecommons.org/licenses/by/4.0/ does not license the whole video. Narration: approved Pocket TTS Anna preset; production attribution retained by pipeline. No official demo footage included.
+First submitted: 2026-10-22
+Fig. 1 — harness evolution; enlarged source panel · Sun, Nguyen & Vu (2026), arXiv:2610.31401v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Fig. 1 — weight training and deployment; enlarged panel · Sun, Nguyen & Vu (2026), arXiv:2610.31401v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Fig. 2 — original method panel · Sun, Nguyen & Vu (2026), arXiv:2610.31401v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Fig. 2b — student with trainable low-rank adapters · Sun, Nguyen & Vu (2026), arXiv:2610.31401v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Fig. 2a — two frozen drift references · Sun, Nguyen & Vu (2026), arXiv:2610.31401v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Table 1 — selected task-score columns/rows · Sun, Nguyen & Vu (2026), arXiv:2610.31401v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Table 1 — selected general-score columns/rows · Sun, Nguyen & Vu (2026), arXiv:2610.31401v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Table 3 — general-score drop; ablation is SINGLE SEED · Sun, Nguyen & Vu (2026), arXiv:2610.31401v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

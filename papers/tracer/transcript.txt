@@ -1,0 +1,44 @@
+TRACER, a time-to-event EHR foundation model for disease detection across health systems
+
+First publication: 2026-10-29 | Version: v1 (2026-10-29)
+Status: arXiv preprint; peer-reviewed venue not verified.
+Video produced: 2026-11-03 | Intended digest: 2026-11-03
+Primary source: https://arxiv.org/abs/2610.40536v1
+
+1 / Problem
+A risk model can rank patients well and still be a poor screening tool. TRACER asks what electronic health record predictions actually buy when false alerts must remain low. The model predicts future recorded diagnoses, not whether disease is biologically present today. Its central distinction is between sensitivity, the share of future cases found, and positive predictive value, the share of flagged patients who receive the diagnosis. A high area under the receiver operating characteristic curve summarizes ranking across many thresholds. It does not guarantee either quantity at a practical screening threshold.
+
+2 / Why difficult
+Rare outcomes make this problem especially unforgiving. Even a small false-positive rate can produce many more false alerts than true cases. Incomplete follow-up adds another trap: a patient who leaves the record cannot simply be labeled disease-free five years later. And hospitals differ in populations, coding and follow-up. The authors therefore study sixteen disease endpoints, usually at one, two and five years, while keeping natural outcome frequencies. They reserve two entire health systems, containing more than two million patients, from both pretraining and downstream model development.
+
+3 / Prior approaches
+Earlier record models either reconstruct hidden clinical codes or predict the next event. Survival models additionally account for when diagnoses occur and when observation stops. TRACER combines these established ideas rather than claiming a wholly new transformer. Its pretraining pool contains about four and a half million patient sequences from four University of California systems. A separate pool of five hundred thousand sequences supports downstream training and internal testing. The paper compares a causal decoder with a similarly sized masked-token encoder under matched data and evaluation. This is a controlled baseline comparison, not independently established state of the art.
+
+4 / Mechanism
+Diagnoses, procedures, medications, discretized lab values and time gaps become tokens. A roughly one hundred twenty-five million parameter causal transformer learns to predict the next token from preceding tokens. After pretraining, those backbone parameters are frozen. The observed history is encoded and mean-pooled into a seven hundred sixty-eight dimensional patient vector. A small linear survival head is then trained for each disease. It assigns probability to event-time intervals. For an observed diagnosis, training rewards its interval probability. For a censored record, it rewards probability of remaining event-free beyond observed follow-up. A ranking term also favors higher risk for earlier events. At external inference, both backbone and head remain unchanged.
+
+5 / Results
+Consider one-year heart failure at ninety-five percent specificity. Sensitivity is forty-four point two percent internally, but thirty-six point nine and thirty-three point six percent at the external systems. Positive predictive value moves differently: thirteen point eight percent internally, nine point four seven at one external system, and sixteen point four one at the other. Different base rates help explain that divergence. Pancreatic cancer makes the warning sharper. Its internal one-year ranking area is zero point eight four three, yet positive predictive value at the same specificity is only zero point seven one percent. Across all three cohorts, fewer than one percent of flagged patients receive that diagnosis within a year. These are censoring-adjusted retrospective estimates, not prospective screening outcomes.
+
+6 / Relevance and limits
+The reusable lesson is to evaluate a model where it will actually operate. Thresholds here were estimated separately within each evaluation cohort, so the study does not show that a cutoff transports unchanged. All six systems are within one university network. Recorded diagnosis is not biological onset, and there is no explicit washout period before diagnosis, so work-up clues may help prediction. Prospective benefit, calibration in deployment and clinician burden remain untested. For representation research, this is a useful counterexample to treating one global metric as the entire deployment story.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.40536v1
+https://arxiv.org/abs/2610.40536v1
+arXiv preprint; no verified peer-reviewed venue
+Pleasure et al. (2026), arXiv:2610.40536v1. Paper CC BY-NC-ND 4.0, https://creativecommons.org/licenses/by-nc-nd/4.0/. Video visuals are our independently drawn mechanism diagrams and factual numerical readouts, not modified original figures; based on cited paper sections and tables.
+First submitted: 2026-10-29
+Our diagram · evaluation problem · Pleasure et al. (2026), arXiv:2610.40536v1. Paper CC BY-NC-ND 4.0, https://creativecommons.org/licenses/by-nc-nd/4.0/. Video visuals are our independently drawn mechanism diagrams and factual numerical readouts, not modified original figures; based on cited paper sections and tables.
+Our diagram · cohort design · Pleasure et al. (2026), arXiv:2610.40536v1. Paper CC BY-NC-ND 4.0, https://creativecommons.org/licenses/by-nc-nd/4.0/. Video visuals are our independently drawn mechanism diagrams and factual numerical readouts, not modified original figures; based on cited paper sections and tables.
+Our diagram · matched study · Pleasure et al. (2026), arXiv:2610.40536v1. Paper CC BY-NC-ND 4.0, https://creativecommons.org/licenses/by-nc-nd/4.0/. Video visuals are our independently drawn mechanism diagrams and factual numerical readouts, not modified original figures; based on cited paper sections and tables.
+Our diagram · model and objectives · Pleasure et al. (2026), arXiv:2610.40536v1. Paper CC BY-NC-ND 4.0, https://creativecommons.org/licenses/by-nc-nd/4.0/. Video visuals are our independently drawn mechanism diagrams and factual numerical readouts, not modified original figures; based on cited paper sections and tables.
+Our diagram · censoring-aware head · Pleasure et al. (2026), arXiv:2610.40536v1. Paper CC BY-NC-ND 4.0, https://creativecommons.org/licenses/by-nc-nd/4.0/. Video visuals are our independently drawn mechanism diagrams and factual numerical readouts, not modified original figures; based on cited paper sections and tables.
+Our readout · Tables S9 / S11 · Pleasure et al. (2026), arXiv:2610.40536v1. Paper CC BY-NC-ND 4.0, https://creativecommons.org/licenses/by-nc-nd/4.0/. Video visuals are our independently drawn mechanism diagrams and factual numerical readouts, not modified original figures; based on cited paper sections and tables.
+Our readout · pancreatic cancer · Pleasure et al. (2026), arXiv:2610.40536v1. Paper CC BY-NC-ND 4.0, https://creativecommons.org/licenses/by-nc-nd/4.0/. Video visuals are our independently drawn mechanism diagrams and factual numerical readouts, not modified original figures; based on cited paper sections and tables.
+Our checklist · limitations · Pleasure et al. (2026), arXiv:2610.40536v1. Paper CC BY-NC-ND 4.0, https://creativecommons.org/licenses/by-nc-nd/4.0/. Video visuals are our independently drawn mechanism diagrams and factual numerical readouts, not modified original figures; based on cited paper sections and tables.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

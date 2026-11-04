@@ -1,0 +1,47 @@
+Latent Reasoning in Continuous Space for Unified Multimodal Models
+
+First publication: 2026-10-30 | Version: v1 (2026-10-30)
+Status: arXiv version 30 Oct 2026; authors claim NeurIPS 2026, acceptance not independently verified
+Video produced: 2026-11-03 | Intended digest: 2026-11-03
+Primary source: https://arxiv.org/abs/2610.42149v1
+
+1 / The problem
+A model that both understands and generates images can write a long explanation before drawing, yet extra words do not necessarily improve its picture. This paper asks whether the model should instead carry some of its intermediate computation in continuous hidden states. The proposed system, called LARC, builds on BAGEL, a model with understanding and image-generation components. The key is not to remove language altogether. Short sampled text spans are interleaved with latent steps, so the model retains a trainable stochastic reasoning path while passing richer continuous information to image generation.
+
+2 / Why it matters
+The evaluated applications are text-to-image generation, image editing and visual reasoning. A planner that reasons internally before rendering is a plausible broader application, not a deployment shown here. Prior systems often express their intermediate computation entirely as text, which may discard spatial or perceptual information. Other latent-reasoning methods motivate continuous steps, but the important empirical question is whether these steps change the generated image usefully. Longer hidden trajectories alone do not establish better reasoning; they need a training signal and a controlled comparison.
+
+3 / What happens inside
+After a special latent marker, the understanding component feeds its final hidden state back as the next input embedding. Several such steps can occur before text generation resumes. The image-generation component reads the accumulated trajectory through attention. Initial supervised training progressively introduces these latent steps. Text prediction and image-denoising objectives train the understanding and generation components while the visual tokenizer stays frozen. There is no ground-truth hidden-state chain. But training still uses paired context and target images: absence of annotated reasoning is not absence of supervised data.
+
+4 / How the reward works
+The next stage samples eight alternative trajectories for a context. A frozen reference model tries to predict the target image once with a trajectory and once without it, using the same noise and diffusion time. A trajectory receives a better reward when it reduces the reference model’s image-prediction loss. A separate diversity reward discourages all latent steps from becoming identical. Rewards are normalized within the sampled group to update the understanding component; the image-generation component is no longer updated. This is a loss-based usefulness proxy, not proof of causal reasoning or exact information gain.
+
+5 / Results and cost
+On GenEval, a detector-based benchmark of compositional image generation, the author-reported overall score improves from BAGEL’s zero point eight-one to zero point eight-eight. Attribute binding improves from zero point six-three to zero point seven-eight. The ablation reports zero point eight-three after supervised training and zero point eight-eight after the reward stage, so the gain is not only adding latent steps. On one A-one-hundred GPU with batch size one, increasing from one to ten latent steps changes per-sample time from forty-six point eight to forty-eight seconds. Ten separate BAGEL samples take four-hundred-sixty-nine seconds; that is a different sampling procedure, not an equal-compute comparison.
+
+6 / What is reusable
+The most reusable idea is to evaluate an internal computation by whether a frozen model predicts the intended output better when given that computation. The diversity ablation matters: without it, the latent steps nearly collapse to copies. These experiments use one underlying model and selected benchmarks, with some model-judged metrics. Broader state-of-the-art status and independent reproduction are unverified. Training reportedly costs three-hundred GPU-hours for supervision and ninety-six for reinforcement learning. The connection to world models is speculative: this paper improves unified image tasks, not persistent memory, continual adaptation or a learned physical simulator.
+
+Credits and disclosure (not spoken narration)
+Jeon et al. · arXiv:2610.42149v1
+https://arxiv.org/abs/2610.42149v1
+arXiv version 30 Oct 2026; authors claim NeurIPS 2026, acceptance not independently verified
+Original Figure 1/2 and Table 8 excerpts from Jeon et al., arXiv:2610.42149v1, CC BY 4.0. Selected Table 1 and Table 11 readouts adapted and explicitly labeled; no recreated experimental images.
+First submitted: 2026-10-30
+Figure 2 · understanding and generation components; enlarged · Jeon et al. · 2610.42149v1 · CC BY 4.0
+Fig. 1 generation panel · original pixels; legend/axis rearranged · Jeon et al. · 2610.42149v1 · CC BY 4.0
+Figure 2 · latent feedback · Jeon et al. · 2610.42149v1 · CC BY 4.0
+Figure 2 · reward loop · Jeon et al. · 2610.42149v1 · CC BY 4.0
+Figure 2 · policy-update loop; enlarged · Jeon et al. · 2610.42149v1 · CC BY 4.0
+Table 1 · adapted readout · Jeon et al. · 2610.42149v1 · CC BY 4.0
+Table 8 · selected GenEval column; training-stage ablation · Jeon et al. · 2610.42149v1 · CC BY 4.0
+Table 11 · measured inference cost · Jeon et al. · 2610.42149v1 · CC BY 4.0
+Table 12 · selected diversity weight, cosine similarity, GenEval · Jeon et al. · 2610.42149v1 · CC BY 4.0
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
+
+Additional figure disclosure: Original Figure 1/2 and Table 8 excerpts from Jeon et al., arXiv:2610.42149v1, CC BY 4.0. Selected Table 1 and Table 11 readouts adapted and explicitly labeled; no recreated experimental images. Final views include original Table12 selected diversity/cosine/GenEval cells; Figure1 legend and x-axis are rearranged without changing plot pixels; source-panel and table-column selections are disclosed.

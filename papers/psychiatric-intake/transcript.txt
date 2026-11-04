@@ -1,0 +1,41 @@
+Training language models in simulation for psychiatric intake
+
+First publication: 2026-10-29 | Version: v1 (2026-10-29)
+Video produced: 2026-11-02 | Selection digest: 2026-11-02
+Publication status: arXiv preprint; peer-review venue not verified
+Primary source: https://arxiv.org/abs/2610.40476v1
+
+1. Problem
+Can a language model learn to conduct a better psychiatric intake by practicing conversations rather than only answering exam questions? Schmidgall and colleagues train an interviewing agent in simulation. The target is a single text-based intake: gathering history, considering alternative explanations, and proposing a preliminary plan. This is not a psychotherapy system, and no real patients participated.
+
+2. Why it is difficult
+Important information may emerge only after sensitive questioning and rapport building. A correct final answer is insufficient if the interview misses a concealed crisis. Yet synthetic patients can reward artificial conversational habits. The authors generated about forty-eight thousand psychiatric training scenarios, checked consistency, and removed near-duplicates of held-out scenarios. Their diagnoses and treatment references were not individually validated by clinicians, so these are synthetic training signals, not clinical ground truth.
+
+3. Applications and prior approaches
+The plausible application is clinician-supervised pre-visit information gathering, not autonomous psychiatric assessment. The cleanest comparison is against the same base model with identical prompts, tools, and reasoning-token budgets. Thirty-two psychiatrists enacted standardized patients in sixty matched scenario pairs. Fifteen different psychiatrists scored the transcripts. This tests transfer beyond the patient simulator, but expert role-play can be more orderly than real distress and does not establish patient benefit.
+
+4. Method
+The interviewing model asks questions while a separate patient model receives the hidden case history and responds. A third model grades the completed conversation and structured clinical outputs. Its reward combines clinical completeness, diagnostic and management quality, communication, and safety penalties. For several conversations from the same scenario, training increases the interviewing model's probability of higher-scoring trajectories relative to lower-scoring ones. This is group-relative reinforcement learning: the policy changes, not a stored patient memory. At evaluation, the learned policy conducts the interview without updating its parameters.
+
+5. Results
+Independent psychiatrist ratings favored the trained agent in forty-six of sixty matched pairs, or seventy-six point seven percent. The adapted clinical-skills score rose from two point three two to three point zero four out of five. But the trained model used a median of sixty interviewer turns versus eight for the base model. The design did not equalize conversation length. In a separate set of 256 adversarial simulated encounters, failure to escalate acute risk fell from thirty point five to twelve point nine percent. Thirty-three unsafe failures still remained.
+
+6. Relevance and limits
+The reusable idea is optimizing whole interactive trajectories and then testing with human actors outside the training simulator. The caution is equally important: rewards and primary automated evaluation share a model family, and each human transcript received only one independent rater. All encounters were English and reflected United States clinical norms. Text omits physical and nonverbal signs. Code is not released, and no real-patient or prospective clinical outcomes were tested. Better simulated interviewing is evidence of training progress, not readiness for autonomous care.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.40476v1
+https://arxiv.org/abs/2610.40476v1
+arXiv preprint; peer-review venue not verified
+Schmidgall et al. (2026), CC BY 4.0 https://creativecommons.org/licenses/by/4.0/. Original figure panels cropped/rearranged; added readouts labeled adaptations. No author endorsement. No official demo reused.
+First submitted: 2026-10-29
+Fig.2a • clinician role-play study · Schmidgall et al., 2610.40476v1. CC BY 4.0; attributed excerpts/adaptations.
+Fig.7 • original panels rearranged · Schmidgall et al., 2610.40476v1. CC BY 4.0; attributed excerpts/adaptations.
+Fig.2b,c • original axes + readout · Schmidgall et al., 2610.40476v1. CC BY 4.0; attributed excerpts/adaptations.
+Table2 • simulated safety failures · Schmidgall et al., 2610.40476v1. CC BY 4.0; attributed excerpts/adaptations.
+Table2 • disclosed readout adaptation · Schmidgall et al., 2610.40476v1. CC BY 4.0; attributed excerpts/adaptations.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

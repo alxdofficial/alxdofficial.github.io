@@ -1,0 +1,42 @@
+Routed Continual Learning
+
+First publication: 2026-10-28 | Version: v1 (2026-10-28)
+Video produced: 2026-11-02 | Selection digest: 2026-11-02
+Publication status: arXiv preprint; no verified peer-reviewed venue
+Primary source: https://arxiv.org/abs/2610.38796v1
+
+1. 1 / Problem
+An agent solving different kinds of tasks should not learn from every earlier interaction in the same way. A past database query may be useful as an example; a stream of noisy measurements needs an estimate, not pages of conversation. Routed Continual Learning asks two coupled questions: which experiences should share memory, and what form should that memory take? This is adaptation of external state, not continual fine-tuning of language-model weights.
+
+2. 2 / Why difficult
+One global conversation history retains details but spends tokens on irrelevant experience. One compressed summary saves space but can discard information needed later. Splitting memory too aggressively prevents transfer; combining unrelated cases creates interference. The paper studies a stream where task labels are hidden, although the visible prompts, tool interfaces, and response formats can still reveal substantial task structure.
+
+3. 3 / Applications and prior approaches
+The evaluation interleaves 301 problems from Continual Learning Bench, a benchmark of six stateful agent tasks, with 97 banking-service conversations from tau-three Bench. Five matched runs preserve ordering within each task. Comparisons progressively add memory: no shared history, one global history, several routed histories, and routing across different memory mechanisms. Each condition uses the same actor, task interfaces, and budgets. These are controlled benchmark comparisons, not a verified ranking of all current memory systems.
+
+4. 4 / Method
+Before an agent starts, a prompted language model reads its current request, descriptions of available memory mechanisms, and brief cluster summaries. It either reuses a cluster or creates one; that choice stays fixed for the run. The router is not trained and cannot read the clusters’ raw histories. The selected memory returns advice that is inserted beside the unchanged task prompt. After execution, only that cluster receives the visible trajectory. Language-model parameters remain unchanged. The fixed library includes complete histories, reusable reasoning lessons, and three statistical memories for scalar outcomes, event-probability curves, and noisy persistent entities. For numerical memories, a configuration layer maps visible fields into a restricted schema, checks extracted evidence, and fits or updates statistical state. It does not generate new memory algorithms or submit answers. Hidden evaluation rewards never enter this process.
+
+5. 5 / Results
+The main score averages seven tasks equally. For six tasks, zero denotes an external stateless reference and one the task maximum; banking uses its native reward. With GPT-five-point-six Sol, mean normalized reward rises from 0.168 for global history to 0.387 for routed histories and 0.464 for full routing. Estimated cost per 398-problem run falls from 456 dollars to 170 dollars to 126 dollars. These are author estimates including every model call and caching, not current price quotes. Across four models, full routing saves 65 to 72 percent against global history. But its gain beyond routed histories is only 0.002 for Gemini, and it costs five percent more than routed histories for Opus four-point-seven.
+
+6. 6 / Relevance and caveats
+The reusable idea is to select a memory representation together with its sharing boundary, rather than searching one universal store. The memory library was developed on this benchmark before being frozen. Evaluation is sequential, uses one model for every role in a run, and does not test simultaneous updates or cross-model sharing. Five rollouts and uneven task-level wins limit generalization. For persistent agents, treat this as a promising routing design with measured tradeoffs, not proof of unrestricted lifelong learning.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.38796v1
+https://arxiv.org/abs/2610.38796v1
+arXiv preprint; no verified peer-reviewed venue
+Paper arXiv nonexclusive distribution: all visuals here are explicitly labeled independent mechanism/data adaptations, not licensed original figure reproduction.
+First submitted: 2026-10-28
+Adapted Problem · Our explanatory adaptation of Routed Continual Learning; author-reported data.
+Adapted Why · Our explanatory adaptation of Routed Continual Learning; author-reported data.
+Adapted Applications · Our explanatory adaptation of Routed Continual Learning; author-reported data.
+Adapted Method · Our explanatory adaptation of Routed Continual Learning; author-reported data.
+Adapted Results · Our explanatory adaptation of Routed Continual Learning; author-reported data.
+Adapted Relevance · Our explanatory adaptation of Routed Continual Learning; author-reported data.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

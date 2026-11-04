@@ -1,0 +1,43 @@
+Multi-Token Prediction Done Right
+
+First publication: 2026-10-28 | Version: v1 (2026-10-28)
+Video produced: 2026-11-02 | Selection digest: 2026-11-02
+Publication status: arXiv preprint v1; 28 October 2026
+Primary source: https://arxiv.org/abs/2610.38331v1
+
+1. Problem
+A language model can predict several future tokens instead of only the next one. Those extra predictions can draft a short continuation cheaply, which the main model checks before accepting. But the training target is usually the observed next word, while the draft's deployment partner is the model's own probability distribution. This paper asks whether a better learning signal can improve both the shared language model and its multi-token drafts without adding parameters.
+
+2. Why it is difficult
+The authors decompose the draft's training gradient into two parts: one moves its probabilities toward the main model's prediction, and the other depends on the sampled training word. In their experiments the second part is noisier and can oppose the ordinary next-token update. Removing it also introduces a bias toward the model's own imperfect predictions. The argument is therefore a bias-variance tradeoff, not proof that observed training words should generally be ignored.
+
+3. Applications and prior approaches
+The demonstrated applications are language-model pretraining and faster speculative generation. Extra prediction modules share a linear output layer with the ordinary next-token predictor. A future-token prediction is aligned with the next-token prediction at the later position that targets the same word. Directly matching these distributions needs large vocabulary-sized tensors. The proposed method instead reuses the gradients already computed by ordinary cross-entropy training, remaining compatible with memory-efficient fused loss kernels.
+
+4. Method
+At the aligned next-token representation, the code adds a detached copy of a draft representation and subtracts the original draft representation. These cancel numerically, so the forward prediction is unchanged. During differentiation, only the subtraction sends an extra gradient into the draft branch. Combined with its usual loss, this cancels the unwanted residual. The shared output layer still learns from observed words, while the draft modules and shared trunk receive the recovered distribution-matching signal. The ordinary next-token gradient remains intact. Matching loss weights and target counts is essential. This is Soft Multi-Token Prediction, or Soft-MTP; it changes training, not the verification rule at inference.
+
+5. Results
+The study trains four model sizes, from one hundred sixty-seven million to one point two billion base parameters, on about thirty-one point five billion FineWeb-Edu tokens. At the largest size, average zero-shot benchmark accuracy rises from fifty-six point eight to fifty-seven point three one percent versus standard multi-token training. Some individual tasks still regress. On one H200, training throughput and fused-loss peak memory are effectively unchanged relative to standard multi-token prediction, not relative to next-token-only training.
+
+6. Relevance and limits
+Across five generation domains, the additional speculative speedup over standard multi-token training averages only about one point four to one point five percent. The roughly one-point-seven-times speedup figures compare speculative decoding with ordinary autoregressive generation, a different comparison. Code fine-tuning improves at larger sample budgets, but the reported code scores select the best temperature. Models above one point two billion parameters and other optimizers are not established by these experiments. The reusable idea is carefully routing a distribution-matching gradient while preserving ordinary supervision at the shared output layer.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.38331v1
+https://arxiv.org/abs/2610.38331v1
+arXiv preprint v1; 28 October 2026
+Original figures and selected table columns from Jayden Teoh, Multi-Token Prediction Done Right, CC BY4.0 https://creativecommons.org/licenses/by/4.0/. Cropped/rearranged; factual problem/limitation adaptations labeled. No official demo footage reproduced.
+First submitted: 2026-10-28
+Adaptation: draft and verify · Teoh, arXiv:2610.38331v1; CC BY4.0, crop/adaptation
+Table 1: gradient destinations · Teoh, arXiv:2610.38331v1; CC BY4.0, crop/adaptation
+Fig 2: aligned prediction targets · Teoh, arXiv:2610.38331v1; CC BY4.0, crop/adaptation
+Fig 1: backward-only change · Teoh, arXiv:2610.38331v1; CC BY4.0, crop/adaptation
+Table 3: 1.2B selected average · Teoh, arXiv:2610.38331v1; CC BY4.0, crop/adaptation
+Table 5: training cost, 1.2B · Teoh, arXiv:2610.38331v1; CC BY4.0, crop/adaptation
+Adapted Table 2: incremental speedup · Teoh, arXiv:2610.38331v1; CC BY4.0, crop/adaptation
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

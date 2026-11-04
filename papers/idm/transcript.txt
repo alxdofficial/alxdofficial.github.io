@@ -1,0 +1,42 @@
+Intrinsic Distribution Matching
+
+First publication: 2026-10-29 | Version: v1 (2026-10-29)
+Video produced: 2026-11-02 | Selection digest: 2026-11-02
+Publication status: arXiv preprint v1; 29 October 2026
+Primary source: https://arxiv.org/abs/2610.39633v1
+
+1. Problem
+Generating an image in one or two network evaluations is attractive for interactive systems, but leaves little opportunity to repair small details. Rendering a long bilingual menu is particularly demanding: the model must preserve many characters, layout, and the surrounding scene together. Intrinsic Distribution Matching asks whether a fast image generator can improve its training signal by measuring statistics in its own internal representation, rather than adding another external feature network.
+
+2. Why it is difficult
+A distribution-matching update compares where generated images concentrate with where reference images concentrate. In practice, both estimates are learned and imperfect. The paper separates the ideal update into a component determined by means and covariances, and a remaining component describing other distributional structure. Equal means and spread can still hide very different distributions. This motivates adding a statistical constraint, not replacing the original distribution-matching correction or claiming that two moments are sufficient.
+
+3. Applications and prior approaches
+The demonstrated application is few-step text-to-image generation on six-billion and twenty-billion-parameter backbones. Earlier work already avoids a separate generated-image score network by using two branches of the generator. One receives the ordinary text condition; the other receives its negated embedding and learns the generated distribution. Their velocity difference corrects a predicted clean image after it is re-noised. This paper retains that construction and uses the correction to supervise both velocity and image-endpoint predictions.
+
+4. Method
+The new constraint compares generated and reference images through a slowly updated copy of the generator. It averages the copy's last-layer activations into one vector per image, then matches feature means and coordinate-wise standard deviations. Historical feature queues stabilize these estimates. The copy's parameters and old queue entries are fixed during each update, but gradients still pass through the current generated images into the live generator. Afterward, the queues and moving-average parameters refresh. These are pooled statistics across prompts, not separately matched conditional distributions. At inference, the extra feature extraction and queues disappear; the trained generator still runs in one or two evaluations.
+
+5. Results
+At two evaluations, the Z-Image model scores ninety-four point two five percent on Chinese LongText-Bench and ninety point two zero on its English subset, both measures of text-rendering fidelity. In the matched ablation, adding the moment loss improves these scores by zero point three eight and zero point four one percentage points. All five aggregate metrics improve, but the gains are modest. Larger improvements over an earlier method also involve a much larger text-focused training collection, so they cannot be assigned entirely to the new loss.
+
+6. Relevance and limits
+The reusable idea is to obtain a stable training representation from the model's own moving average, while keeping gradients through its inputs. Historical queues make that inexpensive in graph storage, but their statistics become stale as the model changes. Matching only diagonal feature statistics leaves other differences unconstrained. The English score still trails the eight-evaluation reference, and an earlier method leads on another prompt-following benchmark. This is a useful controlled objective ablation, not evidence of universal state-of-the-art generation or improved lifelong memory.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.39633v1
+https://arxiv.org/abs/2610.39633v1
+arXiv preprint v1; 29 October 2026
+Liu et al. CC BY4.0; original Fig3 crop and selected Table5 rows/columns rearranged with attribution. Mechanism diagrams and readout are labeled faithful adaptations for phone legibility. No demo footage.
+First submitted: 2026-10-29
+Adaptation of Fig 1: fast generation · Liu et al., arXiv:2610.39633v1; CC BY4.0, cropped/adapted
+Fig 3: moments and residual · Liu et al., arXiv:2610.39633v1; CC BY4.0, cropped/adapted
+Adaptation of Fig 4: internal score branches · Liu et al., arXiv:2610.39633v1; CC BY4.0, cropped/adapted
+Adaptation of Fig 4: feature-moment update · Liu et al., arXiv:2610.39633v1; CC BY4.0, cropped/adapted
+Table 5: matched text-rendering control · Liu et al., arXiv:2610.39633v1; CC BY4.0, cropped/adapted
+Adapted readout: what the gain establishes · Liu et al., arXiv:2610.39633v1; CC BY4.0, cropped/adapted
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

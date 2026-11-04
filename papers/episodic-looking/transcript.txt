@@ -1,0 +1,46 @@
+Episodic looking - using reinforcement learning to bias perception enhances few-shot and continual learning with protection from forgetting
+
+First publication: 2026-10-28 | Version: v1 (2026-10-28)
+Video produced: 2026-11-02 | Selection digest: 2026-11-02
+Publication status: arXiv preprint; no verified peer-reviewed venue
+Primary source: https://arxiv.org/abs/2610.38577v1
+
+1. 1 / Problem
+Can a fast-learning controller change how a stable vision model interprets an image, without rewriting that model and forgetting earlier examples? Episodic looking studies this question with a two-part architecture: a frozen image classifier provides reusable visual knowledge, while a small reinforcement-learning controller adjusts intermediate features. It is a feasibility study of complementary learning systems, not a new best-performing continual-learning benchmark result.
+
+2. 2 / Why difficult
+A frozen representation protects old knowledge but may fail to separate unfamiliar categories. Updating the whole classifier can learn new examples while damaging old ones. The authors instead let a controller repeatedly reinterpret one image. Unlike moving a camera or choosing a crop, its action changes internal feature strengths. That distinction matters: this is active interpretation of a static image, not demonstrated robotic exploration or event-camera perception.
+
+3. 3 / Applications and prior approaches
+All experiments use selected subsets of CIFAR-one-hundred, a dataset of tiny labeled images. A ResNet-eighteen classifier is pretrained on two fine categories within each of twenty broad categories. Four pairs of broad categories then receive three previously unseen fine categories in sequence. Predictions still use the original twenty broad labels. The comparisons include full-classifier fine-tuning and several small classifiers on frozen features. Different seeds, training budgets, and starting accuracies mean these are not equal-compute comparisons.
+
+4. 4 / Method
+For each image, the controller runs eight steps. It receives earlier feature summaries, classification scores, and its previous action. Its actor outputs 128 channel multipliers, bounded between zero and two, that gate the frozen classifier after its second residual stage. The classifier then predicts again. During training, reward is the change in probability assigned to the correct broad class. Thus the experimental reward still depends on labels, even though the controller is not given the target label directly. A critic estimates future reward; actor and critic weights update after each step, with clipped policy changes. No gradient updates the image classifier, and there is no replay buffer. A fixed random projection selects just 32 of 1000 hidden units, reducing overlap between updates. At evaluation the learned controller still runs the repeated gating loop without learning from test labels.
+
+5. 5 / Results
+Averaged across the four category pairs, final accuracy is 78.0 percent for the proposed controller, 78.4 percent for full-classifier fine-tuning, and 81.3 percent for a sparse frozen-feature classifier. The paper’s forgetting measure is the largest accuracy drop after a category was learned. It falls from 16.0 percentage points with full fine-tuning to 4.6 with the controller; the sparse comparison achieves 4.0. In the aquatic-mammal versus fish few-shot experiment, with sixteen training images per category, accuracy on the newly trained category reaches 78.1 percent, versus 80.5 for full fine-tuning. This advantage does not extend to every aggregate score or to the one-example setting.
+
+6. 6 / Relevance and caveats
+The useful mechanism is a sparse, fast controller steering an unchanged intermediate representation. But similar animals still overlap, and more extensively pretrained visual features were harder to steer. The study covers only four chosen category pairs, and repeated passes add computation. Consolidating new experience into the visual model is future work, not implemented here. A sensing system could explore this separation of stable representation and rapid control, but continuous natural streams and real-world deployment remain unverified.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.38577v1
+https://arxiv.org/abs/2610.38577v1
+arXiv preprint; no verified peer-reviewed venue
+Original paper figures/table excerpts CC BY4.0: https://creativecommons.org/licenses/by/4.0/; attributed crops/rearrangements disclosed. Explanatory diagrams labeled adaptations. Paper license does not assert whole-video licensing.
+First submitted: 2026-10-28
+Adapted Problem · Our explanatory adaptation of Episodic looking - using reinforcement learning to bias perception enhances few-shot and continual learning with protection from forgetting; author-reported data.
+Adapted Why · Our explanatory adaptation of Episodic looking - using reinforcement learning to bias perception enhances few-shot and continual learning with protection from forgetting; author-reported data.
+Adapted Applications · Our explanatory adaptation of Episodic looking - using reinforcement learning to bias perception enhances few-shot and continual learning with protection from forgetting; author-reported data.
+Original Fig. 3 · Rawlinson & Kowadlo (2026), Fig.3 CC BY4.0; original pixels cropped to consecutive controller/frozen-vision details. Other panel shown separately.
+Fig. 3 controller detail · Rawlinson & Kowadlo (2026), Fig.3 CC BY4.0; original pixels cropped to consecutive controller/frozen-vision details. Other panel shown separately.
+Fig. 3 frozen-vision detail · Rawlinson & Kowadlo (2026), Fig.3 CC BY4.0; original pixels cropped to consecutive controller/frozen-vision details. Other panel shown separately.
+Adapted training · Our mechanism adaptation of section2.2; not experimental footage.
+Original Table 3 excerpt · Rawlinson & Kowadlo (2026), Table3 CC BY4.0; selected original mean rows and model/n/ACC/forgetting cells rearranged and enlarged; headers expanded; other rows/columns omitted.
+Original Table 4 excerpt · Rawlinson & Kowadlo (2026), Table4 CC BY4.0; original RL-STM and LTM-only N16 trained-class cells enlarged/rearranged. Other rows/columns omitted; mean±SD5seeds.
+Adapted Relevance · Our explanatory adaptation of Episodic looking - using reinforcement learning to bias perception enhances few-shot and continual learning with protection from forgetting; author-reported data.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

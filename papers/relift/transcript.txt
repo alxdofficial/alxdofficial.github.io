@@ -1,0 +1,40 @@
+ReLift: Dense 3D Tracking as Lifted Trajectory Repair
+
+First publication: 2026-10-30 | Version: v1 (2026-10-30)
+Status: arXiv preprint · 30 Oct 2026; not independently peer-review verified
+Video produced: 2026-11-03 | Intended digest: 2026-11-03
+Primary source: https://arxiv.org/abs/2610.42136v1
+
+1 / The problem
+A point in a video can disappear behind another object and later reappear. Following its image location is already difficult; recovering its three-dimensional motion also requires depth and camera estimates. ReLift asks whether we should learn this whole problem jointly. Its alternative is to combine pretrained two-dimensional trackers and geometry estimators, then learn only how to repair the resulting trajectories. This is a geometry correction model, not a new image encoder. The practical difficulty is that an occluded point inherits the foreground occluder’s depth if we lift its image coordinate naively.
+
+2 / Why it matters
+Dense three-dimensional tracks could support scene analysis, editing and robot perception, but those downstream applications are plausible rather than demonstrated deployments here. The demonstrated task is benchmark tracking. The authors compare joint tracking systems with a deliberately simple baseline: take a two-dimensional track, read its depth, and project it into a common camera coordinate system. That lift already performs surprisingly well. ReLift therefore concentrates scarce four-dimensional supervision on the remaining errors. Importantly, geometry-only refers to the corrector’s inputs and training; the complete system still consumes video through pretrained visual models.
+
+3 / Preparing a repair
+At inference, a frozen tracker supplies image positions and visibility. A frozen geometry model supplies depth and cameras. Visible observations become three-dimensional points. Occluded observations are discarded and initialized by interpolation, rather than treated as reliable foreground depth. The corrector receives displacement, viewing-ray, camera-position and missingness information, scaled by median reference depth. It groups short stretches of each trajectory into tokens. Attention first exchanges information through time, then across trajectories within each group. A prediction head produces three-coordinate residuals, which are added to the initial trajectories. The tracker’s visibility predictions are not updated.
+
+4 / What changes during training
+Only the nineteen-million-parameter corrector is trained. Ground-truth PointOdyssey trajectories are corrupted with simulated ray errors, noisy depth, wrong-surface observations and occlusion. The network learns to recover positions and frame-to-frame motion, with extra weight on moving and missing points. Training does not require running a particular tracker or geometry provider. This matters because the same trained corrector is then tested across six provider combinations without retraining. The simulation does not explicitly model every failure: persistent identity switches and camera-pose errors remain important transfer risks.
+
+5 / Results and the trade-off
+On WorldTrack, the metric is average percentage of points within several three-dimensional distance thresholds, after a robust similarity alignment. It is not absolute unaligned reconstruction accuracy. The strongest ReLift configuration scores eighty-nine point zero-one on all points and eighty-six point nine-five on dynamic points. The corresponding strongest baseline scores are eighty-six point nine-four and eighty-three point nine-one, from different methods. The fastest ReLift configuration is not the most accurate one. With AllTracker and VGGT Omega, it reaches eighty-six point five-seven on all points in seven point three seconds, versus thirty-one point eight for 4RC. The highest-accuracy configuration takes forty point four seconds.
+
+6 / Reusable idea and caveats
+These timings cover eighty-four frames on one RTX PRO six-thousand GPU, excluding video decoding and model loading. Evaluation mixes real and synthetic datasets, while correction training uses synthetic trajectories; the authors exclude an alternate view of one evaluation recording. There is no independent reproduction here. The reusable idea is modular repair: spend supervision on correcting a strong frozen representation rather than rebuilding the full perceptual stack. That is potentially useful for streaming perception, but this paper does not establish causal online operation or long-duration tracking. Official interactive demonstrations illustrate results, not additional controlled evidence.
+
+Credits and disclosure (not spoken narration)
+Singer et al. · arXiv:2610.42136v1
+https://arxiv.org/abs/2610.42136v1
+arXiv preprint · 30 Oct 2026; not independently peer-review verified
+Original figure and table excerpts from Singer et al., ReLift, arXiv:2610.42136v1, CC BY 4.0. Cropped for commentary; no experimental outputs recreated. Training-flow diagram is our conceptual adaptation of §3.4; Figure4 selected original panels rearranged with omission disclosure.
+First submitted: 2026-10-30
+Figure 4 · qualitative tracks · Singer et al. · 2610.42136v1 · CC BY 4.0
+Figure 2 · pipeline · Singer et al. · 2610.42136v1 · CC BY 4.0
+§3.4 · training-flow adaptation · Singer et al. · 2610.42136v1 · CC BY 4.0
+Table 1 · selected original cells · Singer et al. · 2610.42136v1 · CC BY 4.0
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

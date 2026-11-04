@@ -1,0 +1,43 @@
+Advancing Clinical Genomic Analysis with a Skill-Centred Agent
+
+First publication: 2026-10-29 | Version: v1 (2026-10-29)
+Video produced: 2026-11-02 | Selection digest: 2026-11-02
+Publication status: arXiv preprint; peer-review venue not verified
+Primary source: https://arxiv.org/abs/2610.40556v1
+
+1. 1. Problem
+Genomic interpretation is not simply looking up a mutation. An analyst must combine the patient's presentation, inheritance pattern, experimental evidence, and changing professional guidelines. Zheng and colleagues propose ClinGeX, an agent that assembles executable specialist skills for this work. Its goal is better evidence interpretation, not replacing a clinical geneticist or proving that an automated recommendation improves patient outcomes.
+
+2. 2. Why it is difficult
+A retrieved paragraph does not tell an agent how to apply an evidence rule, run a calculation, or obtain a prerequisite result. Loading every possible instruction also creates irrelevant context. The authors curate 105 skills: twenty-seven guides, forty search skills, and thirty-eight analysis skills. Each packages inputs, procedures, outputs, and limitations. Builder and evaluator agents revise these instructions and scripts against generated test cases; this is software and instruction refinement, not demonstrated continual training of model weights.
+
+3. 3. Applications and prior approaches
+The tested applications are variant interpretation, gene-disease evidence assessment, and clinical actionability classification. On 223 benchmark cases, systems receive controlled case information and supporting literature. The authors select reference records released after comparator knowledge cutoffs and audit execution logs for prohibited answer-source retrieval. These reduce leakage opportunities but cannot prove that proprietary model pretraining is uncontaminated. Several agent baselines share the same language-model core, while commercial comparators have different or undisclosed backends. This is not a universal state-of-the-art ranking.
+
+4. 4. Method
+A language model first decomposes the request into one to three analytical needs. A text encoder matches these needs to skill descriptions and selects thirty initial skills. A graph adds related skills and recursively includes required prerequisites. The host sees concise descriptions, plans the analysis, and delegates individual steps to agents that load the complete relevant instructions. Those agents query sources or execute calculations, and the host synthesizes a report with an execution record. During inference, the system changes its working context and tool state; the paper does not describe online weight updates.
+
+5. 5. Results
+For seventy-nine single-nucleotide variant cases, final classification agreement with the expert reference was eighty-nine point nine percent, versus forty-nine point four for the best reported comparator on that task. In a separate study, forty-five professionals completed 135 cases under counterbalanced assistance conditions. For criterion-level variant analysis, twenty-three of forty-five ClinGeX-assisted assessments agreed with the reference, compared with ten unassisted and seven with general DeepSeek assistance. These are case-level interpretation outcomes, not clinical diagnostic yield or patient benefit.
+
+6. 6. Relevance and limits
+The reusable mechanism is dependency-aware skill retrieval with progressive instruction loading and auditable tool execution. But the human study is not 135 independent patients: variant cases came from thirty-nine records, and forty-five rare-disease cases came from twenty-five patients. No reader repeated a case, but this does not eliminate all case dependence. Time savings were self-reported. The exploratory deployment was self-selected and non-interventional. Source code is not public. Stronger prospective outcomes, independent replication, and broader populations remain necessary before claiming clinical utility.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.40556v1
+https://arxiv.org/abs/2610.40556v1
+arXiv preprint; peer-review venue not verified
+Zheng et al. (2026), arXiv non-exclusive distribution license https://arxiv.org/licenses/nonexclusive-distrib/1.0/. Not an open reuse grant. Limited attributed figure excerpts for technical criticism/commentary. Crops and added readouts/explanation disclosed. No official demo reused; code not public and hosted application requires registration.
+First submitted: 2026-10-29
+Fig.1a • original excerpt + explanation · Zheng et al., arXiv:2610.40556v1. Limited attributed excerpts; adaptations disclosed.
+Fig.1b • skill graph and readout · Zheng et al., arXiv:2610.40556v1. Limited attributed excerpts; adaptations disclosed.
+Fig.2a • original concordance panel · Zheng et al., arXiv:2610.40556v1. Limited attributed excerpts; adaptations disclosed.
+Fig.1a • progressive skill loading · Zheng et al., arXiv:2610.40556v1. Limited attributed excerpts; adaptations disclosed.
+Fig.2a • benchmark concordance · Zheng et al., arXiv:2610.40556v1. Limited attributed excerpts; adaptations disclosed.
+Fig.4a • reader-study concordance · Zheng et al., arXiv:2610.40556v1. Limited attributed excerpts; adaptations disclosed.
+Fig.4a • original reader-study panel · Zheng et al., arXiv:2610.40556v1. Limited attributed excerpts; adaptations disclosed.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

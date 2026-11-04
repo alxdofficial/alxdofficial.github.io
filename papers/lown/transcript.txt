@@ -1,0 +1,43 @@
+Look Only When Needed: Certificate-Guided Visual Routing for Efficient Diffusion VLMs
+
+First publication: 2026-10-27 | Version: v1 (2026-10-27)
+Video produced: 2026-11-02 | Selection digest: 2026-11-02
+Publication status: arXiv preprint v1; 27 October 2026
+Primary source: https://arxiv.org/abs/2610.36671v1
+
+1. Problem
+A diffusion vision-language model fills masked answer positions over several decoding steps. Unlike ordinary left-to-right generation, its bidirectional attention repeatedly processes the whole input. In the evaluated LLaDA-V model, images occupy most input tokens, so re-reading the same image dominates decoding work. This paper asks a simple question: can we consult the image only when the answer actually needs it? The target is cheaper inference, not a model that learns new visual knowledge.
+
+2. Why it is difficult
+A text-only answer can sound plausible while missing visual evidence. The authors compare image-conditioned and text-only predictions along the same baseline trajectory. Image access changes an unmasking decision on about twenty-three percent of steps on average, but the fraction ranges from about eight percent on a general multimodal benchmark to forty-four percent on document questions. A fixed image-reading schedule therefore faces a mismatch: different prompts need visual evidence at different times.
+
+3. Applications and prior approaches
+Visual question answering, document reading and captioning are demonstrated applications. Existing token pruning permanently removes part of the visual representation; caching reuses intermediate computations; faster schedules reveal more answer tokens per step. LOWN instead keeps the visual input available and decides when to process it. These approaches can compose, but their savings and accuracy tradeoffs must be evaluated together. The comparison uses selected accelerated baselines, not an independent ranking of every current inference method.
+
+4. Method
+After an image-conditioned forward pass, the system stores each masked position's predicted token and confidence. A cheaper forward pass omits image tokens while preserving position identifiers. Remaining positions are ordered by the stored confidence. The system accepts the consecutive predictions that agree with the stored tokens, stopping at the first disagreement. If enough agree to match the baseline's per-step progress, it reveals that whole prefix without reading the image. Otherwise it runs a fresh image-conditioned pass, replaces the stored predictions, and prioritizes disagreements for unmasking. A repetition guard limits repeated tokens. Only decoding state changes; there is no additional training. The authors call this agreement a certificate, but it is not a proof of correctness.
+
+5. Results
+Across ten LLaDA-V benchmarks, the method uses thirty-five point three percent of baseline decoding operations. The reported average score index is ninety-nine point six percent of baseline, but scores mix different task metrics. This does not mean every task retains that accuracy: mathematical visual reasoning falls from fifty-nine point one to fifty-six percent. Batch-one generation time on H200 hardware falls by fifty-seven point four percent on average. The operation count excludes vision encoding, while the timed generation call includes it.
+
+6. Relevance and limits
+The reusable principle is adaptive access to expensive context, using a cheap consistency test. However, a fresh visual pass changes between two point two and four point seven percent of the accepted text-only tokens. Document and chart tasks save less, and cost cannot be fixed before decoding. Adding the method to a cache reduces time further but also lowers scores on the three reported cache-combination tasks. For always-on agents, this suggests a useful inference-control experiment, not a safety guarantee or evidence of continual memory.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.36671v1
+https://arxiv.org/abs/2610.36671v1
+arXiv preprint v1; 27 October 2026
+Short original figure/table excerpts attributed to Cho et al. for technical criticism; cropped and selected columns rearranged. arXiv non-exclusive distribution license is not a general reuse license. Final limitations panel is our factual adaptation. Official repository/demo inspected; no separately permission-verified demo footage included. The refresh flow is our mechanism adaptation of Algorithm 1.
+First submitted: 2026-10-27
+Fig 1: decoding choices · Cho et al., arXiv:2610.36671v1; attributed excerpt/adaptation
+Fig 2: task-dependent visual access · Cho et al., arXiv:2610.36671v1; attributed excerpt/adaptation
+Fig 1: baseline and token pruning · Cho et al., arXiv:2610.36671v1; attributed excerpt/adaptation
+Fig 3: agreement check · Cho et al., arXiv:2610.36671v1; attributed excerpt/adaptation
+Adaptation: refresh on disagreement · Cho et al., arXiv:2610.36671v1; attributed excerpt/adaptation
+Table 1: selected average columns · Cho et al., arXiv:2610.36671v1; attributed excerpt/adaptation
+Adapted certificate error readout · Cho et al., arXiv:2610.36671v1; attributed excerpt/adaptation
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

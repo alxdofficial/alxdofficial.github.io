@@ -1,0 +1,45 @@
+OpenFlyV2: An onboard vision-language-action model for aerial perception and navigation
+
+First publication: 2026-10-29 | Version: v1 (2026-10-29)
+Video produced: 2026-11-02 | Selection digest: 2026-11-02
+Publication status: arXiv preprint v1; 29 October 2026
+Primary source: https://arxiv.org/abs/2610.39287v1
+
+1. Problem
+An aerial robot must connect a language goal with changing visual observations while continuing to fly. Sending every decision to a remote language model makes the control loop depend on communication. OpenFlyV2 instead puts a roughly one-billion-parameter perception-and-action model on a Jetson Orin NX aboard the aircraft. It predicts twelve-waypoint chunks at ten hertz. A separate low-level flight controller stabilizes the vehicle and tracks those waypoints; the language model does not directly control the motors.
+
+2. Why it is difficult
+The challenge is not just recognizing a landmark. The robot needs to remember which turns and landmarks it has already passed, while reserving enough computation to predict the next motion. Dense historical images consume many visual tokens. Repeatedly refining a randomly initialized action sequence adds another cost. The paper attacks these two bottlenecks separately: compress history around motion events, and start action refinement from a plausible motion pattern rather than unstructured noise.
+
+3. Applications and prior approaches
+The shared vision-language backbone can answer aerial questions, locate described objects, estimate spatial relationships, or condition an action expert. Training uses rendered navigation trajectories and visual question-answer pairs, including reconstructed real places, but no real-flight demonstrations. Earlier navigation policies provide the simulation comparisons. The main model is jointly supervised, then only its action expert receives reinforcement post-training from simulator rollouts. The backbone, memory encoder, and motion-prior module stay fixed during that reinforcement stage.
+
+4. Method
+Past executed actions define event boundaries when motion changes enough or a segment becomes too long. A temporal encoder summarizes each action segment. Learned queries use that summary to retrieve information from images at the event's start and end, producing a bounded number of memory tokens. Event age is added separately, so completed-event content can be cached. This is Motion-Adaptive Memory. For the next action, a prediction head selects one of four trajectory prototypes learned by clustering training motions, adjusts its length and turning, then adds class-specific correlated noise. An action expert uses the current image, instruction, state, and memory to refine this whole twelve-waypoint candidate in one flow update. That starting distribution is the Motion-Structured Prior; it does not restrict the final path to a fixed template.
+
+5. Results
+In the supervised ablation, one-step navigation success rises from forty-nine point eight two percent for the base model, to fifty-three point four five with memory, and fifty-seven point zero nine with both components. These results pool seen and unseen simulation episodes and precede reinforcement post-training. At two refinement steps, memory alone performs better than the combined model, so the prior's advantage is budget-dependent. Historical compression also reduces input tokens from four hundred forty-six to at most two hundred eighteen; the reported fourfold speedup concerns action-expert denoising, not the entire system.
+
+6. Relevance and limits
+In physical testing, forty-eight of one hundred trials succeed across two seen and two unseen locations combined. Success is manually judged and differs from simulation's twenty-five-meter stopping criterion. This is not forty-eight percent on entirely unseen places. The reusable ideas for always-on agents are motion-conditioned memory and separating cached event content from changing age. But this memory is bounded recent history, not lifelong learning. Code and checkpoints were still announced as coming soon when checked, and the reported field success is not evidence of safety-certified autonomous flight.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.39287v1
+https://arxiv.org/abs/2610.39287v1
+arXiv preprint v1; 29 October 2026
+Original figures and selected Table1 columns from Liu et al., CC BY4.0; cropped with attribution. Protocol card our adaptation, not experimental imagery. No additional demo footage.
+First submitted: 2026-10-29
+Fig 1D: onboard hardware and operating point · Liu et al., arXiv:2610.39287v1; CC BY4.0, crop/adaptation
+Fig 6B: causal motion events · Liu et al., arXiv:2610.39287v1; CC BY4.0, crop/adaptation
+Fig 1B: question and action tasks · Liu et al., arXiv:2610.39287v1; CC BY4.0, crop/adaptation
+Fig 6B: causal event boundaries · Liu et al., arXiv:2610.39287v1; CC BY4.0, crop/adaptation
+Fig 6B: action-conditioned event encoding · Liu et al., arXiv:2610.39287v1; CC BY4.0, crop/adaptation
+Fig 6C: structured source initialization · Liu et al., arXiv:2610.39287v1; CC BY4.0, crop/adaptation
+Fig 6C: action expert and refinement · Liu et al., arXiv:2610.39287v1; CC BY4.0, crop/adaptation
+Table 1: supervised ablation, SR percent · Liu et al., arXiv:2610.39287v1; CC BY4.0, crop/adaptation
+Adaptation: physical evaluation protocol · Liu et al., arXiv:2610.39287v1; CC BY4.0, crop/adaptation
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

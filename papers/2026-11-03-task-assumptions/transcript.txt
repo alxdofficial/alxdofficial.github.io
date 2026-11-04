@@ -1,0 +1,41 @@
+Implicit Assumptions About Tasks in Continual Learning
+
+Paper first publication: 2026-10-30 | Version: v1 (2026-10-30)
+Status: arXiv preprint; results are author-reported.
+Video produced: 2026-11-03
+Primary source: https://arxiv.org/abs/2610.41792v1
+
+1. What counts as a task?
+A continual learner receives experiences over time. But a benchmark designer decides where one task ends and another begins. This paper asks whether we mistake properties of those boundaries for properties of the learning problem. The same colored experience stream can be divided into broad tasks or narrow ones. Those choices change what we call task similarity, within-task change, and forgetting. This is an evaluation framework and a controlled demonstration, not a new memory algorithm.
+
+2. Why boundaries matter
+Consider a camera stream whose scene changes gradually. A wide task contains substantial change internally; a narrow task may look almost stationary. Adjacent wide tasks can share many kinds of experience, while narrow tasks can look dissimilar. Neither description alone tells us what a particular network finds difficult. The paper separates three levels: the realized stream, its partition into tasks, and the learner with its own representations and access to past data. A claim about similarity needs to say which level it measures.
+
+3. Where to use the framework
+This distinction matters when comparing continual-learning systems or designing a streaming benchmark. A class split, a time interval, and a change in instructions are different ways to construct tasks. The paper reviews examples across image classification, temporal data, robotics, and language models. This is an illustrative review, not an exhaustive leaderboard. Earlier teacher-student research already showed that similarity in input features and similarity in output mappings can affect forgetting differently. The new contribution is to make the stream, boundary choices, and learner explicit together.
+
+4. The controlled test
+To make these choices inspectable, a small neural network generates regression targets while its weights move along a prescribed trajectory. A second network learns those targets sequentially. The authors divide the trajectory into five, ten, or fifty tasks, keeping the total training set at ten thousand samples. They repeat student training with five initializations. After the whole sequence, they measure mean squared prediction error separately for each task. Lower error means better retention of that region. The colored strips identify the training regions; the curves show final error, not classification accuracy.
+
+5. What the experiments show
+In the granularity panel, changing the partition changes the shape of the final error profile. In the order panel, reversing the task order reverses the retention profile, while shuffling breaks its systematic relationship with stream position. In the similarity panel, increasing the teacher weights’ travel distance makes regions less alike and raises final error. These are controlled toy-model observations, not evidence that one partition is universally optimal. The shaded uncertainty is standard error over five initializations. We should not infer precise numerical improvements from the plotted curves.
+
+6. The important qualification
+There is a crucial boundary case. If the learner never sees task boundaries and receives exactly the same samples and updates, merely relabeling those samples cannot change its predictions. Task-indexed forgetting summaries can still change because their grouping changed. The toy experiments vary more than labels, including how training examples are drawn from the trajectory. For practical work, report the chronological stream, partition rules, sample exposure, replay access, and which parameters update. Then test boundary sensitivity before interpreting a forgetting score as a property of the algorithm alone.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.41792v1
+https://arxiv.org/abs/2610.41792v1
+PREPRINT · AUTHOR-REPORTED
+Korte et al. (2026), arXiv:2610.41792v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled. Source license https://creativecommons.org/licenses/by/4.0/ does not license the whole video. Narration: approved Pocket TTS Anna preset; production attribution retained by pipeline. No official demo footage included.
+First submitted: 2026-10-30
+Fig. 1 — stream and task cuts · Korte et al. (2026), arXiv:2610.41792v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Fig. 2 — original source panel · Korte et al. (2026), arXiv:2610.41792v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Fig. 2c — final per-task MSE; five initializations · Korte et al. (2026), arXiv:2610.41792v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Fig. 2d — final per-task MSE; order manipulation · Korte et al. (2026), arXiv:2610.41792v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+Fig. 2e — final per-task MSE; similarity manipulation · Korte et al. (2026), arXiv:2610.41792v1; CC BY 4.0. Original figure pixels cropped/enlarged; table subsets explicitly labeled.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

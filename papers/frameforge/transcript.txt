@@ -1,0 +1,50 @@
+FrameForge: Harnessing Priors of Video Foundation Models for Unified Image Generation
+
+First publication: 2026-10-27 | Version: v1 (2026-10-27)
+Status: arXiv preprint · 27 Oct 2026
+Video produced: 2026-11-03 | Intended digest: 2026-11-03
+Primary source: https://arxiv.org/abs/2610.36545v1
+
+1 / The problem
+Suppose you want to change a cat’s pose without changing its identity, or generate an image that follows an edge map. Both are conditional image generation, but they demand different amounts of change. FrameForge repurposes a video diffusion model to handle three image tasks with one shared adapter. The input and output are treated as frames separated by a virtual temporal interval. This is not a prediction of real elapsed time. The hypothesis is that a video model’s learned transformation patterns can help decide what to preserve and what to alter.
+
+2 / Why this is difficult
+Earlier video-to-image adaptations already used condition and target frames, and some inserted intermediate reasoning tokens. FrameForge’s distinction is to adapt the virtual interval during denoising, rather than assigning every input a fixed distance. Applications demonstrated here are reference-subject generation, edge-guided synthesis and instruction editing. A production design assistant is a possible use, not an evaluated deployment. The trade-off is real: a short interval may preserve identity but resist a large edit, while a longer interval may allow transformation at the expense of fidelity.
+
+3 / The routing mechanism
+A frozen HunyuanVideo one-point-five backbone receives text, the condition image and a noisy target representation. A small router pools these inputs and selects one of three temporal position settings at each denoising step. These so-called experts are positional choices, not three separate full neural networks. Their equivalent video spans are seventeen, sixty-nine and one-hundred-twenty-one frames. One shared low-rank adapter modifies attention and feed-forward projections across all tasks. Only its added parameters and the router are trained; the original backbone and image encoder remain frozen.
+
+4 / The intermediate pathway
+The model also inserts one noisy intermediate latent representation between condition and target. Attention progressively updates it; there is no supervised intermediate image and it is not decoded as one. During the middle training stage, an attention mask sometimes blocks direct communication between target and condition or text. Information must then travel through the intermediate representation. The final stage restores full attention, matching inference. The learning target is the target image’s denoising velocity, with a routing balance penalty. The term temporal reasoning therefore describes a learned latent pathway, not a verified symbolic explanation.
+
+5 / What the results show
+Training uses five-hundred-ten-thousand pairs at five-hundred-twelve-square resolution, equally divided across the three tasks. The reported run takes about six days on two A-eight-hundred GPUs. On the English GEdit benchmark, the overall judge score rises from ChronoEdit’s five point zero-eight to six point one-two, but remains below the listed closed-model references. On edge-conditioned generation, structural similarity is best among the chosen baselines, while distributional image quality is not. The shared-model ablation is revealing: editing scores four point nine-four without either module, five point seven-seven with routing alone, and six point one-two with both.
+
+6 / Novelty and limitations
+The reusable idea is to expose a pretrained model’s positional structure as an adaptive control variable. The routing plots show task- and denoising-stage preferences, but do not prove that temporal distance is a causal semantic scale. Different backbones and training sets complicate broad comparisons, and several metrics depend on model judges. The code release supplies inference for all three tasks; some upstream weights require separately gated access. These are author-reported results, not an independent current-state-of-the-art audit. For research, the interesting next test is controlled transfer: does adaptive positioning still help when data, backbone and compute are held fixed?
+
+Credits and disclosure (not spoken narration)
+Lin et al. · arXiv:2610.36545v1
+https://arxiv.org/abs/2610.36545v1
+arXiv preprint · 27 Oct 2026
+Limited attributed original Figure 2, Figure 5, Figure 6 and Table 4 excerpts used for direct technical criticism/commentary. arXiv nonexclusive distribution is not a reuse license; no broad figure license claimed. Source: Lin et al., arXiv:2610.36545v1.
+First submitted: 2026-10-27
+Fig. 5 · original selected panels · Lin et al. · 2610.36545v1 · commentary excerpt
+Fig. 2 · original panels rearranged · Lin et al. · 2610.36545v1 · commentary excerpt
+Fig. 2 · operational adaptation · Lin et al. · 2610.36545v1 · commentary excerpt
+Fig. 2 · original position settings · Lin et al. · 2610.36545v1 · commentary excerpt
+Fig. 2 · original adapter close-up · Lin et al. · 2610.36545v1 · commentary excerpt
+Fig. 2 · latent-path adaptation · Lin et al. · 2610.36545v1 · commentary excerpt
+§3.4 · training-mask adaptation · Lin et al. · 2610.36545v1 · commentary excerpt
+§3.5 · inference-path adaptation · Lin et al. · 2610.36545v1 · commentary excerpt
+Table 4 · component ablation · Lin et al. · 2610.36545v1 · commentary excerpt
+Table 3 · adapted selected-row readout · Lin et al. · 2610.36545v1 · commentary excerpt
+Table 4 · original selected columns · Lin et al. · 2610.36545v1 · commentary excerpt
+Fig. 6 · original curves; relabeled axes · Lin et al. · 2610.36545v1 · commentary excerpt
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
+
+Additional visual disclosure: Limited attributed original Figure 2, Figure 5, Figure 6 and Table 4 excerpts used for direct technical criticism/commentary. arXiv nonexclusive distribution is not a reuse license; no broad figure license claimed. Source: Lin et al., arXiv:2610.36545v1. Figure2 includes explicitly labeled operational/latent-path adaptations plus selected original panels rearranged; Figure6 retains original curve pixels with accurately aligned enlarged axes/legends. Table3 factual readout is an adaptation; Table4 selected original cells retain conditions.

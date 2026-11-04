@@ -1,0 +1,50 @@
+Apriel Voice 27B Preview: An Open Model for Speech, Reasoning, and Tool Use
+
+First publication: 2026-10-29 | Version: v1 (2026-10-29)
+Status: arXiv preprint; author-reported results; unresolved EVA reporting inconsistency
+Video produced: 2026-11-03 | Intended digest: 2026-11-03
+Primary source: https://arxiv.org/abs/2610.40738v1
+
+1 / Problem: speech without losing reasoning
+Apriel Voice asks how to give an existing reasoning model ears without discarding its text and image skills. A voice assistant must do more than recognize words: it must resolve requests and choose tools. A conventional pipeline first transcribes speech, then asks a language model to respond, then synthesizes speech. Apriel instead feeds acoustic features into the reasoning model. This is a speech-input, text-output model, not a native speech generator. The challenge is learning this new interface while preserving useful behavior already in the backbone.
+
+2 / Applications and prior approaches
+The demonstrated setting is conversational service tasks, including airline, retail, and telecom workflows. The shared model produces either response text or a structured tool call. The application executes the tool and returns its result to the conversation. A separate speech synthesizer voices the answer; the application also handles turns and interruptions. Those components matter to measured latency. Earlier speech-projector and behavior-distillation systems already use related ideas. This paper is best read as a practical integration and training recipe, not the invention of speech projection or proof of autonomous deployment readiness.
+
+3 / Method: connect and then adapt
+A frozen Whisper speech encoder converts audio to feature vectors. Eight neighboring frames are stacked, and a learned projector maps them into the input dimension of the Gemma four reasoning backbone. Text and images can occupy the same conversation. First, only the projector changes. Next, the projector, language backbone, and expert-routing parameters change together, while the speech encoder and original vision components stay frozen. Training includes synthetic conversations with selected user spans converted to speech. Assistant answers and tool messages remain text. Conversion checks reduce speech mismatches, but do not prove that synthetic answers are correct.
+
+4 / Learning target and retention
+The student receives speech or mixed inputs and predicts the desired response tokens. A frozen copy of the starting language model receives the matching text view and predicts a distribution over possible next tokens. Training can reward the correct target, match that teacher distribution, or combine both, with weights chosen by data source. This is forward Kullback-Leibler distillation: matching predictions at corresponding response positions, not aligning every audio frame to a word. Text replay supplies old-style tasks during adaptation. The teacher exists only during training; inference needs neither its predictions nor a separate transcript.
+
+5 / Results: useful trade-off, unresolved caveat
+On tau-Voice, a spoken task-completion benchmark, Apriel succeeds on 65.51 percent with 1.91 seconds mean response latency. The Parakeet transcription plus Gemma four cascade scores 67.78 percent at 3.01 seconds. These are author-reported equal-domain averages using the same external speech synthesizer, not an isolated architecture experiment. There is a reporting caveat. The paper's EVA service-accuracy score exceeds a required faithfulness component, despite describing joint success and equal-domain averaging. That needs clarification, and plotted points also disagree with tables. We therefore do not treat its headline EVA ranking as settled evidence.
+
+6 / Novelty, relevance and limits
+Text capability changes are mixed: the broad knowledge benchmark MMLU-Pro falls from 85.27 to 84.42, while the graduate science benchmark GPQA Diamond rises from 77.80 to 80.40. This is not a statistical guarantee of retention. Six of nine image scores also fall. The reusable idea is a controlled modality upgrade: add a small speech interface, train against a text teacher, and replay established tasks. But there are no decisive component ablations, multilingual evidence is limited, and tool reliability remains imperfect. It is relevant to multimodal agents, not evidence of continual memory or learned full-duplex streaming.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.40738v1
+https://arxiv.org/abs/2610.40738v1
+arXiv preprint; author-reported results; unresolved EVA reporting inconsistency
+Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations. Model card states MIT for checkpoint; this does not replace paper-figure license. No official demo footage included.
+First submitted: 2026-10-29
+Figure 1 · speech and shared backbone · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Figure 1 · output and tool-result loop · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Figure 1 · external speech synthesis · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Figure 2 · trainable components · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Figure 2 · stage 2 updates · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Figure 3 · source dialogue and span selection · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Figure 3 · speech conversion and checks · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Figure 2 · student, teacher and supervised targets · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Figure 2 · source-dependent supervision · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Figure 2 · teacher only during training · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Table 6 · selected matched comparison; adaptation · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Tables 6–7 · unresolved aggregation inconsistency · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Table 8 · selected text benchmarks; adaptation · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+Method and limitations · explanatory summary · Tiwari et al., ServiceNow, arXiv:2610.40738v1 (2026-10-29). Paper CC BY-NC-SA 4.0; noncommercial attributed crops/adaptations.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
