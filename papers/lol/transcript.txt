@@ -1,0 +1,69 @@
+Library of Layers (LoL): Adaptively Ordering Transformer Layers at Runtime
+
+First publication: 2026-11-02 | Version: v1 (2026-11-02)
+Status: arXiv preprint; peer review and conference/journal acceptance not verified
+Video produced: 2026-11-04 | Intended digest: 2026-11-04
+Primary source: https://arxiv.org/abs/2611.03526v1
+
+1. Problem
+A normal transformer sends every token through the same ordered stack of blocks. Library of Layers asks whether the model should choose that order while processing its input. It keeps a shared collection of full transformer blocks and selects one at each routed depth. A block can be reused, skipped, or called in a different order for another input. This changes the computational path itself, rather than merely choosing a small feed-forward expert inside an otherwise fixed layer. The paper studies what those paths learn and whether they can control behavior.
+
+2. Why it is difficult
+Routing an entire attention block separately for every token creates a problem: neighboring tokens may produce queries and keys using different transformations. The authors instead divide a sequence into windows and route all tokens within a window through the same block. Window boundaries shift at later depths, allowing information to cross boundaries. The router must also avoid looking into the future. It uses summaries of earlier windows to choose the next block. These design choices trade unrestricted global attention for coherent, causally routed computation.
+
+3. Applications and prior approaches
+The demonstrated settings include multilingual text, language-model pretraining, mathematical reasoning, and synthetic Sudoku and maze traces. Dense transformers use a fixed block order. Looped transformers reuse a fixed sequence of blocks. Sparse mixtures usually select feed-forward experts within fixed layers. This method selects complete blocks from one library. The number of available blocks and the number of executed steps are separate controls: a small library encourages reuse, while a large library can leave blocks unused for a particular input. These are architectural alternatives, not an established ranking of all current models.
+
+4. Solution
+A conventional prelude first transforms token embeddings. Inside the routed core, a linear router scores the available blocks using past-window summaries. It selects the highest-scoring block, executes it, and weights the residual update by the selected routing probability, allowing training signals to reach the router. Training jointly updates block weights and routing parameters under next-token prediction. Noise encourages path exploration, balancing discourages collapse onto one block, and depth-dependent normalization lets reused blocks behave differently at different steps. Conventional ending layers produce predictions; inference can follow learned routing or an experimentally fixed path.
+
+5. Results
+For the one-billion-parameter mathematical-reasoning experiment, training costs approximately ninety ExaFLOPs. On ARC-Easy, a multiple-choice reasoning benchmark, the method scores fifty point three percent versus forty-nine point five for the sliding-window dense baseline. On GSM8K, a grade-school mathematics benchmark, the scores are twenty-seven point nine versus twenty-seven point five. Reported standard errors overlap. Separately, fixing learned routing paths produces nearly perfect requested strategies on synthetic Sudoku and maze tasks. Those controlled tests support behavior steering through computation paths, but do not establish reliable open-ended reasoning.
+
+6. Relevance and limitations
+The sparse-mixture comparison favors the baseline slightly in training cross-entropy: approximately two point seven five versus two point eight for Library of Layers. Looped-model comparisons also show higher variation across routing seeds. The interesting contribution is therefore flexible, inspectable computation, not a universal performance win. For adaptive agents, routing could become a way to select reusable processing strategies. That connection remains a research hypothesis: the paper does not demonstrate lifelong memory, online learning, or improved sensing. Independent replication and realistic runtime measurements would be needed before treating routing flexibility as a deployment advantage.
+
+Credits and disclosure (not spoken narration)
+arXiv:2611.03526v1
+https://arxiv.org/abs/2611.03526v1
+arXiv preprint; peer review and conference/journal acceptance not verified
+Original paper distributed under arXiv nonexclusive license. No paper images reproduced; explanatory schematics and numeric readouts are our adaptations.
+First submitted: 2026-11-02
+Our adaptation: Layer order becomes an input-dependent choice · Our explanatory adaptation of Library of Layers, arXiv:2611.03526v1; not experimental footage
+Our adaptation: Tokens sharing attention need compatible processing · Our explanatory adaptation of Library of Layers, arXiv:2611.03526v1; not experimental footage
+Our adaptation: Flexibility is distinct from extra capacity · Our explanatory adaptation of Library of Layers, arXiv:2611.03526v1; not experimental footage
+Our adaptation: Train a router together with reusable blocks · Our explanatory adaptation of Library of Layers, arXiv:2611.03526v1; not experimental footage
+Our adaptation: Competitive accuracy, not clear dominance · Our explanatory adaptation of Library of Layers, arXiv:2611.03526v1; not experimental footage
+Our adaptation: A control mechanism worth testing · Our explanatory adaptation of Library of Layers, arXiv:2611.03526v1; not experimental footage
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
+
+
+Explanation duration:254.541667 seconds. Additional official architecture-animation segment:13.041667 seconds in the final24fps video (original GIF13.05 seconds). Total video duration:267.583333 seconds.
+
+Additional official architecture animation (13.05 seconds; silent): Library of Layers, https://github.com/arahmani1/library-of-layers/blob/main/docs/media/LoL_teaser.gif. This is an authors’ conceptual illustration, not recorded experimental output. Scaled to fit with an attribution frame; source timing resampled to24fps, with frame-boundary rounding.
+
+MIT License
+
+Copyright (c) 2026 Sean McLeish, Adellah Rahmani
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

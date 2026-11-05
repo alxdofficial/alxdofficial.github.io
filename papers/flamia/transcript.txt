@@ -1,0 +1,42 @@
+FLAMIA: FLAsh MIcroscaling Attention for Fast and Causally Safe Training on Blackwell
+
+First publication: 2026-11-02 | Version: v1 (2026-11-02)
+Status: arXiv preprint; peer review and conference/journal acceptance not verified
+Video produced: 2026-11-04 | Intended digest: 2026-11-04
+Primary source: https://arxiv.org/abs/2611.03344v1
+
+1. Problem
+Attention training on a new GPU can be fast and still be wrong. FLAMIA studies low-bit attention on NVIDIA Blackwell hardware. Each query scores keys, normalizes those scores, and mixes value vectors. Training must also differentiate that computation. The subtle problem is that several tokens can share one quantization scale. A future token can change that scale and therefore change the rounded representation of an earlier token, even when the attention mask hides the future. The paper tests this numerical route around causal masking.
+
+2. Why it is difficult
+Blackwell provides very fast four-bit and eight-bit matrix multiplication. But attention also needs scaling, conversion, softmax normalization, and gradient accumulation. Speeding up one multiplication does not necessarily speed up the complete training call. The authors also find that a good one-step gradient similarity score can miss unstable training. If the forward pass and the backward recomputation use different rounded probabilities, their updates can diverge. This is a systems problem and a numerical-consistency problem, rather than simply a contest to use fewer bits.
+
+3. Applications and prior approaches
+The demonstrated application is language-model training with documents of different lengths packed together. Packing avoids allocating work and memory to padding. Prior baselines include FlashAttention-4 and NVIDIA cuDNN attention, with differing precision and supported execution paths. The diagram shows document-local scale groups inside a packed row. FLAMIA schedules work using document sizes without repacking the input. Comparisons therefore need matching masks and document layouts. A forward-only implementation cannot serve as a complete training baseline when its packed-document backward pass is unavailable.
+
+4. Solution
+The main eight-bit path shares a power-of-two scale over thirty-two tokens. Its representation can be reused after transposition, reducing conversion work. Attention-score gradients get their own thirty-two-by-thirty-two scaling blocks to preserve small entries. The forward pass and backward recomputation use compatible quantized inputs and numerical conventions. A mixed four-bit path changes selected multiplications, rather than forcing everything into four bits. Crucially, default scaling still retains residual dependencies. Options removing the identified causal dependencies exist for supported batched calls, with additional cost; they are not a universal packed-training guarantee.
+
+5. Results
+Across nine causal packed-document workloads, the authors report attention training-call speedups of one point ten to one point forty on B200, and one point zero six to one point forty-two on B300. These include quantization, forward, and backward. For one long document plus two hundred twenty-four short documents on B300, FLAMIA takes one point six seven milliseconds, versus two point three seven for the fastest evaluated baseline. Those are attention-call results, not whole-model training speedups. Other settings include ties and losses, so superiority is not universal.
+
+6. Relevance and limitations
+The one-billion-parameter training test uses one hundred billion FineWeb-Edu tokens. Average final training loss is two point three nine two for the brain-float sixteen baseline, versus two point three nine seven for the eight-bit path. Mean downstream accuracy falls from zero point five eight three two to zero point five seven three seven; individual tasks vary. These are author-reported checkpoints, not independent replication. The reusable lesson is to test causal leakage and forward-backward consistency alongside throughput. That matters when optimizing future streaming models, but sensing or continual-learning improvements are not demonstrated.
+
+Credits and disclosure (not spoken narration)
+arXiv:2611.03344v1
+https://arxiv.org/abs/2611.03344v1
+arXiv preprint; peer review and conference/journal acceptance not verified
+Paper figures and table reproduced under CC BY 4.0; custom diagrams labeled as adaptations.
+First submitted: 2026-11-02
+Figure 1: causal leakage · Velikonivtsev et al., arXiv:2611.03344v1, CC BY 4.0; original crop
+Our adaptation: Count conversion and backward costs · Our explanatory adaptation of FLAMIA, arXiv:2611.03344v1; not experimental footage
+Figure 2: packed documents · Velikonivtsev et al., arXiv:2611.03344v1, CC BY 4.0; original crop
+Our adaptation: Low-bit values, consistent recomputation · Our explanatory adaptation of FLAMIA, arXiv:2611.03344v1; not experimental footage
+Our adaptation: Hardware and workload bounds matter · Our explanatory adaptation of FLAMIA, arXiv:2611.03344v1; not experimental footage
+Table 6: training validation · Velikonivtsev et al., arXiv:2611.03344v1, CC BY 4.0; original crop
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

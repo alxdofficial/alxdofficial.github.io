@@ -1,0 +1,46 @@
+STREAM: A data-driven framework for physiological state monitoring in ICU patients
+
+First publication: 2026-10-01 | Version: Published version (2026-10-01)
+Status: Peer-reviewed journal article, PLOS Digital Health 5(10): e0001753
+Video produced: 2026-11-05 | Intended digest: 2026-11-05
+Primary source: https://doi.org/10.1371/journal.pdig.0001753
+
+1. The problem
+An intensive care unit produces many measurements, but a list of abnormal numbers is not a description of how a patient's overall condition is changing. STREAM asks whether routine measurements can locate a patient within a small set of physiological states, and whether movement away from those states adds useful mortality-risk information. This October first, twenty twenty-six journal paper uses twenty-six measurements, including laboratory tests, vital signs, and neurological assessments. It studies retrospective records, not an intervention that improved patient outcomes.
+
+2. Why it is difficult
+Two patients can share an abnormal measurement while differing across every other organ system. Missing measurements, changing sampling schedules, and correlations between variables make ordinary distance misleading. The authors therefore compare entire distributions of clinical snapshots across time, rather than manually labeling a few disease stages. Their discovery cohort contains roughly one hundred fifty-eight thousand ICU admissions. The five resulting states are population patterns; they are not five universal diagnoses, and the number of admissions must not be mistaken for the number of independent people.
+
+3. Applications and prior approaches
+The intended uses are tracking physiology, flagging unusual trajectories, and supplementing mortality prediction. Conventional severity scores compress a patient's condition into a number; this framework also describes where the patient sits relative to a reference population. Its comparison model uses the same clinical measurements and demographics without the added state geometry. That is an informative matched baseline, but it does not establish superiority over every current clinical model. The original workflow's risk-alert box describes a proposed application, not a prospectively validated alarm system.
+
+4. How the method works
+During development, three distribution-distance methods look for changes across clinical time windows. Their combined votes define five states. Each state stores a mean measurement vector and a covariance matrix describing how its variables vary together. At inference, a new snapshot is assigned to the closest state using a distance that accounts for those correlations, called Mahalanobis distance. A boosted decision-tree model then receives the clinical values plus six geometry features, including state identities and distance summaries. Its parameters learn mortality prediction; it does not learn treatment choices.
+
+5. What the results show
+At eight hours, the internal mortality model reports an area under the receiver operating characteristic curve of zero point eight six three. This measures how well risk scores rank deaths above survivors. On the independent MIMIC hospital dataset, the eight-hour value falls to zero point seven nine eight, compared with zero point seven four eight for the matched baseline. At seventy-two hours, external discrimination rises to zero point eight five seven. These are author-reported retrospective results. Strong ranking does not imply accurate individual probabilities, and the reported operating points have low positive predictive value.
+
+6. Relevance and limits
+The reusable idea is an interpretable state representation between raw time series and a downstream predictor. Patient-level splitting and training-only imputation reduce important leakage risks. However, retrospective interpolation and external distribution alignment need careful auditing before live use. Descriptions of threshold selection are inconsistent across the paper and supplement. Whole-stay outlier associations also use information unavailable early in a stay. Both cohorts are American, and prospective benefit remains untested. For streaming research, this is a useful representation pattern to investigate, not a clinically ready decision policy.
+
+Credits and disclosure (not spoken narration)
+PLOS Digital Health · 2026-10-01
+https://doi.org/10.1371/journal.pdig.0001753
+Peer-reviewed journal article, PLOS Digital Health 5(10): e0001753
+Original figures and selected table columns cropped from the CC BY 4.0 article; editorial highlighting is our adaptation.
+First submitted: 2026-10-01
+Original Fig. 1 · clinical input panel · STREAM authors · PLOS Digital Health 2026 · CC BY 4.0
+Original Fig. 2A · population state discovery · STREAM authors · PLOS Digital Health 2026 · CC BY 4.0
+Original Fig. 1 · downstream applications · STREAM authors · PLOS Digital Health 2026 · CC BY 4.0
+Original Fig. 1 · state assignment · STREAM authors · PLOS Digital Health 2026 · CC BY 4.0
+Original Fig. 1 · prediction application · STREAM authors · PLOS Digital Health 2026 · CC BY 4.0
+Original Table 2 · time window and AUROC · STREAM authors · PLOS Digital Health 2026 · CC BY 4.0
+Original Table 3 · time window and AUROC columns · STREAM authors · PLOS Digital Health 2026 · CC BY 4.0
+Original Fig. 1 · state movement; example is schematic · STREAM authors · PLOS Digital Health 2026 · CC BY 4.0
+
+Paper authors: Ali Namvar, Sundaresh Ram, Wassim W. Labaki, Stefanie Galban, Njira L. Lugogo and Craig J. Galban. Original article/figure components: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ . Editorial crops/highlights are identified above; no whole-video license is asserted.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

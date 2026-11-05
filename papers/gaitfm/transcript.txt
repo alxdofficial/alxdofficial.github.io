@@ -1,0 +1,44 @@
+GaitFM: A Cross-Modal Foundation Model for Wearable Gait Assessment
+
+First publication: 2026-11-01 | Version: v1 (2026-11-01)
+Status: arXiv preprint; peer review and venue not verified
+Video produced: 2026-11-04 | Intended digest: 2026-11-04
+Primary source: https://arxiv.org/abs/2611.01684v1
+
+1. Problem
+A walking sensor measures acceleration and rotation, but turning those streams into a dependable health assessment is difficult. GaitFM asks whether a model first trained on photographs can supply useful starting knowledge for wearable gait analysis. The target is not one universal diagnosis. It is a reusable representation that can be adapted to separate tasks, such as estimating walking speed, recognizing abnormal gait, or predicting future falls. This November first preprint tests that idea across eleven datasets. Its results are research evidence, not clinical approval.
+
+2. Why it matters
+The practical obstacle is variation: a phone in a pocket, a wrist sensor and an ankle sensor observe different motion. Patient groups, devices and walking protocols also change. Training a separate model for every setup wastes scarce labeled data. The authors curate 3,973 participants and roughly 1.23 million sensor windows. Windows are five seconds long at fifty samples per second. Participants, not windows, are divided sixty, twenty, twenty into training, validation and test sets. Keeping one person's windows together is essential to avoiding identity leakage.
+
+3. Applications and prior approaches
+The original diagram shows two stages. First, a vision model learns to reconstruct missing image patches. Its learned weights initialize the wearable model. This transfers parameters, not photographs of patients and not a diagnostic teacher's labels. Earlier comparison models learn directly from task-specific sensor data. The demonstrated applications include gait measurements, disease-associated classification and fall-risk prediction. Remote monitoring is a plausible future use, but prospective clinical utility is not established. Importantly, external datasets are excluded from sensor pretraining but still supply labeled data for downstream fine-tuning.
+
+4. How it works
+Each sensor channel passes through a shared temporal convolution. Its outputs are rearranged into a three-channel image-like grid, resized and normalized. A transformer receives visible grid patches and a decoder predicts the missing seventy-five percent; reconstruction error updates the model. For a downstream task, that decoder is discarded. Each body location is encoded separately, combined with a learned location identifier and placed in a fixed slot. Missing slots are zeroed and accompanied by an availability mask. The prediction head and encoder are fine-tuned together. At inference, available sensors feed those same slots without reconstruction.
+
+5. Results
+Consider fall prediction rather than only the headline average. In the GSTRIDE cohort, vision initialization raises area under the receiver operating characteristic curve from 0.777 to 0.847. This metric measures ranking of positive versus negative cases, not calibrated individual risk. On the external LTMM dataset, the same comparison rises from 0.357 to 0.589. That is an improvement, but still weak discrimination. The figure reports thirty-two and fourteen test participants respectively, so uncertainty matters. These are author-reported comparisons against a scratch-initialized version, not evidence of superiority to every current clinical model.
+
+6. Relevance and limits
+The reusable idea is the interface: adapt heterogeneous time-series sensors to a pretrained representation, then explicitly encode which sensor locations are present. That is relevant to sensing and representation learning, although benefits for other modalities remain hypothetical. The study uses full fine-tuning, not an online lifelong-learning loop. Several external tasks have very small test cohorts; some metrics are calculated per window rather than per patient. Population imbalance, dataset confounding and uncertainty estimation deserve further audit. Treat this as a promising transfer-learning design, with weak external fall results as a useful warning against equating improvement with readiness.
+
+Credits and disclosure (not spoken narration)
+arXiv:2611.01684v1
+https://arxiv.org/abs/2611.01684v1
+arXiv preprint; peer review and venue not verified
+Original paper figures by Cai and Hong, CC BY 4.0. Crops retain relevant axes and labels. Explicitly labeled schematic adaptation where used.
+First submitted: 2026-11-01
+Wearable motion is not yet a clinical diagnosis · Cai and Hong · arXiv:2611.01684v1 · CC BY 4.0 · original figure crop
+Split participants, not repeated windows · Cai and Hong · arXiv:2611.01684v1 · CC BY 4.0 · original figure crop
+Image initialization → sensor pretraining → task adaptation · Cai and Hong · arXiv:2611.01684v1 · CC BY 4.0 · original figure crop
+Reconstruct masked sensor patches; fine-tune task outputs · Cai and Hong · arXiv:2611.01684v1 · CC BY 4.0 · original figure crop
+Figure 2g: original GSTRIDE and LTMM panels rearranged · Cai and Hong · arXiv:2611.01684v1 · CC BY 4.0 · original figure crop
+A useful sensor interface, with external-validation limits · Cai and Hong · arXiv:2611.01684v1 · CC BY 4.0 · original figure crop
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
+
+Visual modification disclosure: Original Figure 1 pretraining and downstream diagrams cropped. Figure 2g GSTRIDE and LTMM panels rearranged side-by-side. Figure 2f cohort comparisons rearranged with complete shared legend. Source axes, cohort sizes and conditions retained; no experimental values redrawn. Source: https://arxiv.org/html/2611.01684v1 · CC BY 4.0.

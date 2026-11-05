@@ -1,0 +1,38 @@
+Before We Adapt: The Zero-Shot Generalization Bottleneck in Continual World Models
+
+First publication: 2026-10-29 | Version: v1 (2026-10-29)
+Status: arXiv preprint
+Video produced: 2026-11-04 | Intended digest: 2026-11-04
+Primary source: https://arxiv.org/abs/2610.41041v1
+
+1. Problem
+Can a learned world model reuse a familiar rule when only the surroundings change? Before We Adapt asks this question before any adaptation is allowed. A world model predicts what follows an action, so a planner can compare imagined futures. But learning to predict one room does not guarantee understanding movement independently of that room. The paper separates behavioral context, such as action and reward rules, from physical context, such as location and obstacle layout. Its experiment holds the rules fixed and changes the physical setting.
+
+2. Why it matters
+This distinction matters because extra training can conceal a representation problem. If the agent has to relearn unchanged movement rules after a simple translation, its knowledge was not as reusable as its training accuracy suggested. The original FourRooms diagram shows one training context and three unseen contexts. This is a deliberately small, deterministic grid environment, not a robot experiment. Plausible applications include testing whether a mobile agent separates portable interaction rules from location-specific features, but the paper does not demonstrate real-world deployment.
+
+3. Prior approaches and test
+The authors compare two existing model-based reinforcement learning systems. Dyna-Q learns a predictor of the next observation and uses simulated transitions to help learn action values. Temporal Difference Model Predictive Control, or TD-MPC, predicts the next encoded state in a learned representation and plans with short imagined trajectories. Each system trains for one hundred thousand environment steps in one room, using six random seeds. Evaluation freezes every parameter. The experiment changes the input representation: global position and direction, local obstacle distances and direction, or both together.
+
+4. Mechanism of the diagnostic
+For every valid grid cell, orientation and action, the study measures one-step prediction error. Dyna predicts observations; TD-MPC predicts encoded states, so their raw errors are not directly comparable. Each error is instead normalized by that model’s mean training-room error, then expressed on a base-ten logarithmic scale. Zero means the training-room reference; one means ten times that error. Local distance inputs tell the model how far obstacles are in front, behind, left and right. Unlike global coordinates, these measurements can remain unchanged when an otherwise identical room is translated.
+
+5. Results
+The original heatmaps show a strong representation effect. With global position and direction, the unseen bottom-right room has a reported log error gap of 1.41 for Dyna-Q and 0.94 for TD-MPC. With local distances, the corresponding values are minus 0.30 and minus 0.05: no degradation relative to each model’s own training reference. Combining local and global information gives intermediate gaps of 0.32 and 0.14. These are averaged prediction-error diagnostics, not navigation success rates. The paper also tests translation and layout changes separately to clarify what information each observation actually provides.
+
+6. Relevance and caveats
+The contribution is a diagnostic argument, not a new learning algorithm. A learned latent state does not automatically discard physical nuisance information. However, hand-designed obstacle distances are an optimistic representation, and global coordinates alone do not reveal new obstacle geometry. This small study cannot establish the best current world model or prove lifelong learning. For continual-memory and sensing research, a reusable idea is to test frozen cross-context prediction before adding replay or adaptation. Ask which features should stay invariant, which must change, and whether improvements survive matched observations and evaluation conditions.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.41041v1
+https://arxiv.org/abs/2610.41041v1
+arXiv preprint
+Mesbah & Wu, arXiv:2610.41041v1, CC BY 4.0; original figure crop
+First submitted: 2026-10-29
+Original Figure 2 / contextual FourRooms · Mesbah & Wu, arXiv:2610.41041v1, CC BY 4.0; original figure crop
+Original Figure 1 / representation diagnostic · Mesbah & Wu, arXiv:2610.41041v1, CC BY 4.0; original figure crop
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

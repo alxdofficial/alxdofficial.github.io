@@ -1,0 +1,43 @@
+Agent Memory as Rate-Limited Filtering: Explicit State Outlasts Long Context Beyond a Reader-Dependent Horizon
+
+First publication: 2026-11-02 | Version: v1 (2026-11-02)
+Status: arXiv preprint; independent peer-review status not established
+Video produced: 2026-11-05 | Intended digest: 2026-11-05
+Primary source: https://arxiv.org/abs/2611.02361v1
+
+1. Problem
+An agent can remember every sentence and still answer a current-state question incorrectly. Suppose a resource was granted, then withdrawn, then restored under a different authority. Finding a relevant sentence does not establish which permission is valid now. Agent Memory as Rate-Limited Filtering studies this distinction using executable access-control histories. Its central question is when a compact, explicitly maintained state becomes more reliable than asking a language model to reconstruct that state from the complete history.
+
+2. Why it is difficult
+The difficulty is not simply a full context window. Decisions can depend on event order, expiry times, group membership and which source has authority. The authors construct paired histories where a small decisive change reverses the correct answer, and measure balanced accuracy: the fraction of correct decisions across the two answer classes. This controlled design exposes dependency mistakes. But these are synthetic policy environments with known rules, not evidence that every real assistant needs the same memory architecture.
+
+3. Applications and prior approaches
+Potential applications include assistants tracking permissions or other changing commitments. The paper compares a model-written ledger, editable fact stores, relevance-based retrieval and reasoning over the full log. The important counterexample is a dependency-aware retriever. It selects the queried resource's relevant events plus membership and policy dependencies, while preserving their order. That approach can match the filter. So the evidence supports selecting the right dependencies, not a universal claim that compression beats retrieval. Current state of the art outside this benchmark is not established.
+
+4. How the method works
+The proposed pipeline first gives a language model one event at a time. It returns typed fields, such as event type, resource, authority and expiry. Ordinary code then applies the benchmark's transition rules to update an external table of live state. Finally, a reader model answers from that table. The language-model weights do not change. This is explicit state maintenance, not continual training. Giving the same parsed updates to a language model to apply works worse, identifying rule execution and state retention as important failure points.
+
+5. What the results show
+In Table seven, across eighty streams of two hundred fifty-six events, the Qwen fourteen-billion-parameter reader scores eighty percent with parsed state, versus sixty-four percent with full-log reasoning and fifty percent with a model-written ledger. Those methods do not have identical token budgets. A stronger reader changes the picture. In Table ten, the one-hundred-twenty-billion-parameter reader scores ninety-five percent on the full log at two hundred fifty-six events, versus ninety-nine percent on state. At one thousand twenty-four events, that comparison is eighty-seven versus ninety-nine percent. Another seed narrows the gap, so the claimed crossover depends on reader and protocol.
+
+6. Relevance and limits
+The reusable idea is to separate language interpretation from exact, auditable state transitions. Its cost is not free: parsing every event adds substantial work before any question is asked. The paper estimates that reuse across several queries can amortize this cost, depending on caching and model choice. More importantly, the rules and state schema are supplied. Ambiguous, cross-event or novel situations can invalidate that assumption. Treat this as a careful diagnosis of memory failure and a design pattern for structured tasks, not proof that a handwritten state machine solves general lifelong learning.
+
+Credits and disclosure (not spoken narration)
+arXiv:2611.02361v1 · 2 Nov 2026
+https://arxiv.org/abs/2611.02361v1
+arXiv preprint; independent peer-review status not established
+Limited original figure/table excerpts for attributed scientific commentary; custom diagrams explicitly labeled adaptations. arXiv nonexclusive distribution license is not a blanket reuse license.
+First submitted: 2026-11-02
+Current state, not a sentence archive · Our illustrative adaptation; Guo & Guo, §4
+Order and authority determine validity · Our illustrative adaptation; Guo & Guo, §4
+Dependencies matter more than format · Our adaptation; Guo & Guo, §4.6 and limitations
+Event → typed update → live state · Our adaptation; Guo & Guo, §4.5–4.6
+Table 7 excerpt: Qwen2.5-14B / 80 streams · Guo & Guo, arXiv:2611.02361v1, p.34; original table crop
+Table 10 excerpt: 100 paired streams / gpt-oss-120b · Guo & Guo, arXiv:2611.02361v1, p.39; original table crop
+Scope and write-time cost · Our adaptation; Guo & Guo, §4.11 and limitations
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

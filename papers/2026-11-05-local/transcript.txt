@@ -1,0 +1,44 @@
+Think Less, Locally: Local Preference Learning for Reasoning Compression
+
+First publication: 2026-11-03 | Version: v1 (2026-11-03)
+Status: arXiv preprint; peer review not verified
+Video produced: 2026-11-05 | Intended digest: 2026-11-05
+Primary source: https://arxiv.org/abs/2611.04814v1
+
+1. Problem
+Think Less, Locally asks how to shorten a reasoning model’s response without teaching it to stop before solving the problem. Its November third preprint studies a seven-billion-parameter model that often continues reasoning after useful work is already complete. A global preference for short answers can discard necessary intermediate steps. The proposed method instead compares two continuations from the same partly completed solution. This isolates a local question: given what the model has already established, should it continue exploring or conclude with a shorter, still correct answer?
+
+2. Why it is difficult
+The training pipeline first generates mathematical solutions and keeps a correct trace. It divides that trace into paragraph-sized steps and measures the model’s confidence in predicted tokens. Low confidence with a sharp confidence change flags a possible overthinking point. A stronger judge then checks the candidate in context. This is an offline data-construction procedure, not a reliable live stopping alarm. The judge can inspect the following step, and low confidence alone does not establish that reasoning is redundant. Correctness verification is therefore essential before shortening anything.
+
+3. Applications and prior approaches
+The immediate application is cheaper mathematical and programming inference. Earlier whole-trajectory preference methods favor a shorter correct solution over a longer correct solution to the same question. That comparison changes many reasoning decisions at once. Here the already-written prefix is held identical. The same base model samples eight replacement continuations from that prefix. A symbolic answer checker rejects incorrect replacements; the shortest valid continuation becomes the preferred answer. Pairs must save at least three hundred tokens, and at most three pairs are retained per question.
+
+4. Solution
+Training increases the preferred continuation’s likelihood relative to the original longer continuation, compared with a frozen reference model. This is direct preference optimization. Only added low-rank adapter matrices in the attention projections are updated; the base model’s original weights stay frozen. The paper trains for two epochs on four H20 graphics processors using self-generated mathematical traces. At deployment, the adapted model simply generates its response normally. It does not need the stronger judge or eight-way continuation sampling. Those expensive steps build training supervision, rather than running for every user query.
+
+5. Results
+On five mathematics benchmarks, the authors report roughly forty-two to forty-five percent fewer completion tokens. On AIME twenty twenty-four, a thirty-problem mathematics test, average output length falls from thirteen thousand four hundred ninety-three to seven thousand three hundred sixty-four tokens. Reported accuracy rises from fifty point eight three to fifty-four point one seven percent, with substantial uncertainty on this small test. On the sanitized MBPP programming benchmark, accuracy remains eighty-four point zero five percent while tokens fall thirty-six point three percent. These are author-reported results, not independent replications.
+
+6. Relevance and caveats
+An ablation trains preferences on entire solutions instead of shared intermediate states. On the same AIME test it reaches the same reported accuracy, but uses about twelve thousand tokens rather than seven thousand three hundred sixty-four. That supports the local comparison, although it does not establish universal superiority. Training uses mathematics only, yet coding evaluations also improve the accuracy–length trade-off. Transfer to continual memory or long-running agents remains untested. Token savings are not measured wall-clock savings, and data generation still requires multiple rollouts, a stronger judge and verifiable answers.
+
+Credits and disclosure (not spoken narration)
+arXiv 2611.04814v1
+https://arxiv.org/abs/2611.04814v1
+arXiv preprint; peer review not verified
+Original overview from official LoCo repository, MIT license retained. Other diagrams and numeric panels are factual adaptations; paper arXiv distribution license is not a general reuse grant.
+First submitted: 2026-11-03
+Adaptation from paper: Problem · Yuan et al. | arXiv 2611.04814v1 | 2026-11-03
+Adaptation from paper: Why it is difficult · Yuan et al. | arXiv 2611.04814v1 | 2026-11-03
+Original overview: focused mechanism detail · Yuan et al. · Official LoCo repository overview · MIT license
+Adaptation from paper: Applications and prior approaches · Yuan et al. | arXiv 2611.04814v1 | 2026-11-03
+Adaptation from paper: Solution · Yuan et al. | arXiv 2611.04814v1 | 2026-11-03
+Adaptation from paper: Results · Yuan et al. | arXiv 2611.04814v1 | 2026-11-03
+Adaptation from paper: Relevance and caveats · Yuan et al. | arXiv 2611.04814v1 | 2026-11-03
+Official LoCo repository overview: Yuan and colleagues, MIT license, https://github.com/MuyaoYuan/LoCo/blob/main/LICENSE . Other diagrams/numerical panels are identified adaptations. The paper’s arXiv distribution license is not a blanket public-reuse grant.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

@@ -1,0 +1,49 @@
+Wave Forcing: Towards Speed-of-Light Streaming Video Generation
+
+First publication: 2026-10-31 | Version: v1 (2026-10-31)
+Status: arXiv preprint; not peer reviewed
+Video produced: 2026-11-04 | Intended digest: 2026-11-04
+Primary source: https://arxiv.org/abs/2611.00859v1
+
+1. The problem
+Streaming video generation faces a scheduling problem. A diffusion model repeatedly cleans noisy video chunks before producing visible frames. Conventional chunk-by-chunk generation finishes one chunk before starting the next, leaving a long gap between outputs. Wave Forcing asks whether several chunks can move through different cleaning stages simultaneously. Its speed-of-light title is a metaphor, not a physical limit or latency claim. The practical goal is sustained output throughput after a pipeline fills, while preserving coherent subjects and camera motion over long videos.
+
+2. Why it is difficult
+A later chunk needs context from earlier chunks. Simply running everything in parallel can violate causal dependencies or feed the model noise patterns it never saw during training. Here, an earlier chunk can still be under construction when a later chunk starts. The later chunk sees that earlier, cleaner state, but an earlier chunk never reads future, noisier content. Each denoising stage owns a complete model replica. After startup, several replicas work on different chunks at once, rather than removing the denoising steps required for each chunk.
+
+3. Applications and prior approaches
+The demonstrated task is text-conditioned video generation, including hundred-second videos. Interactive creation is a plausible use, but responsiveness to new controls and multi-user serving are not established. The paper compares causal and rolling video generators, which have different quality and motion trade-offs. It also compares parallel execution strategies under matched hardware and step counts. Those comparisons must stay separate: an eight-GPU streaming system beating a one-GPU baseline is not an equal-compute algorithm comparison. Motion scores, visual quality, and subject stability measure different things.
+
+4. How it works
+Training first exposes the generator to mixed noise levels across neighboring chunks. Next, teacher-generated motion supplies coherent trajectories that are re-noised into staggered stages. Finally, training uses the generator’s own histories so it learns to handle its deployment context. Teacher score signals push the generator’s output distribution toward the teacher’s, updating generator weights rather than copying finished videos. At runtime, each stage sends attention keys and values to downstream consumers as soon as they are computed. Necessary waits remain, but communication overlaps computation. A separate pipeline decodes latent video representations into visible frames.
+
+5. What the results establish
+On eight H200 GPUs, four-step generation reaches 134.81 end-to-end frames per second at 832 by 480 resolution. That includes decoding, and is 7.07 times the reported single-GPU rolling baseline of 19.06. The allocation is four denoising replicas, one clean-history store replica, and three decoder partitions. Quality results use a separate five-step variant: its standard VBench total is 81.64 versus 81.15 for Rolling Forcing. On long videos it raises motion and subject-preservation scores, with slightly worse camera drift. No single quality metric dominates every baseline.
+
+6. Relevance and limitations
+The reusable idea is to train for partially completed context, then exploit that dependency graph in a streaming runtime. This may inform always-on perception or generation systems, but transfer beyond video diffusion is speculative. Startup latency, concurrent users, memory cost, and interactive controls still matter even when steady output is fast. The reported benefits rely on full model replication and a fast interconnect. The paper is an unreviewed preprint, and the displayed comparisons are author-reported. A good reproduction would measure end-to-end delay and quality under a fixed hardware budget, not throughput alone.
+
+Credits and disclosure (not spoken narration)
+Jin et al. · arXiv:2611.00859v1
+https://arxiv.org/abs/2611.00859v1
+arXiv preprint; not peer reviewed
+Limited attributed original figure/table excerpts for scientific commentary. arXiv nonexclusive distribution license is not a blanket reuse grant. An attributed official demo follows the explanation; see provenance below.
+First submitted: 2026-10-31
+Original Fig. 1 · Jin et al. · 2611.00859v1
+Original Fig. 1 · selected panel · Jin et al. · 2611.00859v1
+Original Fig. 5 · Jin et al. · 2611.00859v1
+Original Fig. 2 · Jin et al. · 2611.00859v1
+Original Fig. 2 · selected panel · Jin et al. · 2611.00859v1
+Original Table 1 · Jin et al. · 2611.00859v1
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
+
+Official demonstration provenance
+Additional demo: 10.333333 seconds, separate from 250.666667 seconds of explanation. Original author-generated five-step WaveForcing-1.3B rally-car output, MovieGen prompt p067, seed 42. This is a qualitative example, not our recreation or an independent reproduction.
+Source: https://sjtu-deng-lab.github.io/WaveForcing/static/videos/demo/wf10-p067.mp4
+Official repository asset: https://github.com/SJTU-DENG-Lab/WaveForcing/blob/main/page/static/videos/demo/wf10-p067.mp4
+License: Apache-2.0 repository root license, https://github.com/SJTU-DENG-Lab/WaveForcing/blob/main/LICENSE . Copyright and license notices retained in the private production package. No endorsement implied.
+Changes: full original 10.3125-second preview preserved at source speed, fitted into charcoal 16:9 layout with attribution; 16 to 24 FPS conversion and silent audio track. Source SHA256: 8358f0e722a51551ca887ccad3db636237a38b3dcd24e3d4378098982b1162c0.

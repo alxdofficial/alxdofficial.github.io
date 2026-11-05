@@ -1,0 +1,49 @@
+Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models
+
+First publication: 2026-11-03 | Version: v1 (2026-11-03)
+Status: arXiv preprint; peer review not verified
+Video produced: 2026-11-05 | Intended digest: 2026-11-05
+Primary source: https://arxiv.org/abs/2611.04449v1
+
+1. Problem
+A training run can look numerically healthy while losing its learning signal. This paper finds that extremely small token embeddings can trigger enormous, still finite gradients in gated sequence models. A later clipping calculation then overflows and zeros the fresh batch gradients. The authors survey 291 model repositories and test mitigation during continued pretraining. This is a November third preprint, not an independently replicated result. Its practical question is specific: can a rare token quietly waste otherwise expensive training steps?
+
+2. Why it happens
+A token embedding is the vector entering the model for a vocabulary item. With separate input and output embedding tables, a rarely used input row may receive weight decay without useful input gradients. In the survey, near-zero rows occur in 67 of 190 untied checkpoints, but none of 101 tied checkpoints. Reachability matters: the authors exclude padding and tokens that cannot actually be produced by the tokenizer. These counts describe the surveyed checkpoints, not every architecture or deployed language distribution.
+
+3. Applications and prior approaches
+The immediate application is continued training on languages whose tokens were rare in earlier training. Ordinary global gradient clipping divides all parameter gradients by one common norm. That normally limits unstable updates, but squaring an already huge value can overflow a 32-bit accumulator. Attention models often restore a small token vector using surrounding context; the tested gated models can instead suppress that route. This distinction is conditional. Even a Transformer can be vulnerable at an initial position without a beginning-of-sequence token.
+
+4. Method
+Here is the failure chain. A nearly zero input reaches a gate or linear query that also approaches zero. Repeated normalization then divides by a tiny scale, magnifying backward gradients across layers. Once a finite gradient exceeds roughly ten to the nineteenth, its square can overflow. GroupClip separates embedding gradients from backbone gradients and computes the embedding norm robustly, using higher precision or rescaling. The rest of the model keeps its own clipping calculation. After the first encounter, the affected embedding can recover. A separate proposed gate offset changes the architecture and is intended for training from scratch.
+
+5. Results
+In Telugu continued pretraining of Nemotron three Nano four billion, the baseline loses fresh gradients on 19.8 percent of training steps. Across three seeds, GroupClip removes those stalled steps. After one thousand steps, held-out perplexity falls from 13.44 to 13.04; lower means better next-token prediction on the FLORES two hundred development-test text. GroupClip reaches the baseline final quality by step eight hundred. That is a step reduction, not a measured twenty-percent wall-clock saving. Momentum and weight decay may still move baseline parameters during a stalled step, so the entire optimizer is not literally frozen.
+
+6. Relevance and limits
+The reusable lesson is to monitor clipping arithmetic, not just losses and obvious invalid numbers. A rare embedding can damage learning elsewhere without producing a not-a-number alert. For continually updated agents, that is a plausible reliability concern, not a demonstrated improvement to agent memory. The higher-precision clipping implementation has a measured memory overhead; a rescaled implementation avoids that transient allocation. Benefits vary by language and model, and the from-scratch gate experiments have limited seed coverage. Treat this as a concrete diagnostic and mitigation worth testing under your own numerical precision and optimizer settings.
+
+Credits and disclosure (not spoken narration)
+arXiv:2611.04449v1
+https://arxiv.org/abs/2611.04449v1
+arXiv preprint; peer review not verified
+Limited attributed original figure excerpts for scholarly explanation; arXiv distribution license is not a blanket reuse license.
+First submitted: 2026-11-03
+Original paper, page 1 · cropped source panel · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.1 · attributed excerpt
+Original paper, page 3 · cropped source panel · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.3 · attributed excerpt
+Original paper, page 2 · cropped source panel · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.2 · attributed excerpt
+Fig.2 · full context · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.2 · attributed excerpt
+Fig.2a · context restores scale; enlarged original · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.2 · attributed excerpt
+Fig.2b · gate pathway; enlarged original · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.2 · attributed excerpt
+Fig.2 · normalization at the input; enlarged original · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.2 · attributed excerpt
+GroupClip mechanism · our adaptation · Our adaptation of GroupClip mechanism; arXiv:2611.04449v1
+Original paper, page 7 · cropped source panel · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.7 · attributed excerpt
+Fig.6a · Telugu, three seeds; original · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.7 · attributed excerpt
+Fig.6a–b · source context · Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models · arXiv:2611.04449v1, p.7 · attributed excerpt
+
+Paper authors: Xin Liu, Boyuan Sun, Yuxin Wang, Haoran Song, Mingjian Zhao and Mengyu Liu. Limited attributed excerpts for scientific commentary; the paper’s arXiv distribution license is not a blanket public-reuse grant.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

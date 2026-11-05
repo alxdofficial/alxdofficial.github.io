@@ -1,0 +1,42 @@
+Continual Learning Exam: Benchmarking Long-Horizon RSI and Experiential Learning in LLM Agents
+
+First publication: 2026-10-25 | Version: v1 (2026-10-25)
+Status: arXiv preprint
+Video produced: 2026-11-04 | Intended digest: 2026-11-04
+Primary source: https://arxiv.org/abs/2610.33956v1
+
+1. Problem
+Does an agent learn from doing work, or merely solve a fresh task each time? Continual Learning Exam is a benchmark designed to expose that distinction. It contains one hundred twenty professional tasks, each with five connected levels. Passing one assignment unlocks the next; later work can require earlier files, procedures or preferences. The original task-design panel shows this ladder. The benchmark evaluates a complete language-model agent, including its persistent memory and tools, rather than treating the language model alone as the system that learns.
+
+2. Why it matters
+A successful first answer says little about whether an agent can retain lessons and use them later. Here, software maintenance, analysis and other professional assignments evolve within a shared context. Fifty-plus experts created six hundred levels across twelve occupational domains, with real input files and human-written grading criteria. The intended application is evaluating long-horizon professional assistants. These are simulated workflows with stateful mock applications, not evidence that the agents are ready to perform the corresponding real occupations without supervision.
+
+3. Prior approaches and learning loop
+The paper distinguishes learning inside fixed model weights from changing an agent’s external working state. In the reported experiments, the model parameters stay frozen. The agent reads task inputs, chooses tool calls, receives observations and may retain experience in its harness: the surrounding software that manages context, memory and skills. Later decisions can use that retained state. This is not evidence of weight-level continual training. The title also mentions recursive self-improvement, meaning improving the process that learns; the benchmark’s scores alone do not demonstrate that stronger claim.
+
+4. Evaluation mechanism
+Each task uses persistent application records across its five levels, but a new task starts with fresh task files and application databases. Harness memory persists across the fixed task order. A separate evaluation agent checks submitted artifacts against hidden, human-authored binary checklist items. Every item must pass. Trial one permits one submission without diagnostic feedback. Trial two permits a failed submission to receive category-level feedback and then one revision. Unreached levels count as failures, so early mistakes block later credit. The comparison changes both feedback and the opportunity to submit again.
+
+5. Results
+Across seventeen model-and-harness configurations, the authors report a median improvement of 5.33 percentage points with feedback and revision. The strongest tested configuration, Claude Code with Opus five, clears 47.67 percent of all six hundred levels in trial two, but completes all five levels in only twenty-eight of one hundred twenty tasks. Its reported run uses 520.62 million actor tokens and 58.90 active hours. These are author-reported benchmark results, not an independently verified universal ranking. The original charts also show that benefits vary by configuration and one system declines.
+
+6. Relevance and caveats
+For continual-memory research, the useful next experiment is a matched comparison that resets memory before each task while holding models, budgets and feedback fixed. The paper explicitly identifies this missing control. Grader agreement with human labels is reported as 96.86 percent per checklist item, which does not eliminate whole-task grading error. Public materials include a smaller CLE Lite release; the complete rubric packages require access approval. The reusable idea is to measure retained experience through linked assignments, while reporting full-ladder completion, resource costs and memory-reset controls alongside aggregate scores.
+
+Credits and disclosure (not spoken narration)
+arXiv:2610.33956v1
+https://arxiv.org/abs/2610.33956v1
+arXiv preprint
+CLE Team, arXiv:2610.33956v1, CC BY 4.0; original figure crop
+First submitted: 2026-10-25
+Original paper figure / Problem · CLE Team, arXiv:2610.33956v1, CC BY 4.0; original figure crop
+Original paper figure / Why it matters · CLE Team, arXiv:2610.33956v1, CC BY 4.0; original figure crop
+Original paper figure / Prior approaches and learning loop · CLE Team, arXiv:2610.33956v1, CC BY 4.0; original figure crop
+Original paper figure / Evaluation mechanism · CLE Team, arXiv:2610.33956v1, CC BY 4.0; original figure crop
+Original paper figure / Results · CLE Team, arXiv:2610.33956v1, CC BY 4.0; original figure crop
+Original paper figure / Relevance and caveats · CLE Team, arXiv:2610.33956v1, CC BY 4.0; original figure crop
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

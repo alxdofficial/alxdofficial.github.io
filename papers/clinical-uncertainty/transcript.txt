@@ -1,0 +1,45 @@
+Evaluation of clinical prediction models: Decomposing performance uncertainty into model development and validation components
+
+First publication: 2026-11-02 | Version: v1 (2026-11-02)
+Status: arXiv preprint; peer review and venue not verified
+Video produced: 2026-11-04 | Intended digest: 2026-11-04
+Primary source: https://arxiv.org/abs/2611.03337v1
+
+1. Problem
+A clinical prediction model can look precisely evaluated while an important source of uncertainty is missing. Conventional external validation usually treats the fitted model as fixed: it asks how the reported performance would vary if we sampled different validation patients. But a different development sample could have produced a different model. This November second preprint separates those two uncertainties. Its contribution is an evaluation method, not a new diagnostic system, and not a claim that uncertainty accounting makes a model clinically safe.
+
+2. Why it matters
+Imagine repeating a study with the same modeling recipe. Both the fitted coefficients and the patients used to test them would change. A confidence interval that varies only the second part answers a narrower question than reliability of the complete development pipeline. The original calibration figure makes the distinction visible. The horizontal axis is predicted risk and the vertical axis is observed risk. Blue bands reflect validation sampling; orange extensions add model uncertainty. The diagonal is perfect calibration. Wider bands honestly describe uncertainty; they do not improve the underlying predictions.
+
+3. Applications and prior approaches
+The example predicts thirty-day mortality after a heart attack using the GUSTO dataset. Development uses one non-US region with 1,231 patients and ninety-nine deaths; validation uses a separate US region with 1,717 patients and ninety-five deaths. A penalized logistic regression maps six clinical predictors to probabilities. The penalty shrinks coefficients to reduce overfitting. Standard validation provides uncertainty conditional on that fitted predictor. The proposed analysis instead propagates plausible coefficient variation too. This is geographical validation within a historical study, not a modern prospective deployment trial or evidence across all patient populations.
+
+4. How it works
+Operationally, sample plausible fitted parameter vectors, predict risks for the same validation patients, and recompute the chosen performance metric. Estimate the metric's validation-sampling variance for each draw and average it. Then combine that component with variation across models using the law of total variance. The authors provide one algorithm using available analytical variances and another using resampling. The model share of total variance is called M squared; the validation share is V squared. They sum to one. These shares are calculated separately for each metric, not once for the entire model.
+
+5. Results
+In the case study, model development accounts for only 12.1 percent of the variance of the Brier score, which measures average squared probability error. But it accounts for seventy-eight percent of calibration-slope variance, which reflects uncertainty about whether predicted risks are too extreme or too conservative. The slope estimate is 1.13. Its conventional ninety-five percent interval, 0.906 to 1.34, expands to 0.666 to 1.58 with both sources included. These are author-reported results from the same fitted model and validation cohort, not contradictory measurements: different metrics depend differently on the two samples.
+
+6. Relevance and limits
+For health AI, the practical lesson is to diagnose where evaluation uncertainty comes from before deciding whether more training or validation data would help. The framework is useful beyond this regression example when a defensible distribution over fitted models is available. It assumes independent development and validation samples and appropriate sampling assumptions. It does not automatically repair leakage, demographic bias, model misspecification or distribution shift. Its numerical illustration uses one historical disease setting, so general applicability is methodological rather than broadly demonstrated clinical effectiveness. Report both uncertainty sources, but do not confuse that accounting with certification.
+
+Credits and disclosure (not spoken narration)
+arXiv:2611.03337v1
+https://arxiv.org/abs/2611.03337v1
+arXiv preprint; peer review and venue not verified
+Original paper figures by Sadatsafavi, Gustafson and Riley, CC BY 4.0. Crops retain relevant axes and labels. Explicitly labeled schematic adaptation where used.
+First submitted: 2026-11-02
+A fixed model hides development uncertainty · Sadatsafavi, Gustafson and Riley · arXiv:2611.03337v1 · CC BY 4.0 · original figure crop
+Blue: validation; orange: additional model uncertainty · Sadatsafavi, Gustafson and Riley · arXiv:2611.03337v1 · CC BY 4.0 · original figure crop
+GUSTO cohorts: our adaptation of Table 2 study description · Sadatsafavi, Gustafson and Riley · arXiv:2611.03337v1 · CC BY 4.0 · our cohort-summary adaptation
+Separate model variation from validation sampling · Sadatsafavi, Gustafson and Riley · arXiv:2611.03337v1 · CC BY 4.0 · schematic adaptation
+Table 2: selected original columns (intervening columns omitted) · Sadatsafavi, Gustafson and Riley · arXiv:2611.03337v1 · CC BY 4.0 · original figure crop
+Table 2: original interval columns; calibration slope is last row · Sadatsafavi, Gustafson and Riley · arXiv:2611.03337v1 · CC BY 4.0 · original figure crop
+Uncertainty accounting does not repair clinical bias · Sadatsafavi, Gustafson and Riley · arXiv:2611.03337v1 · CC BY 4.0 · original figure crop
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
+
+Visual modification disclosure: Original Figure 1 calibration plots are cropped. Table 2 metric and variance-share columns are selected with intervening columns omitted, followed by the original interval columns. Cohort-summary and algorithm-step diagrams are our labeled adaptations, not experimental outputs. Source: https://arxiv.org/html/2611.03337v1 · CC BY 4.0.

@@ -1,0 +1,44 @@
+Route Anything: A Study of Model and Policy Routing for General-Purpose AI Systems
+
+First publication: 2026-11-03 | Version: v1 (2026-11-03)
+Status: arXiv preprint; peer review not verified
+Video produced: 2026-11-05 | Intended digest: 2026-11-05
+Primary source: https://arxiv.org/abs/2611.05275v1
+
+1. Problem
+A router chooses which model or robot policy handles each input. Route Anything asks whether that choice actually improves quality, or merely looks efficient against a weak baseline. Its November third preprint evaluates text, code, image, video, speech and robot tasks. The central distinction is between a clairvoyant oracle, which sees every candidate outcome afterward, and a deployable router, which must decide before running candidates. Complementary strengths create potential gains, but the router may lack the information needed to identify those strengths on a new input.
+
+2. Why it is difficult
+For each observed input, the ideal decision compares predicted task value against resource cost. Increasing the cost penalty favors cheaper candidates, but efficiency alone can conceal declining quality. The paper therefore adds a minimum quality requirement relative to a named reference. Another trap is noisy evaluation: a candidate can win one random run without being reliably better. The study separates observable information from hindsight and compares candidates on the same test inputs. A larger menu is useful only when its strengths are both complementary and predictable.
+
+3. Applications and prior approaches
+The applications range from selecting a text model to choosing a robot controller from camera observations. Prior approaches include rules, task-type classifiers, and classifiers trained to predict the winning candidate. The paper tests an alternative: predict each candidate’s outcome rather than only its winner label. This matters when several candidates succeed. Picking one winner by a latency tie-break turns the other successful candidates into negative labels. The official repository releases implementations, but explicitly withholds the proprietary multimodal trajectory matrix, limiting independent reproduction of those results.
+
+4. Solution
+In the robot experiment, a four-billion-parameter vision-language router receives an instruction, three camera images and robot state. Seven output heads estimate success probabilities for seven candidate controllers. Training updates the router from forty-nine thousand recorded outcomes, including failures. At inference, its estimates select a controller before that controller acts; task identity is not supplied. Separately, the general router classifies inputs into a capability tree and looks up a candidate. These are different implementations, not one universal trained router. Quality-floor calibration is a further experiment using separate fitting and certification data.
+
+5. Results
+Across sixteen benchmarks and three thousand four hundred forty-four matched test inputs, the capability-tree router scores seventy-nine point nine eight, versus seventy-nine point six eight for the best fixed choice: only zero point three points better. On two thousand robot scenes from unseen tasks, outcome prediction reaches seventy-one point five five percent success. Winner-label prediction reaches forty-two point eight percent. Against the best fixed controller, however, the outcome router’s success advantage is statistically uncertain. Its reported policy time falls twenty-four percent; that is not a guaranteed end-to-end deployment speedup.
+
+6. Relevance and caveats
+The reusable lesson is evaluation discipline: retain outcome information, match the fixed baseline’s inputs, and report quality beside cost. The code-routing study reports nineteen point four times median dollar efficiency after independent quality certification, but uses oracle verification in replay. A deployed verifier has its own mistakes and cost, so that multiplier is not a production promise. For an always-on agent, quality-constrained tool or model selection is a plausible extension, not a demonstrated result. Changing environments, prior agent actions and the unreleased matrix remain important obstacles.
+
+Credits and disclosure (not spoken narration)
+arXiv 2611.05275v1
+https://arxiv.org/abs/2611.05275v1
+arXiv preprint; peer review not verified
+Original paper excerpts: Zhou et al., CC BY-NC-SA 4.0; adaptations labeled; repository code MIT.
+First submitted: 2026-11-03
+Adaptation from paper: Problem · Zhou et al. | arXiv 2611.05275v1 | 2026-11-03
+Adaptation from paper: Why it is difficult · Zhou et al. | arXiv 2611.05275v1 | 2026-11-03
+Adaptation from paper: Applications and prior approaches · Zhou et al. | arXiv 2611.05275v1 | 2026-11-03
+Adaptation from paper: Solution · Zhou et al. | arXiv 2611.05275v1 | 2026-11-03
+Adaptation from paper: Results · Zhou et al. | arXiv 2611.05275v1 | 2026-11-03
+Original Figure 4: robot scene conditions · Zhou et al. · Fig. 4 · CC BY-NC-SA 4.0 · 2,000 scenes
+Adaptation from paper: Relevance and caveats · Zhou et al. | arXiv 2611.05275v1 | 2026-11-03
+Original paper components: Zhou and colleagues, CC BY-NC-SA 4.0, https://creativecommons.org/licenses/by-nc-sa/4.0/ . Editorial crops retain applicable source terms; no whole-video license is asserted.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

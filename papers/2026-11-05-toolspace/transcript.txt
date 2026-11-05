@@ -1,0 +1,43 @@
+ToolSpace: Scaling Tool-Centric Environment Synthesis for Long-Horizon Agents
+
+First publication: 2026-11-03 | Version: v1 (2026-11-03)
+Status: arXiv preprint; peer review not verified
+Video produced: 2026-11-05 | Intended digest: 2026-11-05
+Primary source: https://arxiv.org/abs/2611.05036v1
+
+1. Problem
+Tool-using agents need practice with workflows where earlier actions change what later actions can do. Writing isolated questions or inventing tool names does not create that experience. ToolSpace starts from observed tool executions, builds environments around their dependencies, and synthesizes tasks that can be replayed. This November third preprint asks whether executable, stateful training examples improve long-horizon agents. Its core contribution is a way to construct training environments and verified trajectories, rather than a new language-model architecture.
+
+2. Why it matters
+A workflow can fail even when every individual tool call looks reasonable. A later call may need an identifier returned earlier, an object created earlier, or a recovery path after an error. ToolSpace distinguishes these as data, state and retry dependencies. It mines adjacent calls using deterministic rules and groups the resulting graph into environments. The reported experimental graph contains 2,042 canonical tools and 804 environments. Only 181 environments require synthesized persistent databases; query and stateless tools can instead use snapshots or recorded outputs.
+
+3. Applications and prior approaches
+The demonstrated applications are training and evaluating agents for automation, office work, function calling and other tool-heavy tasks. Database-first synthesis builds a world before deciding which tools matter. ToolSpace reverses that order: it grounds observed tool relationships first and constructs only the state they need. This is not a complete simulation of every real service. Recorded returns cover specific observations, and local adjacency can miss longer-range dependencies. The authors report filtering training overlap with evaluation tasks, but that decontamination has not been independently audited.
+
+4. Method
+A sampler walks the dependency graph, choosing successors compatible with the current environment state. It checkpoints before executing a call; if execution fails, it rolls back and samples another continuation. A language model then converts a successful workflow into a natural-language goal and executable checks over final state, intermediate actions and outputs. The system replays the workflow from its initial snapshot and accepts it only if those checks pass. Teacher trajectories train the agent by supervised learning. A smaller set of difficult tasks then supplies rewards for reinforcement learning, which updates the agent toward successful executions.
+
+5. Results
+Across seven benchmarks, the Qwen-based thirty-five-billion-parameter model’s average score rises from 23.0 to 41.0 after supervised training, and to 43.2 after reinforcement learning. That average combines different benchmark metrics; it is not a universal success probability. In the same-model ablation, removing state-dependency edges lowers banking performance from 34.0 to 21.5 and automation from 45.8 to 36.5. These controlled removals support the value of environment structure. The reported reduction in synthesized files is a cost proxy, not a measured reduction in runtime, training compute or dollars.
+
+6. Relevance and limits
+For agents that learn over time, replayable task generation could provide a controlled practice environment. Connecting it to a particular continual-memory system remains a proposed application, not a tested result. Passing generated checks can still miss a user’s real intent. The public repository releases an AutomationBench-based example rather than the full experimental tool graph, so reproducibility is partial. Its official demonstration uses fixture model responses with real environment execution; those fixtures are not evidence of autonomous model capability. The main reusable idea is to treat environment state and verification as training infrastructure.
+
+Credits and disclosure (not spoken narration)
+arXiv:2611.05036v1
+https://arxiv.org/abs/2611.05036v1
+arXiv preprint; peer review not verified
+Limited attributed original figure excerpts for scholarly explanation; arXiv distribution license is not a blanket reuse license.
+First submitted: 2026-11-03
+Original paper, page 6 · cropped source panel · ToolSpace: Scaling Tool-Centric Environment Synthesis for Long-Horizon Agents · arXiv:2611.05036v1, p.6 · attributed excerpt
+Fig2 · execute, checkpoint and roll back; original crop · ToolSpace: Scaling Tool-Centric Environment Synthesis for Long-Horizon Agents · arXiv:2611.05036v1, p.6 · attributed excerpt
+Fig2 · reverse task synthesis; original crop · ToolSpace: Scaling Tool-Centric Environment Synthesis for Long-Horizon Agents · arXiv:2611.05036v1, p.6 · attributed excerpt
+Fig2 · replay and acceptance; original crop · ToolSpace: Scaling Tool-Centric Environment Synthesis for Long-Horizon Agents · arXiv:2611.05036v1, p.6 · attributed excerpt
+Table 3 · component ablations, same 35B backbone · ToolSpace: Scaling Tool-Centric Environment Synthesis for Long-Horizon Agents · arXiv:2611.05036v1, p.16 · attributed excerpt
+
+Paper authors: Guanting Dong, Zhichao Sun, Xinyu Yang and colleagues; complete author list at the primary paper link above. Limited attributed excerpts for scientific commentary; the paper’s arXiv distribution license is not a blanket public-reuse grant.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

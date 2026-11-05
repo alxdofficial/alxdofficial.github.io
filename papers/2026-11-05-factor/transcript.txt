@@ -1,0 +1,44 @@
+Factorized MLLM Embeddings for Composed Image Retrieval
+
+First publication: 2026-11-03 | Version: v1 (2026-11-03)
+Status: arXiv preprint; peer review not verified
+Video produced: 2026-11-05 | Intended digest: 2026-11-05
+Primary source: https://arxiv.org/abs/2611.05193v1
+
+1. Problem
+Suppose you have a photograph and ask for the same object, but with a different color or background. Composed image retrieval ranks gallery images using both the reference photograph and your requested change. A single compressed vector can mix the property that should change with details that should stay fixed. FactEmbed asks whether several learned vectors can represent different visual factors while preserving the efficiency of ordinary embedding search. This November third preprint evaluates image-retrieval benchmarks, not an interactive image editor.
+
+2. Why it matters
+The difficulty is relational. Matching the reference too closely ignores the instruction; matching only the instruction loses the reference object. Existing systems use multimodal language models to combine the two inputs, often reading one global summary vector. FactEmbed keeps that global representation but adds eight learned factor tokens. These are trainable input markers whose resulting hidden states become additional representations. They are not predefined labels such as color or shape, and the paper does not guarantee a clean human-interpretable meaning for every factor.
+
+3. Applications and prior approaches
+The demonstrated use is retrieval on CIRR and FashionIQ, including refined versions intended to reduce benchmark ambiguities. Plausible applications include searching products by a photograph plus a requested modification, but production usefulness is not established here. The backbone is Qwen two point five VL, a seven-billion-parameter vision-language model. Earlier retrieval methods provide the comparison set. The authors add training supervision that asks the internal factors to explain target-image features, rather than relying only on a loss that pulls matching image representations together.
+
+4. Method
+During training, a small decoder receives the factor representations and reconstructs patch features from the desired target image. Each factor predicts a feature map and a spatial mask; weighted maps combine into a reconstruction. A coarse target-image layout also enters this training-only decoder. Crucially, the query encoder never receives the target image, and this decoder and layout are removed at inference. Training then updates lightweight backbone adapters, factor tokens and decoder using reconstruction, matching and attention-supervision losses. At retrieval time, each image needs just two stored vectors: the global summary and the mean of its factors. Global search shortlists one hundred candidates, then both similarities rerank them.
+
+5. Results
+On refined CIRR, top-one recall rises from ReCALL’s 67.41 percent to 68.99 percent. That is a 1.58 percentage-point gain: the correct target ranks first more often in that benchmark. On refined FashionIQ, average recall within the first ten results rises from 69.48 to 71.13 percent. These are author-reported comparisons, with additional generated training triplets in the proposed pipeline. Keeping full factor matching yields 69.20 percent refined CIRR recall, versus 68.99 with the efficient two-vector approach. The tiny reranking cost is measured on a gallery of 2,297 images, not a billion-image production service.
+
+6. Relevance and limits
+The reusable idea is to use a richer reconstruction task during training, then discard its expensive components for deployment. That could inform representation learning beyond retrieval, but the paper does not demonstrate continual memory or streaming perception. Fixed factor count and mean pooling may discard useful distinctions. The official repository currently says code will be released, while linking a model and interactive demo, so full training reproducibility remains incomplete. Original figures here are attributed under the paper’s share-alike license. The evidence supports a promising retrieval representation, not a universally established best method.
+
+Credits and disclosure (not spoken narration)
+arXiv:2611.05193v1
+https://arxiv.org/abs/2611.05193v1
+arXiv preprint; peer review not verified
+Original figure excerpts: CC BY-SA 4.0, authors credited; crops retain share-alike terms.
+First submitted: 2026-11-03
+Original paper, page 8 · cropped source panel · Factorized MLLM Embeddings for Composed Image Retrieval · arXiv:2611.05193v1, p.8 · attributed excerpt
+Original paper, page 3 · cropped source panel · Factorized MLLM Embeddings for Composed Image Retrieval · arXiv:2611.05193v1, p.3 · attributed excerpt
+Table 1 · original header and selected rows (other rows omitted) · Factorized MLLM Embeddings for Composed Image Retrieval · arXiv:2611.05193v1, p.5 · attributed excerpt
+Table1 · refined CIRR selected original rows/columns · Factorized MLLM Embeddings for Composed Image Retrieval · arXiv:2611.05193v1, p.5 · attributed excerpt
+Table1 · refined FashionIQ averages; intervening columns omitted · Factorized MLLM Embeddings for Composed Image Retrieval · arXiv:2611.05193v1, p.5 · attributed excerpt
+Table1 · refined CIRR source context · Factorized MLLM Embeddings for Composed Image Retrieval · arXiv:2611.05193v1, p.5 · attributed excerpt
+
+Paper authors: WonJun Moon, Seongchan Kim, Dahun Kim and Seungryong Kim. Original figure excerpts and editorial crops retain CC BY-SA 4.0 source terms: https://creativecommons.org/licenses/by-sa/4.0/ . These component terms do not assign a license to the entire explainer.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

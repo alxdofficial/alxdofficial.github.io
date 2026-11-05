@@ -1,0 +1,38 @@
+Order-Only On-Policy Distillation
+
+First publication: 2026-11-01 | Version: v1 (2026-11-01)
+Status: arXiv preprint; not peer reviewed
+Video produced: 2026-11-04 | Intended digest: 2026-11-04
+Primary source: https://arxiv.org/abs/2611.02112v1
+
+1. The problem
+When a smaller language model learns from a larger one, should it copy the teacher’s confidence, or just its preferences? Order-Only On-Policy Distillation tests that distinction. Conventional probability matching asks a student to reproduce numerical probabilities for candidate next tokens. But a smaller model may not have the capacity to match those numbers, and changing the teacher’s temperature changes the target. This November first preprint asks whether the teacher’s ordering is enough. Its evidence concerns mathematical reasoning, not general language competence or safety.
+
+2. Why it is difficult
+The student must learn on the situations it actually visits. A response sampled from the student creates a sequence of partial answers. The frozen teacher then evaluates the next-token choices at each of those prefixes. This is on-policy distillation: supervision follows the student’s own generated history, including its mistakes. The difficulty is separating useful information about which tokens are better from potentially unhelpful information about how confident the larger teacher is. A ranking preserves the first without requiring the second.
+
+3. Applications and prior approaches
+The demonstrated application is transferring mathematical reasoning between Qwen3 language models. Earlier on-policy distillation matches probability distributions; supervised fine-tuning instead learns from reference responses. Here the controlled baseline uses Jensen–Shannon divergence, a symmetric measure of distribution mismatch, over the same eight teacher-selected tokens. The proposed alternative could simplify teacher calibration in other settings, but that extension is not tested. Ranking-based distillation itself is not new. The contribution is using order-only supervision on student-generated prefixes and studying the resulting learning behavior.
+
+4. How it works
+At every generated prefix, the teacher returns its eight preferred token identities, ordered from best to worst. The student computes its own scores for those same tokens. Training pushes each higher-ranked token above its immediate neighbor using a pairwise logistic loss. Seven adjacent comparisons replace twenty-eight all-pairs comparisons. Only low-rank adapter weights in the student are updated; the teacher stays frozen. At inference, the student generates normally without teacher queries. Because positive temperature scaling preserves token order, the target needs no teacher-temperature tuning. Other training hyperparameters still remain.
+
+5. What the results establish
+Across six teacher–student size pairs, the method improves the average accuracy across three competition-math benchmarks in every pair. For an eight-billion-parameter teacher and a 1.7-billion-parameter student, the average rises from 38.1 to 40.7 percent. These are average correctness rates over twelve sampled answers per problem, not best-of-twelve success. Gains are not universal: with a four-billion-parameter teacher, the smaller student improves its overall average but drops on HMMT25. Both methods select their best checkpoint using these evaluation benchmarks, so the comparison is not an untouched test-set estimate.
+
+6. Relevance and limitations
+The reusable lesson is to ask which part of a teacher’s output the learner actually needs. A ranking can be a less restrictive target than calibrated probabilities. The reported student matches the teacher’s ordering better while matching its probabilities worse. That supports this design choice in the tested setting, not a universal rule that probabilities are harmful. Evidence is limited to one model family and mathematical reasoning, with a hundred training steps and checkpoint-selection caveats. A useful next experiment would test independently selected checkpoints and non-mathematical tasks before treating order-only supervision as a general replacement.
+
+Credits and disclosure (not spoken narration)
+Han et al. · arXiv:2611.02112v1
+https://arxiv.org/abs/2611.02112v1
+arXiv preprint; not peer reviewed
+Attributed limited original figure/table excerpts for scientific commentary. arXiv nonexclusive distribution license is not a blanket reuse license. No official demo included.
+First submitted: 2026-11-01
+Original Fig. 2 · Han, Wu & Huang · 2611.02112v1
+Original Table 3 · selected rows · Han, Wu & Huang · 2611.02112v1
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

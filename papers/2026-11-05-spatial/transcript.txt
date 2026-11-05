@@ -1,0 +1,44 @@
+Physical Experience Builds Continual Spatial World Models
+
+First publication: 2026-11-02 | Version: v1 (2026-11-02)
+Status: arXiv preprint; independent peer-review status not established
+Video produced: 2026-11-05 | Intended digest: 2026-11-05
+Primary source: https://arxiv.org/abs/2611.04016v1
+
+1. Problem
+A robot can retain a map yet relearn the same change every time it encounters it. Physical Experience Builds Continual Spatial World Models asks for something stronger: can experience make a later related problem require less observation and correction? The test environment is a simulated tilting circular maze with a rolling ball and gates. Despite the title, the reported navigation experiments are simulation results, not a deployed physical robot. The useful distinction is between storing yesterday's layout and learning how layouts tend to change.
+
+2. Why it is difficult
+A local controller only learns that a gate changed when it can observe that gate. A reusable model could infer the change sooner from another visible gate. But that is only legitimate if the environment contains a stable relationship between the two. The paper controls this relationship explicitly. It also separates the maze's true gate states from the agent's beliefs, so the memory method does not simply receive hidden state. The key question is whether accumulated evidence improves prediction under the same current observations.
+
+3. Applications and prior approaches
+The comparisons include a frozen initial map, a locally reactive controller, an oracle told about changes immediately, and memories tied to particular locations or episodes. These are controlled mechanistic baselines, not a comparison against leading general-purpose robot foundation models. A plausible application is a repeated navigation task where changes follow reusable patterns. However, applying the result to visual navigation or wearable perception would require learning trustworthy observations and handling much richer uncertainty. Those capabilities are not demonstrated here.
+
+4. How the method works
+When the agent observes a gate change, it updates counts of whether a related downstream gate changed compatibly or incompatibly. Counts are shared across spatial transitions, rather than stored only for one route. A Bayesian estimate converts those accumulated counts into a prediction for the next hidden gate. That prediction can redirect the controller before direct observation; otherwise it falls back to reacting. The paper calls this a spatial causal model. Separately, observed motion updates parameters inside a supplied physics equation family, including drag and actuator lag. It does not discover arbitrary physics.
+
+5. What the results show
+With a ten-percent probability of incompatible changes, prediction accuracy rises from fifty-six point four to eighty-nine point eight percent after sixty-four past episodes, approaching the ninety-percent limit imposed by the environment. Route corrections fall from one point seven four four to zero point four zero six per episode. On a spatial transition excluded from training, shared memory reaches eighty-nine point eight percent while comparison methods stay near fifty-six point six. Figure three supplies a crucial negative control: when gate changes are independent, more history gives no improvement beyond chance. Memory does not create information that is absent.
+
+6. Relevance and limits
+The behavioral test uses fifteen held-out episodes where the inferred change should alter the decision. Mean time pursuing an obsolete target falls from seven point eight seconds to one simulation step, and completion time improves by about seven point six seconds. In fifteen decision-preserving episodes, completion time does not change. This supports selective anticipation rather than indiscriminate replanning. Yet the setting has binary changes, clean observations and low-dimensional known dynamics. The novel, reusable lesson is to evaluate memory by transferred prediction and reduced future correction, with an explicit no-information control, not just by persistent storage or success on repeated routes.
+
+Credits and disclosure (not spoken narration)
+arXiv:2611.04016v1 · 2 Nov 2026
+https://arxiv.org/abs/2611.04016v1
+arXiv preprint; independent peer-review status not established
+Limited original figure/table excerpts for attributed scientific commentary; custom diagrams explicitly labeled adaptations. arXiv nonexclusive distribution license is not a blanket reuse license.
+First submitted: 2026-11-02
+Learn a relation, not just a layout · Our adaptation; Sun, §2.3
+Hidden gates are predicted, not observed · Our adaptation; Sun, §2
+Structured simulation and controlled baselines · Our adaptation; Sun, §2–4
+Observation → shared counts → prediction · Our adaptation; Sun, §2.3
+Figure 2b–c: learning across past episodes · Sun, arXiv:2611.04016v1, p.5; original figure crop
+Figure 3b–c: no-information control and transfer · Sun, arXiv:2611.04016v1, p.6; original figure crop
+Figure 4b–c: held-out navigation / 15 + 15 episodes · Sun, arXiv:2611.04016v1, p.7; original figure crop
+Limits of the demonstrated setting · Our adaptation; Sun, §4
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

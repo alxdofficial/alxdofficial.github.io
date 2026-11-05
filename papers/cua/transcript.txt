@@ -1,0 +1,40 @@
+CUA-Master: Scaling Computer-use Agents through Open-World Recursive Improvements
+
+First publication: 2026-11-02 | Version: v1 (2026-11-02)
+Status: arXiv preprint; not peer reviewed
+Video produced: 2026-11-04 | Intended digest: 2026-11-04
+Primary source: https://arxiv.org/abs/2611.03126v1
+
+1. The problem
+Computer-use agents need training examples that cover unfamiliar software and long workflows. Repeatedly learning from their own successes can leave the same blind spots untouched. CUA-Master addresses that bottleneck by bringing in instructional videos, turning their operations into executable tasks, and using model failures to guide further collection. This is a November second preprint about a training-data system and a twenty-seven-billion-parameter agent. It does not demonstrate an independently self-improving agent that learns safely from arbitrary activity on a user’s computer.
+
+2. Why it is difficult
+A tutorial is not a clean action log. Narration may describe an operation before the screen changes; videos include commentary, missing steps, and ambiguous clicks. The pipeline therefore combines language cues with visual changes to locate candidate actions. A stronger annotation model checks nearby frames and transcript context, then reconstructs actions. Even these reconstructed trajectories may not execute correctly in a new environment. The important next step is to turn them into tasks with explicit starting conditions and checks for whether the desired result was achieved.
+
+3. Applications and prior approaches
+The demonstrated workloads span computer applications on Linux, Windows, and macOS. Some evaluations permit only mouse and keyboard actions; others also permit shell commands. These are different capability settings. Earlier pipelines use human demonstrations or synthetic instructions, but simply rewriting instructions offers weak control over task difficulty. CUA-Master represents reusable operations with their application, preconditions, environment requirements, and verifier. Composing compatible operations makes the number of operations and applications explicit. This could help build training curricula, though coverage diagrams alone do not prove robust generalization.
+
+4. How it works
+Tasks run in virtual machines. When a verifier detects failure, a diagnostic model identifies the earliest divergence and restores a valid snapshot. The agent retries the damaged suffix rather than restarting the entire workflow. Successful efficient trajectories train the policy to predict action sequences. Each supervised round restarts from the same base model using the accumulated dataset, rather than continually updating the previous checkpoint. Three rounds accumulate roughly 115,000 tasks. A final reinforcement-learning stage samples eight trajectories per task and updates the policy using relative rewards from task-completion checks.
+
+5. What the results establish
+The reported agent scores 80.2 on OSWorld Verified and 36.9 on OSWorld 2.0 in graphical-interface-only evaluation. In hybrid graphical-interface-plus-command-line evaluation, it scores 43.9 on WeaveBench and achieves a 25 percent full-pass rate on Agents’ Last Exam. These are different metrics on different benchmarks, not interchangeable success percentages. Against the similarly sized UI-Mate specialist, all four reported scores improve. But stronger larger models remain ahead on several benchmarks. Training uses 128 H200 GPUs, so the small parameter count should not be mistaken for a low-cost training recipe.
+
+6. Relevance and limitations
+The useful ingredients are explicit task verification, controllable task composition, and recovering valid execution prefixes. For long-lived agents, these could support targeted curricula and diagnosis, but they are not proof of safe lifelong learning. Stronger external annotation models help more than the agent annotating its own data, so the system depends on outside supervision. Verifier errors can reward the wrong behavior, and benchmark success does not establish permission handling or safety on private workflows. All results are author-reported; independent replication, realistic distribution shifts, and the cost of data construction still need scrutiny.
+
+Credits and disclosure (not spoken narration)
+Yu et al. · arXiv:2611.03126v1
+https://arxiv.org/abs/2611.03126v1
+arXiv preprint; not peer reviewed
+Limited attributed original figure excerpts for scientific commentary; arXiv nonexclusive distribution license is not a blanket public reuse grant. No official demo footage reused.
+First submitted: 2026-11-02
+Original Fig. 2 · selected panel · Yu et al. · 2611.03126v1
+Original Fig. 8 · Yu et al. · 2611.03126v1
+Original Fig. 2 · snapshot retry panel · Yu et al. · 2611.03126v1
+Original Fig. 9 · Yu et al. · 2611.03126v1
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.

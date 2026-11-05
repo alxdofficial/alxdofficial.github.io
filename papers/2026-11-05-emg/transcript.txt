@@ -1,0 +1,47 @@
+EMG-FM-Bench: A Comprehensive Benchmark for Foundation Model Transfer and Adaptation on Electromyography
+
+First publication: 2026-10-05 | Version: v2 (2026-10-13)
+Status: arXiv preprint; peer review not established
+Video produced: 2026-11-05 | Intended digest: 2026-11-05
+Primary source: https://arxiv.org/abs/2610.06450v2
+
+1. The problem
+Electromyography measures electrical activity associated with muscle activation. A model can classify gestures from these signals and still fail when the electrodes move or a new person wears the sensor. EMG-FM-Bench asks a more precise question: when a pretrained time-series model performs well on muscle signals, how much of that success actually comes from pretraining? This October thirteenth preprint version compares nine model configurations across twenty public datasets, totaling just over one million signal windows. It is a transfer benchmark, not a validated diagnostic system.
+
+2. Why it is difficult
+The datasets differ in anatomy, electrode layouts, recording rates, and tasks. A hundred-hertz recording cannot regain missing high-frequency information merely by being resampled to a thousand hertz. Another trap is evaluating multiple windows from the same person's recordings on both sides of a split, then calling that performance generalization to new users. The benchmark separates complete trials or time blocks before windowing and adds explicitly subject-disjoint tests. Its table totals seven hundred fifty-three dataset participants, not a newly recruited clinical cohort with demonstrated population representativeness.
+
+3. Applications and prior approaches
+The studied tasks include hand gestures, lower-limb movement, and decoding typed character sequences from wrist signals. Prosthetic control and rehabilitation are plausible applications, but their safety and benefit are not tested here. Previous EMG benchmarks already examine cross-user adaptation. This study instead isolates representation reuse and initialization: can a frozen pretrained model expose useful features, and does a pretrained starting point beat the identical architecture trained from random weights? Those controls are more informative than comparing two different model families and attributing every difference to pretraining.
+
+4. How the evaluation works
+Each signal window is filtered, resampled, and normalized per channel. A backbone model converts it into a representation, and a linear output layer predicts its class. In the frozen condition, only that output layer learns. Full tuning changes the backbone as well, while the scratch condition starts the same architecture without pretrained weights. Classification training minimizes prediction error against the known label. New-user adaptation updates the model using five labeled examples per class pooled across the held-out cohort. It does not mean five examples collected separately from every individual user.
+
+5. What the results show
+Across one hundred seventy-one model-dataset pairs, pretraining improves accuracy in sixty-two percent of comparisons, averaging only three point three percentage points. Benefits vary sharply by model; some pretrained versions perform worse than their scratch counterparts. On unseen users, the average macro F-one score drops fourteen point nine points. This metric balances precision and recall equally across classes. Five-shot adaptation recovers six point three points on average and improves seventy point two percent of pairs. That is partial recovery, not elimination of user shift, and average gains hide substantial individual variation.
+
+6. Relevance and limits
+The strongest reusable lesson is experimental design: compare frozen features, full tuning, random initialization, and truly new users before choosing a sensing backbone. The shared training recipe controls comparisons but does not find each model's best achievable settings. Most participants are able-bodied, some datasets are small, and existing pretraining corpora are not fully audited here for overlap. Multiple public datasets broaden coverage without proving prospective clinical generalization. For adaptive sensing, the next question is how to retain useful representations while calibrating safely to a new person without erasing earlier performance.
+
+Credits and disclosure (not spoken narration)
+arXiv preprint · v2 · 2026-10-13
+https://arxiv.org/abs/2610.06450v2
+arXiv preprint; peer review not established
+Original paper figure panels and selected table cells cropped from the arXiv CC0 1.0 version; editorial crop selection is our adaptation.
+First submitted: 2026-10-05
+Original Fig. 1 · data scale · Wu et al. · arXiv:2610.06450v2 · CC0 1.0
+Original Fig. 1 · new-user evaluation · Wu et al. · arXiv:2610.06450v2 · CC0 1.0
+Original Fig. 1 · task families · Wu et al. · arXiv:2610.06450v2 · CC0 1.0
+Original Fig. 1 · frozen, tuned and scratch protocols · Wu et al. · arXiv:2610.06450v2 · CC0 1.0
+Original Fig. 1 · learning protocols · Wu et al. · arXiv:2610.06450v2 · CC0 1.0
+Original Fig. 1 · target-cohort adaptation · Wu et al. · arXiv:2610.06450v2 · CC0 1.0
+Original Fig. 2 · matched pretraining accuracy differences · Wu et al. · arXiv:2610.06450v2 · CC0 1.0
+Original Table 5 · model-level macro-F1 changes · Wu et al. · arXiv:2610.06450v2 · CC0 1.0
+Original Fig. 1 · controlled comparisons · Wu et al. · arXiv:2610.06450v2 · CC0 1.0
+
+Paper authors: Tianhao Wu and colleagues; complete author list at the primary paper link above. Original source components: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/ . This does not remove separate narration/software rights.
+
+Speech was generated locally with the public synthetic Anna preset using Kyutai Pocket TTS 3.3.0 (MIT): https://github.com/kyutai-labs/pocket-tts . No voice cloning or pitch shifting was used. Final video audio is AAC.
+The unmodified public English preset model is licensed CC BY 4.0: https://huggingface.co/kyutai/pocket-tts-without-voice-cloning .
+Anna derives from speaker p228 of CSTR VCTK Corpus 0.92, Junichi Yamagishi, Christophe Veaux and Kirsten MacDonald (2019), University of Edinburgh CSTR, CC BY 4.0: https://doi.org/10.7488/ds/2645 . Preset audio: https://huggingface.co/kyutai/tts-voices/blob/main/vctk/p228_023_enhanced.wav .
+No endorsement by the paper authors, voice contributor, or software authors is implied. Figure and software licenses apply to their respective components; no license for the entire video is asserted.
