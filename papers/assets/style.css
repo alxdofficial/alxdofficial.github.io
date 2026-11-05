@@ -237,3 +237,7 @@ footer>div:last-child{font-size:11px}
 
 /* Preserve full scientific titles on narrow screens. */
 .watch>h1{overflow-wrap:anywhere}
+
+/* Full primary-source URLs in transcript introductions must wrap on phones. */
+.reading-layout>*{min-width:0}
+.transcript{overflow-wrap:anywhere}
