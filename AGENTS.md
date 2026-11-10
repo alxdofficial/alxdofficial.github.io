@@ -5,6 +5,7 @@ This public repository is the durable instruction hub for the Paper Channel. Rea
 1. [Research and video checklist](tools/papers/PRODUCTION.md).
 2. [Approved visual contract and concrete examples](tools/papers/THUMBNAILS.md). Actually inspect the referenced image assets, not just this prose.
 3. [Catalog and publication workflow](tools/papers/README.md), including required metadata and exact commands.
+4. [Resumable publication queue](tools/papers/QUEUE.md). Reconcile unfinished episodes before starting another batch; keep its state private.
 
 ## Non-negotiable continuity
 
@@ -27,3 +28,4 @@ For the authorized daily workflow, publish each finished, QA-passed episode as s
 ## Privacy and permissions
 
 The repository and its history are public even for files excluded from Pages. Never commit private research notes, account or Library IDs, credentials, source PDFs, production packages, intermediate audio, sensitive screenshots or access troubleshooting. Keep deeper companion/research and generation materials in the authorized private archive; clean presentation folders contain latest videos, plain-text transcripts and paper links only. Specific finished-media publication authority does not authorize whole-folder sharing, spending, new credentials or permission bypasses. Report precise blockers and never claim an unverified change occurred.
+

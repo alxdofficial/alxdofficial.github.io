@@ -8,6 +8,10 @@ Start with the repository [AGENTS.md](../../AGENTS.md) and [research/video produ
 
 Read [THUMBNAILS.md](THUMBNAILS.md) and inspect its approved examples before every batch. Use the same editorial frame and shared card layout across all dates. Never publish raw, arbitrary-aspect figure crops as thumbnails.
 
+## Resumable publication
+
+Use [QUEUE.md](QUEUE.md) for per-episode checkpoints, retries, interrupted uploads, and exact live-version verification. This supplements the existing generator and scheduled worker; it does not create another schedule or accept credentials. Never publish the private queue database or evidence.
+
 ## Add a daily episode
 
 1. Copy `tools/papers/episode.example.json` to a working JSON file outside the repository. Fill every field with verified public information. New narration may run up to five minutes per paper; optional demo material is separate. Prefer original technical figures with verified attribution and licensing. Existing episode durations remain unchanged. Use a unique stable lowercase slug.
@@ -47,3 +51,4 @@ The workflow only validates and uploads short-lived test artifacts. It has read-
 Prefer a focused, legible original figure panel when reuse has been verified. Preserve axes, legends, labels and scientific context. The existing title below the image supplies the title treatment; do not shrink a whole page into a thumbnail. A labeled adaptation remains appropriate when original reuse is unclear.
 
 For a verified original, use `thumbnail_figure`, `thumbnail_credit`, `thumbnail_source_url`, `thumbnail_license`, `thumbnail_license_url`, and `thumbnail_changes`. The generator displays attribution, license, the selected panel/crop, and a full-size image link. All thumbnails follow the shared 16:9 editorial frame in THUMBNAILS.md, with centered Watch and bottom-right duration overlays. Preserve the unframed original with thumbnail_original_path and show its full attribution on the watch page. Choose figure positioning that leaves the center control legible; the full-size original remains unobscured on its own link. These rights apply to the figure asset; they do not automatically license the whole video.
+

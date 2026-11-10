@@ -36,6 +36,8 @@ Generate sections, measure actual durations, then retime subtitles/visualization
 
 ## 5. Publish immediately after readiness
 
+First reconcile the private [publication queue](QUEUE.md). Enqueue each QA-passed episode as soon as its outputs are ready. Claim one step, perform it with the existing authorized tools, and persist the verified receipt. Keep other episodes moving when one has a technical failure. Do not turn an unanswered routine status update into an approval requirement; actual denied actions and uncertain effects need the handling in QUEUE.md.
+
 Use the existing catalog workflow, not a parallel website or new layout. Prefer a meaningful original-figure-focused frame from the finished video as thumbnail. If needed, use the documented editorial compositor, explicitly identifying the adaptation. Retain credits and source-figure link on the watch page.
 
 Verify specific finished video/transcript public-view access. Add required catalog metadata and stable paths. Run:
@@ -50,3 +52,4 @@ cd tools/papers && npm run test:browser
 ```
 
 Use already available dependencies or the supported setup described in README; never retry denied installations through another route. The existing CI runs responsive browser checks at 320/390/768/1440px. Inspect actual cross-day screenshots and full-size attribution links. Review diff for privacy/unrelated edits, then publish under the user's current authority. Verify remote commit, CI/deployment, live version, actual playback, transcript/paper/download links and mobile/desktop layout. External-video mocks are not playback verification. Report exactly what is verified versus blocked; never publish an inaccessible record as ready.
+

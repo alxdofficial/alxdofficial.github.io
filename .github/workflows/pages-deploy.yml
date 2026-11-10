@@ -10,15 +10,26 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Test resumable publication queue
+        run: python3 -m unittest discover -s tools/papers -p test_queue.py -v
       - run: node tools/papers/test.cjs
       - run: node tools/site/build.cjs
       - run: node tools/site/test.cjs
+      - name: Install browser test dependencies
+        working-directory: tools/papers
+        run: |
+          npm install --ignore-scripts --no-package-lock
+          npx playwright install --with-deps chromium
+      - name: Gate deployment on desktop and mobile checks
+        working-directory: tools/papers
+        run: npm run test:browser
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .site
@@ -35,3 +46,4 @@ jobs:
       - name: Deploy reviewed public artifact
         id: deployment
         uses: actions/deploy-pages@v4
+
