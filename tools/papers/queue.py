@@ -206,8 +206,10 @@ class Queue:
                 raise ValueError('Receipt is for a different media file')
         if step == 'public_access' and receipt.get('permission') != 'anyone:reader':
             raise ValueError('Specific finished video must have public viewer access')
-        if step == 'public_playback' and not (receipt.get('anonymous_playback') is True and receipt.get('time_advanced') is True):
-            raise ValueError('Actual anonymous playback is required; metadata, thumbnails and mocks do not suffice')
+        if step == 'public_playback':
+            expected_src = 'https://drive.google.com/file/d/' + prior('upload')['file_id'] + '/preview'
+            if not (receipt.get('playback_context') == 'site_iframe' and receipt.get('iframe_src') == expected_src and receipt.get('time_advanced') is True):
+                raise ValueError('Actual site-iframe playback is required; direct Drive pages, metadata and mocks do not suffice')
         if step == 'catalog':
             if any(receipt.get(k) != job[k] for k in ('media_sha256','transcript_sha256','thumbnail_sha256')):
                 raise ValueError('Catalog receipt must bind the approved artifact hashes')

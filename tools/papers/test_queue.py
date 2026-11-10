@@ -29,7 +29,7 @@ class Tests(unittest.TestCase):
         if step=='archive': r.update(archive_file_id='saved-archive')
         if step=='upload': r.update(file_id='public-media', media_sha256='a'*64)
         if step=='public_access': r.update(file_id='public-media', permission='anyone:reader')
-        if step=='public_playback': r.update(file_id='public-media', anonymous_playback=True, time_advanced=True)
+        if step=='public_playback': r.update(file_id='public-media', playback_context='site_iframe', iframe_src='https://drive.google.com/file/d/public-media/preview', time_advanced=True)
         if step=='catalog': r.update(file_id='public-media', repo=m.REPO, commit_sha='d'*40, checks_passed=True,media_sha256='a'*64,transcript_sha256='b'*64,thumbnail_sha256='c'*64)
         if step=='deploy': r.update(commit_sha='d'*40, conclusion='success',workflow_run_id='123',workflow_path='.github/workflows/pages-deploy.yml',environment='github-pages')
         if step=='live': r.update(file_id='public-media', commit_sha='d'*40, url=m.SITE+'paper-one/',
@@ -218,6 +218,9 @@ class Tests(unittest.TestCase):
         p=Path(self.tmp.name)/'intake-snapshot.sqlite';self.q.snapshot(p);q2=m.Queue(p)
         try:self.assertEqual(q2.intake()[0]['id'],'paper-one')
         finally:q2.close()
+    def test_direct_preview_is_not_embedded_playback_evidence(self):
+        c=self.until('public_playback');r=self.receipt('public_playback');r['playback_context']='direct_drive_page'
+        with self.assertRaises(ValueError):self.done(c,r)
     def test_no_speech_content_gate(self):
         self.assertFalse(any('whisper' in s or 'transcription' in s for s in m.GATES))
 
