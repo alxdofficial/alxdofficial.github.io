@@ -12,5 +12,6 @@
   "papers/assets/fonts/JetBrainsMono-Regular.ttf",
   "papers/assets/fonts/PlayfairDisplay-OFL.txt",
   "papers/assets/fonts/PlayfairDisplay.ttf",
-  "papers/diagnostics-drap/index.html"
+  "papers/preview/index.html",
+  "papers/assets/preview.js"
 ]
