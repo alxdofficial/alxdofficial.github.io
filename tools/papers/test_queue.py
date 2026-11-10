@@ -207,6 +207,17 @@ class Tests(unittest.TestCase):
         with self.assertRaises(ValueError):self.q.revise(j,'new QA')
         j['existing_media_file_id']='public-media';self.q.revise(j,'new QA')
         self.assertEqual(self.q.claim()['step'],'archive')
+    def test_unready_episode_is_registered_but_never_claimed(self):
+        self.q.register({'id':'paper-one','paper_id':'2611.00001','source_reference':'saved QA','reason':'playback not yet observed'})
+        self.assertEqual(len(self.q.intake()),1);self.assertIsNone(self.q.claim())
+    def test_ready_enqueue_promotes_intake(self):
+        self.q.register({'id':'paper-one','paper_id':'2611.00001','source_reference':'saved QA','reason':'playback pending'})
+        self.add();self.assertEqual(self.q.intake(),[]);self.assertIsNotNone(self.q.claim())
+    def test_intake_survives_private_checkpoint(self):
+        self.q.register({'id':'paper-one','paper_id':'2611.00001','source_reference':'saved QA','reason':'playback pending'})
+        p=Path(self.tmp.name)/'intake-snapshot.sqlite';self.q.snapshot(p);q2=m.Queue(p)
+        try:self.assertEqual(q2.intake()[0]['id'],'paper-one')
+        finally:q2.close()
     def test_no_speech_content_gate(self):
         self.assertFalse(any('whisper' in s or 'transcription' in s for s in m.GATES))
 

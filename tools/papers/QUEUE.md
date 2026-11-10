@@ -14,6 +14,10 @@ Immediately after claiming a mutating step, run `snapshot`, upload it to the exi
 
 After each completed external effect, save its receipt and run `snapshot`; update the same private checkpoint file in the archive using the connected Drive tool. Verify the returned file identity and checksum. Persist that stable checkpoint identity in the private run record. A local SQLite file alone does not survive loss of the computer. If checkpoint upload is uncertain, first read the current version before repeating it.
 
+## Register unfinished episodes without inventing readiness
+
+Use `register RECORD.json` for a known unfinished episode. The private record must contain stable `id`, `paper_id`, `source_reference`, and an exact `reason`; include verified existing media/archive identities and pending checks when known. `intake` lists these records. They survive checkpoint/restore but can never be claimed for publication. Once actual readiness is verified, `add` the complete manifest with the same ID to promote the record. Inspect both `intake` and `status` on every scheduled run.
+
 ## Enqueue only ready episodes
 
 Prepare a private JSON manifest with:

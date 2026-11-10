@@ -75,6 +75,8 @@ class Queue:
           name TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', attempts INTEGER NOT NULL DEFAULT 0,
           available REAL NOT NULL DEFAULT 0, token TEXT, lease_until REAL,
           receipt TEXT, error TEXT, checkpointed INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (episode, name));
+        CREATE TABLE IF NOT EXISTS intake (
+          id TEXT PRIMARY KEY, record TEXT NOT NULL, status TEXT NOT NULL, updated REAL NOT NULL);
         CREATE TABLE IF NOT EXISTS events (
           seq INTEGER PRIMARY KEY AUTOINCREMENT, episode TEXT NOT NULL,
           step TEXT NOT NULL, at REAL NOT NULL, kind TEXT NOT NULL, detail TEXT NOT NULL);
@@ -95,6 +97,9 @@ class Queue:
         fingerprint = hashlib.sha256(manifest.encode()).hexdigest()
         self.db.execute('BEGIN IMMEDIATE')
         try:
+            intake = self.db.execute('SELECT record FROM intake WHERE id=?',(job['id'],)).fetchone()
+            if intake and json.loads(intake[0])['paper_id'] != job['paper_id']:
+                raise ValueError('Ready manifest must match the registered paper identity')
             previous = self.db.execute('SELECT fingerprint FROM episodes WHERE id=?', (job['id'],)).fetchone()
             if previous:
                 if previous['fingerprint'] != fingerprint:
@@ -105,12 +110,35 @@ class Queue:
                             (job['id'], fingerprint, manifest, self.clock()))
             for i, step in enumerate(STEPS):
                 self.db.execute('INSERT INTO steps(episode,position,name) VALUES(?,?,?)', (job['id'], i, step))
+            self.db.execute("UPDATE intake SET status='promoted',updated=? WHERE id=?",(self.clock(),job['id']))
             self.event(job['id'], 'enqueue', 'added', {'fingerprint': fingerprint})
             self.db.commit()
             return True
         except BaseException:
             self.db.rollback()
             raise
+
+    def register(self, record):
+        """Track an unfinished real episode without asserting QA or executing it."""
+        if not SLUG.fullmatch(record.get('id','')):
+            raise ValueError('Invalid stable episode id')
+        nonempty(record,('paper_id','source_reference','reason'))
+        self.db.execute('BEGIN IMMEDIATE')
+        try:
+            if self.db.execute('SELECT 1 FROM episodes WHERE id=?',(record['id'],)).fetchone():
+                self.db.commit();return False
+            old=self.db.execute('SELECT record FROM intake WHERE id=?',(record['id'],)).fetchone()
+            if old and json.loads(old[0])['paper_id'] != record['paper_id']:
+                raise ValueError('Intake identity conflict')
+            self.db.execute('INSERT INTO intake VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET record=excluded.record,updated=excluded.updated',
+                            (record['id'],canonical(record),'awaiting_readiness',self.clock()))
+            self.event(record['id'],'readiness','registered',{'reason':record['reason']})
+            self.db.commit();return True
+        except BaseException:
+            self.db.rollback();raise
+
+    def intake(self):
+        return [json.loads(r['record']) | {'status':r['status']} for r in self.db.execute("SELECT record,status FROM intake WHERE status!='promoted' ORDER BY id")]
 
     def claim(self, lease_seconds=900):
         if not 1 <= lease_seconds <= 3600:
@@ -408,6 +436,8 @@ def main():
     p = sub.add_parser('add'); p.add_argument('manifest')
     p = sub.add_parser('claim'); p.add_argument('--lease-seconds', type=int, default=900)
     sub.add_parser('status')
+    sub.add_parser('intake')
+    p = sub.add_parser('register');p.add_argument('record')
     p = sub.add_parser('renew')
     for key in ('episode','step','token'): p.add_argument(key)
     p.add_argument('--lease-seconds',type=int,default=900)
@@ -437,6 +467,8 @@ def main():
         if args.command == 'add': result = {'added': q.add(read(args.manifest))}
         elif args.command == 'claim': result = q.claim(args.lease_seconds)
         elif args.command == 'status': result = q.status()
+        elif args.command == 'intake': result = q.intake()
+        elif args.command == 'register': result = q.register(read(args.record))
         elif args.command == 'renew': result = q.renew(args.episode,args.step,args.token,args.lease_seconds)
         elif args.command == 'resume': result = q.resume(args.episode,args.step,args.evidence_reference,args.known_not_executed)
         elif args.command == 'revise': result = q.revise(read(args.manifest),args.evidence_reference)
